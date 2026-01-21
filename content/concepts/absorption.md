@@ -10,6 +10,11 @@ Layer: first-order
 
 Absorption is the structural opposite of displacement. Systems with sufficient absorption capacity can produce persistent differences without generating accounting failure, because erasure costs are both tracked and borne at their point of origin.
 
+## Structural dependencies
+- [[erasure-cost]]
+- [[displacement]]
+- [[persistent-difference]]
+
 ## What this is NOT
 
 - Not tolerance (tolerance endures effects without cost; absorption pays the cost)

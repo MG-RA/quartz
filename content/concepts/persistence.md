@@ -2,13 +2,17 @@
 
 Tags: #concept
 
-Layer: primitive
+Layer: primitive → [[transformation-space]] (meta-analytical)
 
 ## Definition
 
 **Persistence** is the property of a [[difference]] that remains re-identifiable across relevant transformations within a specified [[transformation-space]]. A difference persists when operations that might be expected to eliminate it fail to do so, or succeed only at non-trivial cost.
 
 Persistence is not about duration but about **resistance to elimination**. A difference that lasts briefly but requires significant resources to remove is persistent. A difference that lasts long but vanishes with minimal effort is not.
+
+## Structural dependencies
+- [[difference]]
+- [[transformation-space]]
 
 ## What this is NOT
 

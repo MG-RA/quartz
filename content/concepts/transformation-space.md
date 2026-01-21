@@ -10,6 +10,9 @@ Layer: meta-analytical
 
 Transformation space is a **chosen analytic scope**, not a discovered property of the world. By making this choice explicit, the diagnostic can be applied across physical, computational, institutional, and symbolic domains without relying on substrate-specific definitions.
 
+## Structural dependencies
+None (primitive).
+
 ## What this is NOT
 
 - Not state space (state space describes possible configurations; transformation space specifies the allowed operations between them)

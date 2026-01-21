@@ -2,13 +2,19 @@
 
 Tags: #concept
 
-Layer: first-order
+Layer: first-order → [[transformation-space]] (meta-analytical)
 
 ## Definition
 
 **Irreversibility** is a composed structural property: [[persistence]] combined with [[erasure-cost]] [[asymmetry]]. A transition is irreversible when its effects persist and cannot be undone at comparable cost to their production.
 
 Irreversibility is not an ontological claim about time or causation. It is a **structural condition** detected operationally: if reversal requires significantly more resources than the original action, the transition is irreversible relative to the specified [[transformation-space]].
+
+## Structural dependencies
+- [[persistence]]
+- [[erasure-cost]]
+- [[asymmetry]]
+- [[transformation-space]]
 
 ## What this is NOT
 

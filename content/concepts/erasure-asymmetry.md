@@ -8,6 +8,11 @@ Layer: first-order
 
 **Erasure asymmetry** is a specific instantiation of [[asymmetry]] applied to the domain of erasure costs: the observed imbalance between the ease of producing a persistent difference and the cost of undoing it. Creating an effect often requires limited, localized action, while undoing that effect requires broader effort, coordination, or expenditure. This asymmetry is observable in practice without reference to underlying intentions or values.
 
+## Structural dependencies
+- [[asymmetry]]
+- [[erasure-cost]]
+- [[persistent-difference]]
+
 ## What this is NOT
 
 - Not injustice (asymmetry is structural, not moral)

@@ -10,6 +10,10 @@ Layer: first-order
 
 Displacement is the primary mechanism through which accounting failures compound. Costs remain real and operative, but become **unassigned or weakly attributed**, allowing constraint load to accumulate outside the field of local decision-making.
 
+## Structural dependencies
+- [[erasure-cost]]
+- [[persistent-difference]]
+
 ## What this is NOT
 
 - Not externalization alone (externalization is typically economic and spatial; displacement also includes temporal and structural relocation)

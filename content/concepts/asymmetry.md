@@ -10,6 +10,10 @@ Layer: primitive
 
 This asymmetry is observable across substrates: thermodynamic, computational, institutional, ecological. It is not a contingent feature of particular systems but a recurring structural pattern.
 
+## Structural dependencies
+- [[difference]]
+- [[persistence]]
+
 ## What this is NOT
 
 - Not injustice (asymmetry is structural, not moral)

@@ -10,6 +10,10 @@ A **tracking mechanism** is a system component that records persistent differenc
 
 Tracking does not itself absorb erasure costs, nor does it prevent displacement. Instead, it renders both absorption and displacement **visible and assignable**. In the absence of tracking mechanisms, persistent differences accumulate invisibly and costs propagate without attribution.
 
+## Structural dependencies
+- [[persistent-difference]]
+- [[erasure-cost]]
+
 ## What this is NOT
 
 - Not monitoring (monitoring observes behavior; tracking records obligations)

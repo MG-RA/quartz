@@ -10,6 +10,9 @@ A **constraint** is a restriction on the set of transitions a system can undergo
 
 Constraints are not inherently negative. They may be functional (enabling coordination), protective (preventing harm), or structural (reflecting physical law). What matters diagnostically is that they **remove degrees of freedom** from the admissible set.
 
+## Structural dependencies
+None (primitive).
+
 ## What this is NOT
 
 - Not limit (limits bound magnitude; constraints bound transitions)

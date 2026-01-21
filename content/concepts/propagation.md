@@ -8,6 +8,9 @@ Layer: first-order
 
 The spread of effects beyond their point of origin. Propagation is what transforms local actions into persistent differences with distributed consequences. When effects propagate, they couple to external systems, inform subsequent action, or create records that outlast the original event. Propagation is the mechanism by which small-scale reversibility fails to guarantee large-scale reversibility.
 
+## Structural dependencies
+- [[persistent-difference]]
+
 ## What this is NOT
 
 - Not transmission (transmission implies a sender and receiver; propagation can be undirected)

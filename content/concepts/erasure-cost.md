@@ -12,6 +12,9 @@ Erasure cost functions as the **operational test for persistence**: if a differe
 
 Paying erasure cost does not guarantee net reduction of burden; in practice, removal often redistributes cost across time, agents, or systems rather than eliminating it outright.
 
+## Structural dependencies
+- [[persistence]]
+
 ## What this is NOT
 
 - Not punishment or penalty (it is structural, not normative)

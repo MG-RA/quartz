@@ -10,6 +10,9 @@ Layer: primitive
 
 Accumulation is what makes constraint load *load*: individual constraints may be manageable, but their accumulation produces systemic restriction that cannot be addressed one constraint at a time.
 
+## Structural dependencies
+- [[constraint]]
+
 ## What this is NOT
 
 - Not growth (growth adds capacity; accumulation adds restriction)

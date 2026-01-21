@@ -2,13 +2,19 @@
 
 Tags: #concept #failure-state
 
-Layer: accounting
+Layer: accounting → [[admissibility]] (selector)
 
 ## Definition
 
-A **collapse surface** is a boundary in configuration space at which accumulated persistence removes certain states from the admissible set or raises their erasure cost beyond practicable bounds. It is not a point but a surface: a structural region beyond which the system cannot return to previously available configurations without **discontinuous intervention**, such as large-scale re-coordination, redesign, or external shock.
+A **collapse surface** is a boundary in configuration space at which accumulated persistence removes certain states from the [[admissibility|admissible]] set or raises their erasure cost beyond practicable bounds. It is not a point but a surface: a structural region beyond which the system cannot return to previously available configurations without **discontinuous intervention**, such as large-scale re-coordination, redesign, or external shock.
 
 Collapse surfaces are typically **approached gradually** through constraint accumulation. If crossed, the loss of options is experienced **abruptly**, even though the conditions producing it developed incrementally.
+
+## Structural dependencies
+- [[admissibility]]
+- [[constraint-accumulation]]
+- [[persistence]]
+- [[erasure-cost]]
 
 ## What this is NOT
 

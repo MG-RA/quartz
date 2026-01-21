@@ -2,11 +2,16 @@
 
 Tags: #concept #failure-state
 
-Layer: failure-state
+Layer: failure-state → [[admissibility]] (selector)
 
 ## Definition
 
-**Saturation** is a system state in which constraint load has exhausted the available configuration space, leaving no admissible room for further adaptation without first removing existing constraints. In a saturated state, a system may continue operating, but it cannot change direction, absorb new requirements, or respond meaningfully to novel conditions. Action collapses into maintenance: continued function is possible, but strategic movement requires **discontinuous restructuring** that pays down accumulated erasure costs.
+**Saturation** is a system state in which constraint load has exhausted the available configuration space, leaving no [[admissibility|admissible]] room for further adaptation without first removing existing constraints. In a saturated state, a system may continue operating, but it cannot change direction, absorb new requirements, or respond meaningfully to novel conditions. Action collapses into maintenance: continued function is possible, but strategic movement requires **discontinuous restructuring** that pays down accumulated erasure costs.
+
+## Structural dependencies
+- [[constraint-load]]
+- [[admissibility]]
+- [[erasure-cost]]
 
 ## What this is NOT
 

@@ -10,6 +10,10 @@ Layer: selector
 
 Admissibility operates at the interface between structure and action. It does not rank options by desirability or predict which will be chosen. It identifies which options remain structurally coherent—and which have been foreclosed by accumulated constraints.
 
+## Structural dependencies
+- [[constraint]]
+- [[constraint-load]]
+
 ## What this is NOT
 
 - Not possibility (possibility ignores constraints; admissibility respects them)

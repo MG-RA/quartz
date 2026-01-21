@@ -2,13 +2,17 @@
 
 Tags: #concept #failure-state
 
-Layer: failure-state
+Layer: failure-state → [[admissibility]] (selector)
 
 ## Definition
 
-**Brittleness** is a system property in which small perturbations produce disproportionately large losses of function or options due to a scarcity of admissible responses. Brittleness emerges when constraint load has narrowed the space of viable configurations such that the system lacks redundant ways to accommodate variation.
+**Brittleness** is a system property in which small perturbations produce disproportionately large losses of function or options due to a scarcity of [[admissibility|admissible]] responses. Brittleness emerges when constraint load has narrowed the space of viable configurations such that the system lacks redundant ways to accommodate variation.
 
 Unlike fragility, which breaks under increasing stress, brittleness concerns a **discontinuity between apparent stability and sudden failure**: the system continues to perform normally until a perturbation exceeds its remaining narrow tolerance, at which point recovery without significant reconfiguration becomes infeasible.
+
+## Structural dependencies
+- [[admissibility]]
+- [[constraint-load]]
 
 ## What this is NOT
 

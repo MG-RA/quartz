@@ -12,6 +12,10 @@ Persistence is not a metaphysical property of the world but a **practical condit
 
 A difference may persist briefly or indefinitely; what matters is whether its removal incurs **non-local or non-negligible cost**, not how long it lasts.
 
+## Structural dependencies
+- [[persistence]]
+- [[erasure-cost]]
+
 ## What this is NOT
 
 - Not permanence (persistence is always relative to a transformation space)

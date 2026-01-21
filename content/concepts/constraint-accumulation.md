@@ -10,6 +10,10 @@ Layer: first-order
 
 This process is often invisible at the point of action. Its presence is typically inferred only when effects emerge as **brittleness** or **saturation**, at which point corrective actions tend to address surface symptoms while leaving the underlying constraint load unchanged or further increased.
 
+## Structural dependencies
+- [[constraint-load]]
+- [[persistent-difference]]
+
 ## What this is NOT
 
 - Not growth (growth adds capacity; accumulation adds restriction)

@@ -10,6 +10,10 @@ Layer: first-order
 
 Constraint load describes how stability conditions, commitments, and persistent differences have propagated through a domain, progressively narrowing the space of viable actions. It is a **diagnostic descriptor**, not an ontological claim about what constraints "really are," and carries no privileged unit, scale, or metric.
 
+## Structural dependencies
+- [[constraint]]
+- [[erasure-cost]]
+
 ## What this is NOT
 
 - Not technical debt (technical debt is one instance; constraint load is the general form)

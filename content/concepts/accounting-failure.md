@@ -10,6 +10,14 @@ Layer: accounting
 
 Under accounting failure, corrective actions may occur repeatedly, but they do not reduce underlying constraint load. Apparent improvement reflects local adjustment rather than resolution of accumulated persistence.
 
+## Structural dependencies
+- [[persistent-difference]]
+- [[erasure-cost]]
+- [[tracking-mechanism]]
+- [[absorption]]
+- [[displacement]]
+- [[constraint-load]]
+
 ## What this is NOT
 
 - Not negligence (accounting failure can occur despite competence, care, or oversight)

@@ -8,6 +8,9 @@ Layer: first-order
 
 The variation in irreversibility across actors, subsystems, or time horizons. The same effect may be trivially reversible for one actor and permanently binding for another. Persistence gradients reveal that "irreversible" is not a binary property but a relational one—dependent on who is asking, at what scale, and over what duration. An effect that is reversible for the producer may be irreversible for the recipient.
 
+## Structural dependencies
+- [[irreversibility]]
+
 ## What this is NOT
 
 - Not severity (severity measures impact; gradient measures differential reversibility)

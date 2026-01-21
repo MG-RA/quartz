@@ -2,13 +2,16 @@
 
 Tags: #concept
 
-Layer: primitive
+Layer: primitive → [[transformation-space]] (meta-analytical)
 
 ## Definition
 
 A **difference** is a detectable distinction under a specified [[transformation-space]]. It is the minimal unit of structure the framework recognizes: something that can be identified as not-the-same relative to a declared set of allowed operations.
 
 Difference is substrate-agnostic. It applies to physical states, data structures, institutional arrangements, or symbolic configurations. What matters is not what the difference *is*, but whether it can be *detected* given a transformation space.
+
+## Structural dependencies
+- [[transformation-space]]
 
 ## What this is NOT
 
