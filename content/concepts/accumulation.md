@@ -6,7 +6,7 @@ Layer: primitive
 
 ## Definition
 
-**Accumulation** is the stacking of [[constraint|constraints]] such that they do not cancel or dissipate locally. When constraints accumulate, their combined effect exceeds any single constraint's impact, progressively narrowing the set of admissible configurations.
+**Accumulation** is the stacking of [[constraint|constraints]] such that they do not cancel or dissipate locally. When constraints accumulate, their combined effect exceeds any single constraint's impact, progressively narrowing the set of available configurations.
 
 Accumulation is what makes constraint load *load*: individual constraints may be manageable, but their accumulation produces systemic restriction that cannot be addressed one constraint at a time.
 

@@ -2,11 +2,11 @@
 
 Tags: #concept
 
-Layer: primitive
+Layer: first-order
 
 ## Definition
 
-The observed imbalance between the ease of producing a persistent difference and the cost of undoing it. Creating an effect often requires limited, localized action, while undoing that effect requires broader effort, coordination, or expenditure. This asymmetry is observable in practice without reference to underlying intentions or values.
+**Erasure asymmetry** is a specific instantiation of [[asymmetry]] applied to the domain of erasure costs: the observed imbalance between the ease of producing a persistent difference and the cost of undoing it. Creating an effect often requires limited, localized action, while undoing that effect requires broader effort, coordination, or expenditure. This asymmetry is observable in practice without reference to underlying intentions or values.
 
 ## What this is NOT
 

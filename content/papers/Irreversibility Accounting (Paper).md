@@ -91,12 +91,12 @@ Not all differences are equivalent. [[persistent-difference|Persistence]] is def
 
 ### §5.1 Apparent counterexamples
 
-| Domain | Surface reversibility | Hidden persistence |
-|-------|----------------------|-------------------|
-| Thought | Ideas appear discardable | Time, attention, memory modification |
-| Simulation | No “real” consequence | Outputs inform real decisions; effects [[propagation|propagate]] |
-| Reversible computation | Entropy deferred | I/O and error correction introduce irreversibility |
-| Speech | Retractable | Attention, reputation, and coordination effects [[propagation|propagate]] |
+| Domain                 | Surface reversibility    | Hidden persistence                                              |
+| ---------------------- | ------------------------ | --------------------------------------------------------------- |
+| Thought                | Ideas appear discardable | Time, attention, memory modification                            |
+| Simulation             | No “real” consequence    | Outputs inform real decisions; effects [[propagation]]          |
+| Reversible computation | Entropy deferred         | I/O and error correction introduce irreversibility              |
+| Speech                 | Retractable              | Attention, reputation, and coordination effects [[propagation]] |
 
 **Pattern:** Reversibility holds only at constrained scale. Once effects [[propagation|propagate]], persistence emerges.
 
@@ -116,11 +116,11 @@ The lens does **not** apply where:
 
 ## §6. Case Walkthrough: Content Moderation
 
-| Aspect | Claimed | Actual |
-|------|---------|--------|
+| Aspect        | Claimed                              | Actual                                                               |
+| ------------- | ------------------------------------ | -------------------------------------------------------------------- |
 | Reversibility | Errors fixed by retraining or appeal | Lost visibility, disrupted coordination, reputational damage persist |
-| Cost location | Absorbed by system | [[displacement|Displaced]] to users, moderators, and future states |
-| Accounting | Actions and metrics tracked | No account of accumulated [[persistent-difference|persistent effects]] |
+| Cost location | Absorbed by system                   | [[displacement]] to users, moderators, and future states             |
+| Accounting    | Actions and metrics tracked          | No account of accumulated [[persistent-difference]]                  |
 
 **Diagnosis:** Local correctability masks structural [[constraint-accumulation|constraint accumulation]].
 
@@ -198,11 +198,13 @@ tracking-mechanism ──► (absence = accounting-failure)
 persistence-gradient ──► (makes "for whom?" askable)
 
 rollback ──► (the mechanism the lens problematizes)
-```
 
 tracking-mechanism ──► (absence = accounting-failure)  
-persistence-gradient ──► (makes “for whom?” explicit)  
+
+persistence-gradient ──► (makes “for whom?” explicit) 
+ 
 rollback ──► (the mechanism the lens problematizes)
+```
 
 ---
 
@@ -215,4 +217,3 @@ This paper does **not** claim:
 - The lens predicts outcomes  
 - Persistence should be eliminated  
 - This replaces thermodynamic, economic, or institutional models  
-

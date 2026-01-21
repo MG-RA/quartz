@@ -6,7 +6,7 @@ Layer: primitive
 
 ## Definition
 
-A **constraint** is a restriction on the set of [[admissibility|admissible]] transitions a system can undergo. Constraints reduce the configuration space: they eliminate possibilities, narrow options, and foreclose paths that would otherwise be available.
+A **constraint** is a restriction on the set of transitions a system can undergo. Constraints reduce the configuration space: they eliminate possibilities, narrow options, and foreclose paths that would otherwise be available.
 
 Constraints are not inherently negative. They may be functional (enabling coordination), protective (preventing harm), or structural (reflecting physical law). What matters diagnostically is that they **remove degrees of freedom** from the admissible set.
 
