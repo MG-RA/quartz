@@ -1,3 +1,8 @@
+---
+aliases:
+  - "tracking system"
+---
+
 # Tracking Mechanism
 
 Tags: #concept #mechanism

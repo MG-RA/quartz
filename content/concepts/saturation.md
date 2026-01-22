@@ -1,3 +1,8 @@
+---
+aliases:
+  - "no room left to move"
+---
+
 # Saturation
 
 Tags: #concept #failure-state

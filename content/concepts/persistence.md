@@ -1,3 +1,8 @@
+---
+aliases:
+  - "staying power"
+---
+
 # Persistence
 
 Tags: #concept

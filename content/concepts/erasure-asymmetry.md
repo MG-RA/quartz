@@ -1,3 +1,8 @@
+---
+aliases:
+  - "easy to cause, hard to undo"
+---
+
 # Erasure Asymmetry
 
 Tags: #concept

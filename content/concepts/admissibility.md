@@ -1,3 +1,8 @@
+---
+aliases:
+  - "what remains available"
+---
+
 # Admissibility
 
 Tags: #concept

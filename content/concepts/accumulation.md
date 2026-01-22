@@ -1,3 +1,8 @@
+---
+aliases:
+  - "piling up"
+---
+
 # Accumulation
 
 Tags: #concept

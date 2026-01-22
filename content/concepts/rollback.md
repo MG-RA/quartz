@@ -1,3 +1,9 @@
+---
+aliases:
+  - "revert"
+  - "undo"
+---
+
 # Rollback
 
 Tags: #concept #mechanism

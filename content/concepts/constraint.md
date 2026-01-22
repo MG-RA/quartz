@@ -1,3 +1,8 @@
+---
+aliases:
+  - "restriction"
+---
+
 # Constraint
 
 Tags: #concept

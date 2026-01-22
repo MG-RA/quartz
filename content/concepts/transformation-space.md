@@ -1,3 +1,10 @@
+---
+aliases:
+  - "space of possible changes"
+  - "allowed changes"
+  - "what changes count"
+---
+
 # Transformation Space
 
 Tags: #concept

@@ -1,3 +1,8 @@
+---
+aliases:
+  - "interpretation filter"
+---
+
 # Lens
 
 Tags: #concept

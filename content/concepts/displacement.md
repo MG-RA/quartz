@@ -1,3 +1,8 @@
+---
+aliases:
+  - "cost shifted elsewhere"
+---
+
 # Displacement
 
 Tags: #concept

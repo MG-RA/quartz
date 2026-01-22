@@ -1,3 +1,9 @@
+---
+aliases:
+  - "missing tracking"
+  - "untracked costs"
+---
+
 # Accounting Failure
 
 Tags: #concept

@@ -1,3 +1,8 @@
+---
+aliases:
+  - "constraints piling up"
+---
+
 # Constraint Accumulation
 
 Tags: #concept

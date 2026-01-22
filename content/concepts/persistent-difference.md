@@ -1,3 +1,9 @@
+---
+aliases:
+  - "difference that doesn't go away"
+  - "sticky difference"
+---
+
 # Persistent Difference
 
 Tags: #concept

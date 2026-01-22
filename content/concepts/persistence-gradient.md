@@ -1,3 +1,8 @@
+---
+aliases:
+  - "who can undo it"
+---
+
 # Persistence Gradient
 
 Tags: #concept

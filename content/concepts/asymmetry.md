@@ -1,3 +1,8 @@
+---
+aliases:
+  - "imbalance"
+---
+
 # Asymmetry
 
 Tags: #concept

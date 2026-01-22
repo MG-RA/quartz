@@ -1,3 +1,9 @@
+---
+aliases:
+  - "cost of undoing"
+  - "cost to undo"
+---
+
 # Erasure Cost
 
 Tags: #concept

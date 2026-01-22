@@ -1,3 +1,8 @@
+---
+aliases:
+  - "cost paid locally"
+---
+
 # Absorption
 
 Tags: #concept

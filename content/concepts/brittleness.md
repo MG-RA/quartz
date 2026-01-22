@@ -1,3 +1,8 @@
+---
+aliases:
+  - fragility
+---
+
 # Brittleness
 
 Tags: #concept #failure-state

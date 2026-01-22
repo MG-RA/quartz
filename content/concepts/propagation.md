@@ -1,3 +1,8 @@
+---
+aliases:
+  - "spillover"
+---
+
 # Propagation
 
 Tags: #concept

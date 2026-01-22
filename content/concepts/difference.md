@@ -1,3 +1,8 @@
+---
+aliases:
+  - "distinction"
+---
+
 # Difference
 
 Tags: #concept

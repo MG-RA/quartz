@@ -1,3 +1,9 @@
+---
+aliases:
+  - "where options disappear"
+  - "option cutoff"
+---
+
 # Collapse Surface
 
 Tags: #concept #failure-state
