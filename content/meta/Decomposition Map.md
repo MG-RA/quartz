@@ -257,6 +257,22 @@ Anything that violates this ordering is suspect.
 
 ---
 
+## 11. Structural Definition of Maintenance
+
+**Maintenance** is defined structurally, not procedurally:
+
+> Maintenance = any change that alters reference topology, layer designation, or invariant phrasing.
+
+Under this definition:
+
+- Timestamps and change logs are *evidence* of maintenance, not requirements
+- A change log is an *accounting surface*, not a workflow
+- The framework remains non-operational while gaining traceability
+
+This prevents Failure Mode #10 (failure to apply the lens to itself) from sliding into process prescription.
+
+---
+
 ## Status
 
 This document is a structural reference. It should be updated when:
@@ -264,3 +280,4 @@ This document is a structural reference. It should be updated when:
 - New primitives are proposed
 - Layer boundaries are contested
 - The kernel design evolves
+- Reference topology, layer designation, or invariant phrasing changes (per §11)

@@ -41,11 +41,16 @@ They are atomic, non-normative, and reusable across domains.
 
 See [[Decomposition Map]] for the full structural hierarchy.
 
+### Foundational (Non-Primitive)
+
+Foundational concepts have no dependencies but are not primitives because they define the analysis frame rather than the object of analysis.
+
+- [[transformation-space]]
+
 ### Primitives
 
 - [[difference]]
 - [[persistence]]
-- [[persistent-difference]]
 - [[erasure-cost]]
 - [[erasure-asymmetry]]
 - [[asymmetry]]
@@ -54,6 +59,7 @@ See [[Decomposition Map]] for the full structural hierarchy.
 
 ### First-Order Composites
 
+- [[persistent-difference]]
 - [[irreversibility]]
 - [[displacement]]
 - [[absorption]]
@@ -81,7 +87,6 @@ See [[Decomposition Map]] for the full structural hierarchy.
 
 - [[rollback]]
 - [[lens]]
-- [[transformation-space]]
 
 ---
 ## Diagnostics
@@ -110,7 +115,11 @@ If the framework starts to feel obvious, total, or morally loaded, return here.
 Domain notes apply the lens to specific systems.  
 They do not introduce new concepts.
 
-- *(Empty by design until used)*
+- [[Human History]]
+- [[2006-2026 Digital Platforms]]
+- [[2008-2026 Financial Infrastructure]]
+- [[2010-2026 Software Supply Chains]]
+- [[2012-2026 AI Systems]]
 
 If a domain note invents vocabulary, extract it to `/concepts`.
 

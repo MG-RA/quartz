@@ -50,7 +50,7 @@ Use for: comprehensive audits, paper-level analysis, domain application
 
 ### Application load
 
-Load: `/concepts` + relevant domain note + domain template
+Load: `/concepts` + relevant domain note + [[Domain Template]]
 
 Use for: applying the framework to specific systems
 
@@ -140,7 +140,7 @@ Prompt:
 **Goal:** apply the framework without improvising.
 
 Prompt:
-- “Fill the domain template using only the existing concept notes. Any claim not supported by the vault should be labeled as an assumption.”
+- “Fill [[Domain Template]] using only the existing concept notes. Any claim not supported by the vault should be labeled as an assumption.”
 
 ---
 

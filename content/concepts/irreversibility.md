@@ -2,7 +2,7 @@
 
 Tags: #concept
 
-Layer: first-order → [[transformation-space]] (meta-analytical)
+Layer: first-order → [[transformation-space]] (foundational)
 
 ## Definition
 

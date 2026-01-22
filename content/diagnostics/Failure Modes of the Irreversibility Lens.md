@@ -110,3 +110,11 @@ The most serious failure mode is assuming the lens already accounts for its own 
 **Correction:** periodically audit the lens using its own questions:
 _What persists here? What costs are displaced? What options are being foreclosed by this framework itself?_
 **Detection prompt:** "Has this document been updated recently? Are new failure modes being added? If maintenance has stopped, this mode may be active."
+
+---
+structural_maintenance:
+  last_event: 2026-01-21
+  scope: "accounting surface added to answer Failure Mode #10"
+  affected_invariants:
+    - FM10
+---

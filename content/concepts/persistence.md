@@ -2,7 +2,7 @@
 
 Tags: #concept
 
-Layer: primitive → [[transformation-space]] (meta-analytical)
+Layer: primitive → [[transformation-space]] (foundational)
 
 ## Definition
 

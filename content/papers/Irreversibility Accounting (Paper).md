@@ -1,4 +1,3 @@
-# Irreversibility Accounting (Paper)
 
 **Status:** Source paper  
 **Type:** Diagnostic framework introduction  

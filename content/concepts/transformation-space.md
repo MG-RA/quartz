@@ -2,7 +2,7 @@
 
 Tags: #concept
 
-Layer: meta-analytical
+Layer: foundational (non-primitive)
 
 ## Definition
 
