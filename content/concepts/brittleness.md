@@ -2,11 +2,12 @@
 aliases:
   - fragility
 layer: failure-state
+role: concept
+type: failure-state
+canonical: true
 ---
 
 # Brittleness
-
-Tags: #concept #failure-state
 
 ## Definition
 

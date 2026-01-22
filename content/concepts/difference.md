@@ -2,11 +2,11 @@
 aliases:
   - "distinction"
 layer: primitive
+role: concept
+canonical: true
 ---
 
 # Difference
-
-Tags: #concept
 
 ## Definition
 

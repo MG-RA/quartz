@@ -2,11 +2,12 @@
 aliases:
   - "no room left to move"
 layer: failure-state
+role: concept
+type: failure-state
+canonical: true
 ---
 
 # Saturation
-
-Tags: #concept #failure-state
 
 ## Definition
 

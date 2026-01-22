@@ -3,11 +3,12 @@ depends_on:
   - "[[Irreversibility Accounting (Registry)#Dependency classes (by layer)]]"
   - "[[Irreversibility Accounting (Registry)#Boundaries (distinctions)]]"
   - "[[Failure Modes of the Irreversibility Lens]]"
+role: diagnostic
+type: meta
+canonical: true
 ---
 
 # Prompting Guide
-
-Tags: #diagnostic #meta
 
 This note defines prompt patterns for using AI/code agents with this vault while preserving scope, avoiding invention of new primitives, and preventing self-sealing explanations.
 

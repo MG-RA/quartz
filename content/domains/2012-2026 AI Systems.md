@@ -1,6 +1,10 @@
-# 2012-2026 AI Systems (Domain Application)
+---
+role: domain
+type: timeslice
+canonical: true
+---
 
-Tags: #domain
+# 2012-2026 AI Systems (Domain Application)
 
 This is one possible slice for "modern AI" relative to 2026-01-21: **2012-01-21 to 2026-01-21**.
 

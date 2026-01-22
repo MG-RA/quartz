@@ -2,11 +2,11 @@
 aliases:
   - "spillover"
 layer: first-order
+role: concept
+canonical: true
 ---
 
 # Propagation
-
-Tags: #concept
 
 ## Definition
 

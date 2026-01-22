@@ -1,6 +1,10 @@
-# Failure Modes of the Irreversibility Lens
+---
+role: diagnostic
+type: meta
+canonical: true
+---
 
-Tags: #diagnostic #meta
+# Failure Modes of the Irreversibility Lens
 
 This note records the primary ways the irreversibility diagnostic lens can mislead, overreach, or harden into error. These are **structural failure modes of the lens itself**, not mistakes by its users. Maintaining this list is part of the lens's own irreversibility accounting.
 

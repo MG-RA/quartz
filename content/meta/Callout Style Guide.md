@@ -1,3 +1,11 @@
+---
+role: support
+type: style-guide
+canonical: true
+facets:
+  - meta
+---
+
 # Callout Style Guide
 
 Purpose: Use callouts only as boundary markers (scope limits, non-claims, validity limits, misuse risks, and reader orientation). Callouts are not decoration and should not add emphasis.

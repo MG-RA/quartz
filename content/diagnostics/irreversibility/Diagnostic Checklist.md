@@ -3,11 +3,12 @@ depends_on:
   - "[[Irreversibility Accounting (Registry)#Operator (diagnostic sequence)]]"
   - "[[Irreversibility Accounting (Registry)#Scope conditions]]"
   - "[[Failure Modes of the Irreversibility Lens]]"
+role: diagnostic
+type: checklist
+canonical: true
 ---
 
 # Irreversibility Lens - Diagnostic Checklist
-
-Tags: #diagnostic
 
 > [!note]
 > Non-claim: Output is descriptive; it does not rank outcomes or recommend actions.

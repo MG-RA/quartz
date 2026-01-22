@@ -1,3 +1,11 @@
+---
+role: paper
+type: derived
+canonical: false
+depends_on:
+  - "[[Irreversibility Accounting (Paper)]]"
+---
+
 # The Structure of Agency (Derived)
 
 **Status:** Companion paper  

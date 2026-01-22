@@ -2,11 +2,14 @@
 depends_on:
   - "[[Irreversibility Accounting (Registry)#Operator (diagnostic sequence)]]"
   - "[[Irreversibility Accounting (Registry)#Scope conditions]]"
+role: support
+type: template
+canonical: false
+facets:
+  - diagnostic
 ---
 
 # Meeting Diagnosis Template
-
-Tags: #diagnostic #template
 
 > [!note]
 > Non-claim: This template records diagnosis only; it does not recommend actions or outcomes.

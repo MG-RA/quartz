@@ -2,11 +2,12 @@
 depends_on:
   - "[[Irreversibility Accounting (Registry)#Scope conditions]]"
   - "[[Failure Modes of the Irreversibility Lens]]"
+role: diagnostic
+type: boundaries
+canonical: true
 ---
 
 # Irreversibility Lens - Stress Tests & Boundaries
-
-Tags: #diagnostic
 
 > [!warning]
 > Misuse risk: Turning diagnosis into moral verdicts or outcome-ranking claims.

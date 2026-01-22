@@ -3,11 +3,12 @@ aliases:
   - "revert"
   - "undo"
 layer: mechanism
+role: concept
+type: mechanism
+canonical: true
 ---
 
 # Rollback
-
-Tags: #concept #mechanism
 
 ## Definition
 An operation that attempts to restore a prior state by reversing or undoing recent changes. Rollback assumes that the path from state A to state B can be traversed in reverse at comparable cost. In systems with persistent differences, rollback may restore local state while leaving propagated effects, displaced costs, and accumulated constraints intact. Rollback is the implicit mechanism behind correction narratives.

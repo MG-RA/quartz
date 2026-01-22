@@ -1,6 +1,16 @@
-# Zen
+---
+role: projection
+type: encoded
+canonical: false
+facets:
+  - implicit-constraint
+  - anti-belief
+  - canon-resistant
+  - scale-fragile
+  - misuse-risk
+---
 
-Tags: #encoded #implicit-constraint #anti-belief #canon-resistant #scale-fragile #misuse-risk
+# Zen
 
 > [!note]
 > Non-claim: This is a structural re-reading, not doctrine or metaphysics.

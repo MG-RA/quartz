@@ -3,11 +3,11 @@ aliases:
   - "missing tracking"
   - "untracked costs"
 layer: accounting
+role: concept
+canonical: true
 ---
 
 # Accounting Failure
-
-Tags: #concept
 
 ## Definition
 

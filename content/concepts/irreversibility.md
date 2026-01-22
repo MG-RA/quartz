@@ -1,10 +1,10 @@
 ---
 layer: first-order
+role: concept
+canonical: true
 ---
 
 # Irreversibility
-
-Tags: #concept
 
 ## Definition
 

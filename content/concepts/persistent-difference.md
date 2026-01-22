@@ -3,11 +3,11 @@ aliases:
   - "difference that doesn't go away"
   - "sticky difference"
 layer: first-order
+role: concept
+canonical: true
 ---
 
 # Persistent Difference
-
-Tags: #concept
 
 ## Definition
 

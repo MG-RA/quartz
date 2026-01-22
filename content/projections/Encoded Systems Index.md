@@ -1,6 +1,15 @@
-# Encoded Systems - Index
+---
+role: projection
+type: encoded
+canonical: false
+facets:
+  - implicit-constraint
+  - anti-belief
+  - scale-fragile
+  - misuse-risk
+---
 
-Tags: #encoded #implicit-constraint #anti-belief #scale-fragile #misuse-risk
+# Encoded Systems - Index
 
 > [!note]
 > Scope: This index is navigational; it does not imply canon, completeness, or rankings.

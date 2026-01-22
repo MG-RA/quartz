@@ -1,6 +1,10 @@
-# Human History (Domain Application)
+---
+role: domain
+type: timeslice
+canonical: true
+---
 
-Tags: #domain
+# Human History (Domain Application)
 
 Use this note to apply the constraint-first diagnostic lens to "human history" **by selecting a slice** (a time window + region + mechanism). Human history as a whole is too large to diagnose without drifting into totalizing explanation.
 

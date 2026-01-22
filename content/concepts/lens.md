@@ -2,11 +2,11 @@
 aliases:
   - "interpretation filter"
 layer: meta-analytical
+role: concept
+canonical: true
 ---
 
 # Lens
-
-Tags: #concept
 
 ## Definition
 

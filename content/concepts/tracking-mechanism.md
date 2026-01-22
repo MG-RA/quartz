@@ -2,11 +2,12 @@
 aliases:
   - "tracking system"
 layer: accounting
+role: concept
+type: mechanism
+canonical: true
 ---
 
 # Tracking Mechanism
-
-Tags: #concept #mechanism
 
 ## Definition
 

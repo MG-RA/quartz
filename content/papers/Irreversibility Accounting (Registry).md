@@ -1,6 +1,12 @@
-# Irreversibility Accounting (Registry)
+---
+role: registry
+canonical: true
+facets:
+  - diagnostic
+  - meta
+---
 
-Tags: #meta #registry #diagnostic
+# Irreversibility Accounting (Registry)
 
 > [!note]
 > Orientation: Registry of dependency classes and boundaries. Canonical definitions live in `/concepts`; the paper is narrative orientation and operator context.

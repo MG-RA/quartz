@@ -2,11 +2,11 @@
 aliases:
   - "what remains available"
 layer: selector
+role: concept
+canonical: true
 ---
 
 # Admissibility
-
-Tags: #concept
 
 ## Definition
 

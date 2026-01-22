@@ -2,11 +2,11 @@
 aliases:
   - "restriction"
 layer: primitive
+role: concept
+canonical: true
 ---
 
 # Constraint
-
-Tags: #concept
 
 ## Definition
 

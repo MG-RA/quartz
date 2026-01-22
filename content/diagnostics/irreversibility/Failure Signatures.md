@@ -2,11 +2,12 @@
 depends_on:
   - "[[Irreversibility Accounting (Registry)#Boundaries (distinctions)]]"
   - "[[Failure Modes of the Irreversibility Lens]]"
+role: diagnostic
+type: signatures
+canonical: true
 ---
 
 # Irreversibility Lens - Failure Signatures
-
-Tags: #diagnostic
 
 > [!note]
 > Scope: These are failure signatures of analyses, not claims about the system under study.

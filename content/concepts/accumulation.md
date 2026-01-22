@@ -2,11 +2,11 @@
 aliases:
   - "piling up"
 layer: primitive
+role: concept
+canonical: true
 ---
 
 # Accumulation
-
-Tags: #concept
 
 ## Definition
 

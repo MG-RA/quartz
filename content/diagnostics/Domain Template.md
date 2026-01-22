@@ -1,6 +1,14 @@
-# Domain Template
+---
+role: diagnostic
+type: template
+canonical: true
+depends_on:
+  - "[[Irreversibility Accounting (Registry)#Operator (diagnostic sequence)]]"
+  - "[[Irreversibility Accounting (Registry)#Scope conditions]]"
+  - "[[Failure Modes of the Irreversibility Lens]]"
+---
 
-Tags: #diagnostic #template
+# Domain Template
 
 Apply the lens to a specific domain **without introducing new concepts**. Definitions come from `/concepts`. Domain facts must be tagged as (Assumption) unless directly provided.
 

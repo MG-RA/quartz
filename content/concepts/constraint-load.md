@@ -1,10 +1,10 @@
 ---
 layer: first-order
+role: concept
+canonical: true
 ---
 
 # Constraint Load
-
-Tags: #concept
 
 ## Definition
 

@@ -1,3 +1,9 @@
+---
+role: support
+type: index
+canonical: true
+---
+
 *A diagnostic framework for reasoning about systems under irreversible accumulation.*
 
 This vault contains a **constraint-first diagnostic lens** for analyzing systems that produce persistent effects while operating as if those effects were reversible.

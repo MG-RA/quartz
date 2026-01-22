@@ -1,6 +1,10 @@
-# 2010-2026 Software Supply Chains (Domain Application)
+---
+role: domain
+type: timeslice
+canonical: true
+---
 
-Tags: #domain
+# 2010-2026 Software Supply Chains (Domain Application)
 
 This is one possible slice for "software supply chains" relative to 2026-01-21: **2010-01-21 to 2026-01-21**.
 

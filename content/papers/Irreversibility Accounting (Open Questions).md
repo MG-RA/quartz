@@ -1,6 +1,13 @@
-# Irreversibility Accounting (Open Questions)
+---
+role: paper
+type: open-questions
+canonical: false
+facets:
+  - diagnostic
+  - meta
+---
 
-Tags: #diagnostic #meta
+# Irreversibility Accounting (Open Questions)
 
 > [!note]
 > Scope: Open questions; not commitments or requirements.

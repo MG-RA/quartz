@@ -3,11 +3,11 @@ aliases:
   - "cost of undoing"
   - "cost to undo"
 layer: primitive
+role: concept
+canonical: true
 ---
 
 # Erasure Cost
-
-Tags: #concept
 
 ## Definition
 

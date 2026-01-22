@@ -4,11 +4,11 @@ aliases:
   - "allowed changes"
   - "what changes count"
 layer: foundational
+role: concept
+canonical: true
 ---
 
 # Transformation Space
-
-Tags: #concept
 
 ## Definition
 

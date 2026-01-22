@@ -2,11 +2,11 @@
 aliases:
   - "staying power"
 layer: primitive
+role: concept
+canonical: true
 ---
 
 # Persistence
-
-Tags: #concept
 
 ## Definition
 

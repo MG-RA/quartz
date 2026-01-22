@@ -3,11 +3,12 @@ depends_on:
   - "[[Irreversibility Accounting (Registry)#Operator (diagnostic sequence)]]"
   - "[[Irreversibility Accounting (Registry)#Scope conditions]]"
   - "[[Failure Modes of the Irreversibility Lens]]"
+role: diagnostic
+type: toolset
+canonical: true
 ---
 
 # Irreversibility Lens (Diagnostics)
-
-Tags: #diagnostic #toolset
 
 > [!info]
 > Orientation: This lens references concept notes; it does not define or own them.

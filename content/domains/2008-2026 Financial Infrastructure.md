@@ -1,6 +1,10 @@
-# 2008-2026 Financial Infrastructure (Domain Application)
+---
+role: domain
+type: timeslice
+canonical: true
+---
 
-Tags: #domain
+# 2008-2026 Financial Infrastructure (Domain Application)
 
 This is one possible slice for "financial infrastructure post-2008" relative to 2026-01-21: **2008-01-21 to 2026-01-21**.
 

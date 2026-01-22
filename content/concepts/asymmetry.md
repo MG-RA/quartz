@@ -2,11 +2,11 @@
 aliases:
   - "imbalance"
 layer: primitive
+role: concept
+canonical: true
 ---
 
 # Asymmetry
-
-Tags: #concept
 
 ## Definition
 

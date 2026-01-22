@@ -2,11 +2,11 @@
 aliases:
   - "easy to cause, hard to undo"
 layer: first-order
+role: concept
+canonical: true
 ---
 
 # Erasure Asymmetry
-
-Tags: #concept
 
 ## Definition
 

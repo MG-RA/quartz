@@ -2,11 +2,11 @@
 aliases:
   - "who can undo it"
 layer: first-order
+role: concept
+canonical: true
 ---
 
 # Persistence Gradient
-
-Tags: #concept
 
 ## Definition
 

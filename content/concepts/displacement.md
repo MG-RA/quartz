@@ -2,11 +2,11 @@
 aliases:
   - "cost shifted elsewhere"
 layer: first-order
+role: concept
+canonical: true
 ---
 
 # Displacement
-
-Tags: #concept
 
 ## Definition
 

@@ -1,6 +1,15 @@
-# Stoicism
+---
+role: projection
+type: encoded
+canonical: false
+facets:
+  - implicit-constraint
+  - anti-belief
+  - scale-fragile
+  - misuse-risk
+---
 
-Tags: #encoded #implicit-constraint #anti-belief #scale-fragile #misuse-risk
+# Stoicism
 
 > [!note]
 > Non-claim: This is a structural re-reading, not doctrine or metaphysics.

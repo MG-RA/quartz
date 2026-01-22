@@ -2,11 +2,11 @@
 aliases:
   - "constraints piling up"
 layer: first-order
+role: concept
+canonical: true
 ---
 
 # Constraint Accumulation
-
-Tags: #concept
 
 ## Definition
 

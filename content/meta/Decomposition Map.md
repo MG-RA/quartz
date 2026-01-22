@@ -1,6 +1,13 @@
-# Decomposition Map and Structural Clarifications
+---
+role: support
+type: architecture
+canonical: true
+facets:
+  - meta
+  - diagnostic
+---
 
-Tags: #meta #architecture #diagnostic
+# Decomposition Map and Structural Clarifications
 
 ## Purpose
 

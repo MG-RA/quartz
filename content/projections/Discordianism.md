@@ -1,6 +1,15 @@
-# Discordianism
+---
+role: projection
+type: encoded
+canonical: false
+facets:
+  - implicit-constraint
+  - anti-belief
+  - rollback-friendly
+  - scale-fragile
+---
 
-Tags: #encoded #implicit-constraint #anti-belief #rollback-friendly #scale-fragile
+# Discordianism
 
 > [!note]
 > Non-claim: This is a structural re-reading, not doctrine or metaphysics.

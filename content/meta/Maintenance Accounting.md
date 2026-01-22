@@ -1,3 +1,11 @@
+---
+role: support
+type: maintenance-accounting
+canonical: true
+facets:
+  - meta
+---
+
 ## Purpose
 
 This document defines how **structural maintenance** is detected and interpreted within the Irreversibility Accounting vault.

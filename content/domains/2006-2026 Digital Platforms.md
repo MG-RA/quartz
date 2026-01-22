@@ -1,6 +1,10 @@
-# 2006-2026 Digital Platforms (Domain Application)
+---
+role: domain
+type: timeslice
+canonical: true
+---
 
-Tags: #domain
+# 2006-2026 Digital Platforms (Domain Application)
 
 This is one possible slice for "the last 20 years" relative to 2026-01-21: **2006-01-21 to 2026-01-21**.
 

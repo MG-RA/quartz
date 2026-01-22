@@ -4,6 +4,11 @@ depends_on:
   - "[[Irreversibility Accounting (Registry)#Operator (diagnostic sequence)]]"
   - "[[Irreversibility Accounting (Registry)#Scope conditions]]"
   - "[[Irreversibility Accounting (Registry)#Boundaries (distinctions)]]"
+role: paper
+type: source
+canonical: false
+facets:
+  - diagnostic
 ---
 
 # Irreversibility Accounting (Paper)
@@ -12,8 +17,6 @@ depends_on:
 **Type:** Diagnostic lens  
 **Core question:** What [[persistent-difference|persistent differences]] is this system producing, and who is carrying their [[erasure-cost|erasure costs]]?  
 **Core claim:** Systems that produce persistent differences without [[tracking-mechanism|tracking mechanisms]] accumulate [[constraint-load|constraint load]] until they encounter [[collapse-surface|collapse surfaces]].
-
-Tags: #diagnostic #paper
 
 > [!note]
 > Scope: Orientation and narrative only. Canonical definitions live in `/concepts`. This paper does not introduce new primitives, metrics, or prescriptions.

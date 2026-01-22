@@ -3,11 +3,12 @@ aliases:
   - "where options disappear"
   - "option cutoff"
 layer: accounting
+role: concept
+type: failure-state
+canonical: true
 ---
 
 # Collapse Surface
-
-Tags: #concept #failure-state
 
 ## Definition
 

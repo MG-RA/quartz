@@ -2,11 +2,11 @@
 aliases:
   - "cost paid locally"
 layer: first-order
+role: concept
+canonical: true
 ---
 
 # Absorption
-
-Tags: #concept
 
 ## Definition
 

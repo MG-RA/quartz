@@ -2,11 +2,15 @@
 depends_on:
   - "[[Irreversibility Accounting (Registry)#Dependency classes (by layer)]]"
   - "[[Irreversibility Accounting (Registry)#Boundaries (distinctions)]]"
+role: support
+type: template
+canonical: false
+facets:
+  - encoded
+  - anti-belief
 ---
 
 # {{System Name}}
-
-Tags: #template #encoded #anti-belief
 
 > [!note]
 > Non-claim: This template is for structural re-reading, not doctrine or metaphysics.
