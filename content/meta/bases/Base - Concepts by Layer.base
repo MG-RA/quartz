@@ -1,0 +1,50 @@
+filters:
+  and:
+    - file.ext == "md"
+    - or:
+        - file.inFolder("concepts")
+        - file.inFolder("content/concepts")
+formulas:
+  concept: link(file.path, file.name)
+  layer: note.layer
+  depends_on: file.links
+  dependency_count: file.links.length
+properties:
+  formula.concept:
+    displayName: concept
+  formula.layer:
+    displayName: layer
+  formula.depends_on:
+    displayName: depends_on
+  formula.dependency_count:
+    displayName: links
+views:
+  - type: table
+    name: Concept topology
+    groupBy:
+      property: formula.layer
+      direction: ASC
+    order:
+      - formula.concept
+      - formula.layer
+      - formula.depends_on
+    sort:
+      - property: formula.concept
+        direction: ASC
+    summaries:
+      formula.concept: Filled
+  - type: table
+    name: Dependency audit
+    order:
+      - formula.concept
+      - formula.dependency_count
+      - formula.depends_on
+    sort:
+      - property: formula.dependency_count
+        direction: DESC
+      - property: formula.concept
+        direction: DESC
+      - property: formula.depends_on
+        direction: ASC
+    columnSize:
+      formula.dependency_count: 85

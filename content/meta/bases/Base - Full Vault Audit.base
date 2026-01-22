@@ -1,0 +1,57 @@
+filters:
+  and:
+    - file.ext == "md"
+    - or:
+        - file.inFolder("concepts")
+        - file.inFolder("content/concepts")
+        - file.inFolder("domains")
+        - file.inFolder("content/domains")
+        - file.inFolder("diagnostics")
+        - file.inFolder("content/diagnostics")
+        - file.inFolder("papers")
+        - file.inFolder("content/papers")
+        - file.inFolder("projections")
+        - file.inFolder("content/projections")
+formulas:
+  note: link(file.path, file.name)
+  folder: file.folder
+  modified: file.mtime
+  links: file.links.length
+  has_tags: if(file.tags.length > 0, "yes", "no")
+properties:
+  formula.note:
+    displayName: note
+  formula.folder:
+    displayName: location
+  formula.modified:
+    displayName: modified
+  formula.links:
+    displayName: outlinks
+  formula.has_tags:
+    displayName: tagged
+views:
+  - type: table
+    name: Full vault audit
+    order:
+      - formula.note
+      - formula.folder
+      - formula.modified
+      - formula.links
+      - formula.has_tags
+    sort:
+      - property: formula.modified
+        direction: DESC
+    summaries:
+      formula.links: Sum
+      formula.note: Filled
+  - type: table
+    name: By location
+    groupBy:
+      property: formula.folder
+      direction: ASC
+    order:
+      - formula.note
+      - formula.modified
+      - formula.links
+    summaries:
+      formula.note: Filled

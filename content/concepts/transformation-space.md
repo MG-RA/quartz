@@ -3,13 +3,12 @@ aliases:
   - "space of possible changes"
   - "allowed changes"
   - "what changes count"
+layer: foundational
 ---
 
 # Transformation Space
 
 Tags: #concept
-
-Layer: foundational (non-primitive)
 
 ## Definition
 
@@ -23,7 +22,13 @@ Transformation space is a **chosen analytic scope**, not a discovered property o
 By making this choice explicit, the diagnostic can be applied across physical, computational, institutional, and symbolic domains without relying on substrate-specific definitions.
 
 ## Structural dependencies
-None (primitive).
+None (axiomatic). Transformation space is the scope boundary that makes all other concepts auditable.
+
+## Grounds
+
+- [[difference]] — detectability is relative to transformation space
+- [[persistence]] — re-identification requires a declared transformation space
+- [[persistent-difference]] — persistence claims are only auditable given a transformation space
 
 ## What this is NOT
 

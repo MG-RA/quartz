@@ -1,3 +1,8 @@
+---
+depends_on:
+  - "[[Irreversibility Accounting (Registry)#Dependency classes (by layer)]]"
+---
+
 # Concept Drift Exposure Map
 
 Tags: #diagnostic #meta
@@ -232,7 +237,7 @@ This document records drift classification for high-centrality concepts across t
 
 The canonical definition explicitly states erasure-cost is "Not price (prices are assigned; erasure cost exists whether tracked or not)."
 
-**Location:** [Irreversibility-Accounting-MOC.md:90](../papers/Irreversibility-Accounting-MOC.md#L90)
+**Location:** [Irreversibility Accounting (Registry).md:90](../papers/Irreversibility%20Accounting%20(Registry).md#L90)
 **Current text:** "The price of removal; operational test for persistence"
 **Issue:** Metaphorical use of "price" risks reification (Failure Mode #1)
 **Classification:** softened / near-violation
@@ -242,8 +247,8 @@ The canonical definition explicitly states erasure-cost is "Not price (prices ar
 The canonical definition of persistent-difference explicitly states: "Not irreversibility itself (persistence is a condition; irreversibility describes cost asymmetry over transitions)."
 
 **Locations:**
-- [Irreversibility-Accounting-MOC.md:5](../papers/Irreversibility-Accounting-MOC.md#L5): "What irreversible differences is this system producing"
-- [Irreversibility-Accounting-MOC.md:174](../papers/Irreversibility-Accounting-MOC.md#L174): "Irreversible effects accumulate"
+- [Irreversibility Accounting (Registry).md:5](../papers/Irreversibility%20Accounting%20(Registry).md#L5): "What irreversible differences is this system producing"
+- [Irreversibility Accounting (Registry).md:174](../papers/Irreversibility%20Accounting%20(Registry).md#L174): "Irreversible effects accumulate"
 
 **Issue:** Conflation loses the distinction that persistence is substrate-level, irreversibility is the composed property (persistence + asymmetry)
 **Classification:** softened

@@ -1,13 +1,12 @@
 ---
 aliases:
   - "cost paid locally"
+layer: first-order
 ---
 
 # Absorption
 
 Tags: #concept
-
-Layer: first-order
 
 ## Definition
 

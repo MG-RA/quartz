@@ -1,13 +1,12 @@
 ---
 aliases:
   - "restriction"
+layer: primitive
 ---
 
 # Constraint
 
 Tags: #concept
-
-Layer: primitive
 
 ## Definition
 

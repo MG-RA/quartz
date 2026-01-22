@@ -1,13 +1,12 @@
 ---
 aliases:
   - "piling up"
+layer: primitive
 ---
 
 # Accumulation
 
 Tags: #concept
-
-Layer: primitive
 
 ## Definition
 

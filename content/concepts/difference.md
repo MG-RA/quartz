@@ -1,13 +1,12 @@
 ---
 aliases:
   - "distinction"
+layer: primitive
 ---
 
 # Difference
 
 Tags: #concept
-
-Layer: primitive → [[transformation-space]] (foundational)
 
 ## Definition
 

@@ -1,13 +1,12 @@
 ---
 aliases:
   - "what remains available"
+layer: selector
 ---
 
 # Admissibility
 
 Tags: #concept
-
-Layer: selector
 
 ## Definition
 

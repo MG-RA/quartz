@@ -1,13 +1,12 @@
 ---
 aliases:
   - "no room left to move"
+layer: failure-state
 ---
 
 # Saturation
 
 Tags: #concept #failure-state
-
-Layer: failure-state → [[admissibility]] (selector)
 
 ## Definition
 

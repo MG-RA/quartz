@@ -1,13 +1,12 @@
 ---
 aliases:
   - "who can undo it"
+layer: first-order
 ---
 
 # Persistence Gradient
 
 Tags: #concept
-
-Layer: first-order
 
 ## Definition
 

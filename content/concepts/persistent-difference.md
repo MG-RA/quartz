@@ -2,13 +2,12 @@
 aliases:
   - "difference that doesn't go away"
   - "sticky difference"
+layer: first-order
 ---
 
 # Persistent Difference
 
 Tags: #concept
-
-Layer: first-order
 
 ## Definition
 

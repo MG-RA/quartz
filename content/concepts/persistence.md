@@ -1,13 +1,12 @@
 ---
 aliases:
   - "staying power"
+layer: primitive
 ---
 
 # Persistence
 
 Tags: #concept
-
-Layer: primitive → [[transformation-space]] (foundational)
 
 ## Definition
 

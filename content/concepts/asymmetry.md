@@ -1,13 +1,12 @@
 ---
 aliases:
   - "imbalance"
+layer: primitive
 ---
 
 # Asymmetry
 
 Tags: #concept
-
-Layer: primitive
 
 ## Definition
 

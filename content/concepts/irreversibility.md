@@ -1,8 +1,10 @@
+---
+layer: first-order
+---
+
 # Irreversibility
 
 Tags: #concept
-
-Layer: first-order → [[transformation-space]] (foundational)
 
 ## Definition
 

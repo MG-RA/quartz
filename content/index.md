@@ -13,10 +13,10 @@ It constrains explanations by tracking what persists, where costs go, and which 
 There is **no single correct order**.  
 Choose a path based on intent:
 
-- If you want the **core argument** → start with the papers  
-- If you want the **conceptual vocabulary** → browse the concepts  
-- If you want the **diagnostic tool** → go to diagnostics  
-- If you want **limits and guardrails** → read the meta notes  
+- If you want the **core argument** -> start with the papers
+- If you want the **conceptual vocabulary** -> browse the concepts
+- If you want the **diagnostic tool** -> go to diagnostics
+- If you want **limits and guardrails** -> read the meta notes
 
 Links, not sequence, carry meaning.
 
@@ -36,59 +36,12 @@ These are *compiled views* over the concept graph.
   - Depends on Irreversibility Accounting
 
 ---
-## Core Concepts (Lexicon)
+## Concept Vocabulary
 
-These notes define the **minimal vocabulary** of the framework.
-They are atomic, non-normative, and reusable across domains.
+Canonical concept definitions live in `/concepts`.
 
-See [[Decomposition Map]] for the full structural hierarchy.
-
-### Foundational (Non-Primitive)
-
-Foundational concepts have no dependencies but are not primitives because they define the analysis frame rather than the object of analysis.
-
-- [[transformation-space]]
-
-### Primitives
-
-- [[difference]]
-- [[persistence]]
-- [[erasure-cost]]
-- [[erasure-asymmetry]]
-- [[asymmetry]]
-- [[constraint]]
-- [[accumulation]]
-
-### First-Order Composites
-
-- [[persistent-difference]]
-- [[irreversibility]]
-- [[displacement]]
-- [[absorption]]
-- [[propagation]]
-- [[constraint-load]]
-- [[constraint-accumulation]]
-- [[persistence-gradient]]
-
-### Accounting-Level
-
-- [[tracking-mechanism]]
-- [[accounting-failure]]
-- [[collapse-surface]]
-
-### Selector
-
-- [[admissibility]]
-
-### Failure States
-
-- [[brittleness]]
-- [[saturation]]
-
-### Mechanisms & Meta-Analytical
-
-- [[rollback]]
-- [[lens]]
+- Layer bundles / dependency classes: [[Irreversibility Accounting (Registry)#Dependency classes (by layer)]]
+- Structural hierarchy: [[Decomposition Map]]
 
 ---
 ## Diagnostics
@@ -96,6 +49,7 @@ Foundational concepts have no dependencies but are not primitives because they d
 These notes define **how to use the lens** without turning it into doctrine.
 
 - [[Failure Modes of the Irreversibility Lens]]
+- [[Irreversibility Accounting (Registry)#Operator (diagnostic sequence)]]
 - *(additional diagnostic checklists and lenses live here)*
 
 Diagnostics ask questions.  
@@ -106,7 +60,7 @@ They do not propose solutions.
 
 These notes constrain misuse, overreach, and self-sealing interpretations.
 
-- [[Decomposition Map]] — Structural clarification of primitive vs composed concepts
+- [[Decomposition Map]] - Structural clarification of primitive vs composed concepts
 - *(Non-claims, limits, scope clarifications)*
 
 If the framework starts to feel obvious, total, or morally loaded, return here.
@@ -123,7 +77,7 @@ They do not introduce new concepts.
 - [[2010-2026 Software Supply Chains]]
 - [[2012-2026 AI Systems]]
 
-If a domain note invents vocabulary, extract it to `/concepts`.
+When a domain note invents vocabulary, it indicates a candidate extraction to `/concepts`.
 
 ---
 
@@ -137,10 +91,10 @@ This vault is structured for **constrained reasoning**:
 - Papers are projections over the graph
 
 Effective agent prompts include:
-- “Reason only using `/concepts`”
-- “Audit this domain note using `/diagnostics`”
-- “Check for accounting failure using defined concepts only”
-- “Do not introduce new primitives”
+- "Reason only using `/concepts`"
+- "Audit this domain note using `/diagnostics`"
+- "Check for accounting failure using defined concepts only"
+- "Do not introduce new primitives"
 
 [[Prompting Guide]]
 
@@ -150,11 +104,11 @@ This structure minimizes hallucination by **removing ambiguity at the ontology l
 
 ## Design Principles (Explicit)
 
-- Links over hierarchy  
-- Few primitives, many relations  
-- Diagnostics before prescriptions  
-- Scope before scale  
-- Accounting before optimization  
+- Links over hierarchy
+- Few primitives, many relations
+- Diagnostics before prescriptions
+- Scope before scale
+- Accounting before optimization
 
 ---
 ## Status

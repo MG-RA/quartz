@@ -1,0 +1,39 @@
+filters:
+  and:
+    - file.ext == "md"
+    - or:
+        - file.inFolder("projections")
+        - file.inFolder("content/projections")
+    - file.name != "00_README"
+    - file.name != "Encoded Systems Index"
+formulas:
+  projection: link(file.path, file.name)
+  tags: file.tags
+  has_failure_mode_link: if(file.hasLink("Failure Modes of the Irreversibility Lens"), "yes", "no")
+  has_rollback_link: if(file.hasLink("rollback"), "yes", "no")
+  has_lens_link: if(file.hasLink("lens"), "yes", "no")
+  link_count: file.links.length
+properties:
+  formula.projection:
+    displayName: projection
+  formula.tags:
+    displayName: tags
+  formula.has_failure_mode_link:
+    displayName: failure_modes
+  formula.has_rollback_link:
+    displayName: rollback
+  formula.has_lens_link:
+    displayName: lens
+  formula.link_count:
+    displayName: links
+views:
+  - type: table
+    name: Projections
+    order:
+      - formula.projection
+      - formula.tags
+      - formula.has_failure_mode_link
+      - formula.has_rollback_link
+      - formula.has_lens_link
+    summaries:
+      formula.projection: Filled

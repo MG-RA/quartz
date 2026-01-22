@@ -1,0 +1,30 @@
+filters:
+  and:
+    - file.ext == "md"
+    - or:
+        - file.inFolder("papers")
+        - file.inFolder("content/papers")
+formulas:
+  paper: link(file.path, file.name)
+  concepts_linked: file.links
+  link_count: file.links.length
+properties:
+  formula.paper:
+    displayName: paper
+  formula.concepts_linked:
+    displayName: concepts_linked
+  formula.link_count:
+    displayName: links
+views:
+  - type: table
+    name: Papers
+    order:
+      - formula.paper
+      - formula.link_count
+      - formula.concepts_linked
+    sort:
+      - property: formula.link_count
+        direction: DESC
+    summaries:
+      formula.paper: Filled
+      formula.link_count: Sum

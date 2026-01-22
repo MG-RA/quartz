@@ -1,13 +1,12 @@
 ---
 aliases:
   - "cost shifted elsewhere"
+layer: first-order
 ---
 
 # Displacement
 
 Tags: #concept
-
-Layer: first-order
 
 ## Definition
 

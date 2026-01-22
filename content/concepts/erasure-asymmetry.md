@@ -1,13 +1,12 @@
 ---
 aliases:
   - "easy to cause, hard to undo"
+layer: first-order
 ---
 
 # Erasure Asymmetry
 
 Tags: #concept
-
-Layer: first-order
 
 ## Definition
 

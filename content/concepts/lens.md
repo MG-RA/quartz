@@ -1,13 +1,12 @@
 ---
 aliases:
   - "interpretation filter"
+layer: meta-analytical
 ---
 
 # Lens
 
 Tags: #concept
-
-Layer: meta-analytical
 
 ## Definition
 

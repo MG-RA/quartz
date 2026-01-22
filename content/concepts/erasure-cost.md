@@ -2,13 +2,12 @@
 aliases:
   - "cost of undoing"
   - "cost to undo"
+layer: primitive
 ---
 
 # Erasure Cost
 
 Tags: #concept
-
-Layer: primitive
 
 ## Definition
 

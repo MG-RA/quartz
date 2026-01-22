@@ -1,0 +1,36 @@
+filters:
+  and:
+    - file.ext == "md"
+    - or:
+        - file.inFolder("diagnostics")
+        - file.inFolder("content/diagnostics")
+formulas:
+  diagnostic: link(file.path, file.name)
+  folder: file.folder
+  has_depends_on: if(note.depends_on, "yes", "no")
+  tags: file.tags
+  link_count: file.links.length
+properties:
+  formula.diagnostic:
+    displayName: diagnostic
+  formula.folder:
+    displayName: location
+  formula.has_depends_on:
+    displayName: has_dependencies
+  formula.tags:
+    displayName: tags
+  formula.link_count:
+    displayName: links
+views:
+  - type: table
+    name: Diagnostics inventory
+    order:
+      - formula.diagnostic
+      - formula.folder
+      - formula.tags
+      - formula.link_count
+    sort:
+      - property: formula.folder
+        direction: ASC
+    summaries:
+      formula.diagnostic: Filled

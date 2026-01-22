@@ -2,13 +2,12 @@
 aliases:
   - "missing tracking"
   - "untracked costs"
+layer: accounting
 ---
 
 # Accounting Failure
 
 Tags: #concept
-
-Layer: accounting
 
 ## Definition
 

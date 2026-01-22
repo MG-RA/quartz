@@ -1,13 +1,12 @@
 ---
 aliases:
   - fragility
+layer: failure-state
 ---
 
 # Brittleness
 
 Tags: #concept #failure-state
-
-Layer: failure-state → [[admissibility]] (selector)
 
 ## Definition
 

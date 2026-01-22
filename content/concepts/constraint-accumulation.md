@@ -1,13 +1,12 @@
 ---
 aliases:
   - "constraints piling up"
+layer: first-order
 ---
 
 # Constraint Accumulation
 
 Tags: #concept
-
-Layer: first-order
 
 ## Definition
 

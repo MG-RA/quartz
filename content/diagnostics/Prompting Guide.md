@@ -1,3 +1,10 @@
+---
+depends_on:
+  - "[[Irreversibility Accounting (Registry)#Dependency classes (by layer)]]"
+  - "[[Irreversibility Accounting (Registry)#Boundaries (distinctions)]]"
+  - "[[Failure Modes of the Irreversibility Lens]]"
+---
+
 # Prompting Guide
 
 Tags: #diagnostic #meta
@@ -23,7 +30,7 @@ They may summarize, cross-link, and apply concepts, but must not introduce new p
 
 If you are an AI agent reading this vault for the first time:
 
-1. Read: `INDEX.md` (orientation)
+1. Read: `index.md` (orientation)
 2. Load: `Prompting Guide.md` (this file)
 3. Load: `Failure Modes of the Irreversibility Lens.md`
 4. Default mode: "Concept-locked" boilerplate
@@ -64,8 +71,8 @@ Use for: applying the framework to specific systems
 
 When a concept depends on others, load dependencies first:
 
-- `transformation-space` → `persistent-difference` → `erasure-cost` → `displacement`
-- `constraint-load` → `constraint-accumulation` → `collapse-surface`
+- `transformation-space` -> `persistent-difference` -> `erasure-cost` -> `displacement`
+- `constraint-load` -> `constraint-accumulation` -> `collapse-surface`
 
 ### Layer-aware loading
 
@@ -111,18 +118,18 @@ Use one of these context scopes:
 **Goal:** verify a note uses concepts correctly.
 
 Prompt:
-- “Using only `/concepts`, check whether this note uses [[persistent-difference]], [[erasure-cost]], and [[displacement]] correctly. List any mismatches and propose minimal edits. Do not add new concepts.”
+- "Using only `/concepts`, check whether this note uses [[persistent-difference]], [[erasure-cost]], and [[displacement]] correctly. List any mismatches and propose minimal edits. Do not add new concepts."
 
 Output format:
-- Misuse → why → minimal correction
+- Misuse -> why -> minimal correction
 
 ---
 
 ### 2) Link integrity and missing dependencies
-**Goal:** find unl inked concept mentions and missing prerequisites.
+**Goal:** find unlinked concept mentions and missing prerequisites.
 
 Prompt:
-- “Scan this note and identify terms that match existing concepts but are unlinked. Suggest links. If the note uses a concept that requires prerequisites (e.g. persistence without transformation space), flag it.”
+- "Scan this note and identify terms that match existing concepts but are unlinked. Suggest links. If the note uses a concept that requires prerequisites (e.g. persistence without transformation space), flag it."
 
 ---
 
@@ -130,7 +137,7 @@ Prompt:
 **Goal:** catch prescription creep.
 
 Prompt:
-- “Audit this text for normativity or prescriptions. Replace prescriptive sentences with diagnostic equivalents, preserving meaning. If value judgments are unavoidable, mark them explicitly as values.”
+- "Audit this text for normativity or prescriptions. Replace prescriptive sentences with diagnostic equivalents, preserving meaning. If value judgments are unavoidable, mark them explicitly as values."
 
 ---
 
@@ -138,7 +145,7 @@ Prompt:
 **Goal:** prevent self-sealing explanations.
 
 Prompt:
-- “Using [[Failure Modes of the Irreversibility Lens]], identify where this analysis might be over-applied. Provide 3 plausible alternative interpretations that do not assume accounting failure.”
+- "Using [[Failure Modes of the Irreversibility Lens]], identify where this analysis might be over-applied. Provide 3 plausible alternative interpretations that do not assume accounting failure."
 
 ---
 
@@ -146,16 +153,16 @@ Prompt:
 **Goal:** apply the framework without improvising.
 
 Prompt:
-- “Fill [[Domain Template]] using only the existing concept notes. Any claim not supported by the vault should be labeled as an assumption.”
+- "Fill [[Domain Template]] using only the existing concept notes. Any claim not supported by the vault should be labeled as an assumption."
 
 ---
 
 ## Red-flag prompt patterns (avoid)
 
-- “Extend the framework with new concepts” (unless you are intentionally doing extraction work)
-- “Prove the framework explains X” (invites self-sealing)
-- “Optimize constraint load” (invites metric reification and prescription drift)
-- “Translate everything into a single model” (invites totalizing explanation)
+- "Extend the framework with new concepts" (unless you are intentionally doing extraction work)
+- "Prove the framework explains X" (invites self-sealing)
+- "Optimize constraint load" (invites metric reification and prescription drift)
+- "Translate everything into a single model" (invites totalizing explanation)
 
 ---
 
@@ -168,7 +175,7 @@ When an agent answers, require:
   - (Definition) derived from concept notes
   - (Inference) reasonable inference
   - (Assumption) requires external facts
-- **No new primitives:** if needed, propose candidates in a separate section titled “Possible extractions”
+- **No new primitives:** if needed, propose candidates in a separate section titled "Possible extractions"
 
 ---
 
@@ -186,7 +193,7 @@ Each boilerplate includes output discipline requirements.
 
 > You are auditing for scope, misuse, and false positives. Do not propose actions or solutions.
 >
-> **Output format:** List findings as: Issue → Evidence → Correction. Reference failure modes by number.
+> **Output format:** List findings as: Issue -> Evidence -> Correction. Reference failure modes by number.
 
 ### "Application mode" boilerplate
 

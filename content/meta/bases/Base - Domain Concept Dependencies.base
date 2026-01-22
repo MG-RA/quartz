@@ -1,0 +1,47 @@
+filters:
+  and:
+    - file.ext == "md"
+    - or:
+        - file.inFolder("domains")
+        - file.inFolder("content/domains")
+formulas:
+  domain_note: link(file.path, file.name)
+  concepts_referenced: file.links
+  transformation_space_declared: if(file.hasLink("transformation-space"), "yes", "no")
+  erasure_cost_declared: if(file.hasLink("erasure-cost"), "yes", "no")
+  persistence_declared: if(file.hasLink("persistence"), "yes", "no")
+  constraint_load_declared: if(file.hasLink("constraint-load"), "yes", "no")
+  link_count: file.links.length
+properties:
+  formula.domain_note:
+    displayName: domain_note
+  formula.concepts_referenced:
+    displayName: concepts_referenced
+  formula.transformation_space_declared:
+    displayName: transformation_space
+  formula.erasure_cost_declared:
+    displayName: erasure_cost
+  formula.persistence_declared:
+    displayName: persistence
+  formula.constraint_load_declared:
+    displayName: constraint_load
+  formula.link_count:
+    displayName: links
+views:
+  - type: table
+    name: Domain to concept dependencies
+    order:
+      - formula.domain_note
+      - formula.link_count
+      - formula.concepts_referenced
+    sort:
+      - property: formula.link_count
+        direction: DESC
+  - type: table
+    name: Primitive coverage audit
+    order:
+      - formula.domain_note
+      - formula.transformation_space_declared
+      - formula.erasure_cost_declared
+      - formula.persistence_declared
+      - formula.constraint_load_declared

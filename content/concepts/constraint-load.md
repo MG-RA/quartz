@@ -1,8 +1,10 @@
+---
+layer: first-order
+---
+
 # Constraint Load
 
 Tags: #concept
-
-Layer: first-order
 
 ## Definition
 

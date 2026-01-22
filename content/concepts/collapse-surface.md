@@ -2,13 +2,12 @@
 aliases:
   - "where options disappear"
   - "option cutoff"
+layer: accounting
 ---
 
 # Collapse Surface
 
 Tags: #concept #failure-state
-
-Layer: accounting → [[admissibility]] (selector)
 
 ## Definition
 

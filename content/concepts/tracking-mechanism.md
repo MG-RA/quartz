@@ -1,13 +1,12 @@
 ---
 aliases:
   - "tracking system"
+layer: accounting
 ---
 
 # Tracking Mechanism
 
 Tags: #concept #mechanism
-
-Layer: accounting
 
 ## Definition
 

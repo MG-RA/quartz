@@ -1,13 +1,12 @@
 ---
 aliases:
   - "spillover"
+layer: first-order
 ---
 
 # Propagation
 
 Tags: #concept
-
-Layer: first-order
 
 ## Definition
 
