@@ -8,7 +8,12 @@ Layer: foundational (non-primitive)
 
 **Transformation space** is the set of allowed operations under which the re-identification of a pattern is evaluated. Persistence is not absolute; it is always **relative to a specified transformation space**. A pattern may persist under one set of permitted transformations and dissolve under another, depending on what changes are considered admissible.
 
-Transformation space is a **chosen analytic scope**, not a discovered property of the world. By making this choice explicit, the diagnostic can be applied across physical, computational, institutional, and symbolic domains without relying on substrate-specific definitions.
+Transformation space is a **chosen analytic scope**, not a discovered property of the world.
+
+> [!note]
+> Interpretation constraint: Transformation space is chosen, not discovered.
+
+By making this choice explicit, the diagnostic can be applied across physical, computational, institutional, and symbolic domains without relying on substrate-specific definitions.
 
 ## Structural dependencies
 None (primitive).

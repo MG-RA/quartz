@@ -4,9 +4,15 @@ Tags: #diagnostic #meta
 
 This note defines prompt patterns for using AI/code agents with this vault while preserving scope, avoiding invention of new primitives, and preventing self-sealing explanations.
 
+> [!info]
+> Orientation: Prompt patterns for using AI/code agents with this vault.
+
 ---
 
 ## Core rule
+
+> [!note]
+> Constraint: `/concepts` are the source of truth for definitions; do not introduce new primitives.
 
 Agents must treat `/concepts` as the source of truth for definitions.
 They may summarize, cross-link, and apply concepts, but must not introduce new primitives without explicit extraction.

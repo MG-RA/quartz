@@ -14,6 +14,9 @@ Its role is to:
 
 This is not a new theory or extension of scope. It is a **reverse-engineering document**: a record of what the work already assumes once stripped of metaphor and narrative compression.
 
+> [!note]
+> Non-claim: Not a new theory or scope extension; reverse-engineering only.
+
 ---
 
 ## 1. Core Clarification

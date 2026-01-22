@@ -4,6 +4,9 @@ Tags: #domain
 
 This is one possible slice for "financial infrastructure post-2008" relative to 2026-01-21: **2008-01-21 to 2026-01-21**.
 
+> [!note]
+> Scope: Domain application; domain statements are tagged (Assumption)/(Inference) and do not introduce new concepts.
+
 ---
 
 ## 0) Scope and boundary

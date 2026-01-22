@@ -4,6 +4,9 @@ Tags: #diagnostic #meta
 
 This note records the primary ways the irreversibility diagnostic lens can mislead, overreach, or harden into error. These are **structural failure modes of the lens itself**, not mistakes by its users. Maintaining this list is part of the lens's own irreversibility accounting.
 
+> [!note]
+> Scope: These are failure modes of the lens itself, not user error.
+
 ---
 
 ## Usage
@@ -105,6 +108,9 @@ Over-adherence to the lens can itself reduce interpretive flexibility, making ot
 ### 10. Failure to apply the lens to itself
 
 The most serious failure mode is assuming the lens already accounts for its own limitations. As the framework gains clarity and adoption, it accumulates interpretive power that can go untracked.
+
+> [!warning]
+> Misuse risk: assuming the lens already accounts for its own limitations.
 
 **Symptom:** declining attention to scope, limits, and misuses of the lens.
 **Correction:** periodically audit the lens using its own questions:

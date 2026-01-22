@@ -4,6 +4,9 @@ Tags: #domain
 
 This is one possible slice for "modern AI" relative to 2026-01-21: **2012-01-21 to 2026-01-21**.
 
+> [!note]
+> Scope: Domain application; domain statements are tagged (Assumption)/(Inference) and do not introduce new concepts.
+
 ---
 
 ## 0) Scope and boundary
@@ -80,4 +83,3 @@ Using [[Failure Modes of the Irreversibility Lens]]:
 - (Inference) Alternative interpretation 1 (not accounting failure): observed lock-in reflects straightforward comparative advantage (cost/performance) and tooling convenience, not hidden displacement.
 - (Inference) Alternative interpretation 2 (not accounting failure): instability reflects rapid research progress and competitive dynamics, not constraint accumulation.
 - (Inference) Alternative interpretation 3 (not accounting failure): major constraints come from exogenous law, geopolitics, and organizational risk tolerance, not AI-produced persistence.
-

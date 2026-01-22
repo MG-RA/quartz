@@ -23,4 +23,9 @@ Displacement is the primary mechanism through which accounting failures compound
 
 ## Structural role
 
-Displacement constrains claims of _local resolution_. Where displacement occurs, "solved here" implies "borne elsewhere." The diagnostic task is not to assign fault, but to identify **who or what is now carrying the erasure cost, and how that burden constrains future options in its new location**.
+Displacement constrains claims of _local resolution_. Where displacement occurs, "solved here" implies "borne elsewhere."
+
+> [!note]
+> Interpretation constraint: The diagnostic task is not to assign fault.
+
+The diagnostic task is to identify **who or what is now carrying the erasure cost, and how that burden constrains future options in its new location**.

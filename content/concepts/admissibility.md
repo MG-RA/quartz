@@ -10,6 +10,9 @@ Layer: selector
 
 Admissibility operates at the interface between structure and action. It does not rank options by desirability or predict which will be chosen. It identifies which options remain structurally coherent—and which have been foreclosed by accumulated constraints.
 
+> [!note]
+> Non-claim: Admissibility does not rank options by desirability or predict which will be chosen.
+
 ## Structural dependencies
 - [[constraint]]
 - [[constraint-load]]

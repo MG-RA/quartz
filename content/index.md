@@ -2,7 +2,9 @@
 
 This vault contains a **constraint-first diagnostic lens** for analyzing systems that produce persistent effects while operating as if those effects were reversible.
 
-The framework is **not a theory**, **not normative**, and **not predictive**.  
+> [!note]
+> Non-claim: The framework is not a theory, not normative, and not predictive.
+
 It constrains explanations by tracking what persists, where costs go, and which options disappear over time.
 
 ---

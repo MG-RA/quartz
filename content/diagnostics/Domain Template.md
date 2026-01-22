@@ -4,6 +4,9 @@ Tags: #diagnostic #template
 
 Apply the lens to a specific domain **without introducing new concepts**. Definitions come from `/concepts`. Domain facts must be tagged as (Assumption) unless directly provided.
 
+> [!note]
+> Diagnosis only: this template constrains interpretation; it does not recommend actions or outcomes.
+
 ---
 
 ## 0) Scope and boundary
@@ -53,6 +56,9 @@ For each persistent difference:
 Where might there be [[accounting-failure]] (i.e., persistent differences produced without adequate tracking)?
 
 ## 7) Misuse / false-positive audit
+
+> [!warning]
+> Misuse risk: defaulting to accounting failure without testing plausible alternatives (false positives).
 
 Using [[Failure Modes of the Irreversibility Lens]]:
 - Provide 2–3 plausible alternative interpretations that *do not* assume accounting failure. (Inference)

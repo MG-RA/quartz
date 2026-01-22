@@ -5,6 +5,9 @@ This document defines how **structural maintenance** is detected and interpreted
 It does not prescribe maintenance actions.
 It defines **what counts as evidence** that maintenance has occurred.
 
+> [!note]
+> Scope: Defines evidence of maintenance; it does not prescribe maintenance actions.
+
 ---
 
 ## Structural Definition (Source of Truth)

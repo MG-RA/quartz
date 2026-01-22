@@ -14,6 +14,9 @@ The lens is:
 - A constraint on explanations, not a generator of them  
 - Pre-formal (no metrics supplied)
 
+> [!note]
+> Scope: Diagnostic lens only; not normative, and no metrics are supplied.
+
 ---
 
 ## §1. The Recurrent Failure Pattern
@@ -103,6 +106,9 @@ Not all differences are equivalent. [[persistent-difference|Persistence]] is def
 
 ### §5.2 Validity limits
 
+> [!warning]
+> Validity limit: The lens does not apply outside the conditions listed here.
+
 The lens does **not** apply where:
 - Effects are local, ephemeral, and symmetric  
 - [[rollback|Rollback]] is cheap and immediate  
@@ -134,7 +140,7 @@ The lens does **not** apply where:
 | Agency theory | Does not redefine agency; diagnoses what remains after action |
 | Prediction / optimization | Constrains where these can operate; does not itself predict |
 
-**Key distinction:** The lens constrains explanations; it does not generate them.
+**Distinction:** The lens constrains explanations; it does not generate them.
 
 ---
 
@@ -214,5 +220,5 @@ This paper does **not** claim:
 - Irreversibility is always harmful  
 - The lens supplies moral judgment  
 - The lens predicts outcomes  
-- Persistence should be eliminated  
+- Persistence is to be eliminated  
 - This replaces thermodynamic, economic, or institutional models  

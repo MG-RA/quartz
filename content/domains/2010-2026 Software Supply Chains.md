@@ -4,6 +4,9 @@ Tags: #domain
 
 This is one possible slice for "software supply chains" relative to 2026-01-21: **2010-01-21 to 2026-01-21**.
 
+> [!note]
+> Scope: Domain application; domain statements are tagged (Assumption)/(Inference) and do not introduce new concepts.
+
 ---
 
 ## 0) Scope and boundary
@@ -89,4 +92,3 @@ Using [[Failure Modes of the Irreversibility Lens]]:
 ## 8) Output discipline
 
 - (Inference) This note follows [[Domain Template]]: definitions come from `/concepts`, and domain-specific statements are tagged (Assumption) unless they are direct applications of concept definitions.
-

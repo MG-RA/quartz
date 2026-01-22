@@ -13,6 +13,9 @@ about what differences count, persist, or are discarded.
 A lens does not add content, values, or goals.
 It restricts interpretation by eliminating incoherent transformations.
 
+> [!note]
+> Non-claim: A lens does not add content, values, or goals; it restricts interpretation by eliminating incoherent transformations.
+
 ## Structural dependencies
 - [[admissibility]]
 - [[difference]]

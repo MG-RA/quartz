@@ -10,6 +10,9 @@ Layer: first-order → [[transformation-space]] (foundational)
 
 Irreversibility is not an ontological claim about time or causation. It is a **structural condition** detected operationally: if reversal requires significantly more resources than the original action, the transition is irreversible relative to the specified [[transformation-space]].
 
+> [!note]
+> Non-claim: Irreversibility is not an ontological claim about time or causation.
+
 ## Structural dependencies
 - [[persistence]]
 - [[erasure-cost]]

@@ -4,6 +4,9 @@ Tags: #domain
 
 Use this note to apply the constraint-first diagnostic lens to "human history" **by selecting a slice** (a time window + region + mechanism). Human history as a whole is too large to diagnose without drifting into totalizing explanation.
 
+> [!warning]
+> Scope limit: "Human history" as a whole is too large to diagnose; select a slice to avoid totalizing explanation.
+
 Recommended: pick one historical transformation and treat it as a system producing [[persistent-difference]] under a specified [[transformation-space]].
 
 ---

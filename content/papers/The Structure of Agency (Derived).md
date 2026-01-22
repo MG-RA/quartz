@@ -14,6 +14,9 @@ This document offers a **constraint-first interpretation of agency** under condi
 
 It does **not** propose a fundamental ontology of agency, consciousness, freedom, or value. Instead, it assumes the diagnostic concepts introduced in [[Irreversibility Accounting (Paper)]] and asks a narrower question:
 
+> [!note]
+> Scope: Derived interpretation; not an ontology of agency, consciousness, freedom, or value.
+
 > **Where does agency operate once irreversibility is taken seriously?**
 
 This interpretation is relevant in regimes where:

@@ -2,7 +2,10 @@
 
 **Type:** Map of Content  
 **Domain:** Diagnostic frameworks / Systems analysis  
-**Core question:** *What irreversible differences is this system producing, and who is carrying them?*
+**Core question:** *What persistent differences is this system producing, and who is carrying them?*
+
+> [!note]
+> Orientation: Map of content; definitions come from `/concepts` and the linked paper(s).
 
 ---
 
@@ -170,8 +173,11 @@ These are not atomic concepts but *boundaries* that prevent confusion.
 
 ## Scope Conditions
 
+> [!warning]
+> Validity limit: Apply the lens only under the scope conditions listed in this section.
+
 The lens applies **only where:**
-- [[persistent-difference|Irreversible effects]] accumulate faster than [[rollback|rollback]] capacity
+- [[persistent-difference|Persistent differences]] accumulate faster than [[rollback|rollback]] capacity
 - [[erasure-cost|Marginal erasure cost]] begins to dominate marginal action capacity
 
 The lens does **not** apply where:

@@ -4,6 +4,9 @@ Tags: #domain
 
 This is one possible slice for "the last 20 years" relative to 2026-01-21: **2006-01-21 to 2026-01-21**.
 
+> [!note]
+> Scope: Domain application; domain statements are tagged (Assumption)/(Inference) and do not introduce new concepts.
+
 ---
 
 ## 0) Scope and boundary
@@ -75,4 +78,3 @@ Using [[Failure Modes of the Irreversibility Lens]]:
 - (Inference) Alternative interpretation 1 (not accounting failure): many outcomes reflect preference shifts and new communication affordances, not hidden cost displacement.
 - (Inference) Alternative interpretation 2 (not accounting failure): observed instability is strategic conflict/adaptation (adversaries, competition), not constraint accumulation.
 - (Inference) Alternative interpretation 3 (not accounting failure): constraints come from exogenous geopolitics/law and demographic/economic change, not platform-produced persistence.
-
