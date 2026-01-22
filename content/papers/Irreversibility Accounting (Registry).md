@@ -3,11 +3,11 @@
 Tags: #meta #registry #diagnostic
 
 > [!note]
-> Orientation: Registry of dependency classes and boundaries. Canonical definitions live in `/concepts` and [[Irreversibility Accounting (Paper)]].
+> Orientation: Registry of dependency classes and boundaries. Canonical definitions live in `/concepts`; the paper is narrative orientation and operator context.
 
 This file is intended as an import target for structural artifacts that assume a stable concept vocabulary without re-defining it.
 
-Directionality: This registry points to `/concepts` and the paper; it does not import templates, examples, or domain notes.
+Directionality: This registry points to `/concepts` (definitions) and the paper (narrative/operator); it does not import templates, examples, or domain notes.
 
 ## Core question
 
@@ -118,5 +118,4 @@ The lens does not apply where:
 ## Related
 
 - [[Irreversibility Accounting (Paper)]]
-- [[Irreversibility Accounting (Overview)]]
 - [[Irreversibility Accounting (Open Questions)]]

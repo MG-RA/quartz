@@ -37,3 +37,5 @@ views:
       - formula.has_lens_link
     summaries:
       formula.projection: Filled
+    columnSize:
+      formula.tags: 515
