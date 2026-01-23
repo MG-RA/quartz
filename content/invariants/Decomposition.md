@@ -1,3 +1,11 @@
+---
+role: invariant
+status: structural
+canonical: true
+---
+
+# Decomposition
+
 > **Status:** Structural invariant  
 > **Scope:** Vault-wide  
 > **Non-claim:** This document is not a theory, lens, or diagnostic. It specifies a decomposition that must hold for the system to remain coherent under refinement and scale.
@@ -138,3 +146,11 @@ Beyond this point, further decomposition is ornamental.
 > The decomposition must not collapse.**
 
 This document exists so that future clarity does not reintroduce old failure modes under a new vocabulary.
+
+---
+
+## Related invariants
+
+- [[Governance]]
+- [[Attribution]]
+- [[Irreversibility]]

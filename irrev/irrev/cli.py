@@ -41,12 +41,43 @@ def cli(ctx: click.Context, vault: Path) -> None:
     help="Output results as JSON",
 )
 @click.option(
+    "--flat",
+    is_flag=True,
+    help="Use flat output (legacy) instead of invariant-grouped (default)",
+)
+@click.option(
+    "--invariant",
+    "invariant_filter",
+    type=str,
+    default=None,
+    metavar="INVARIANT_ID",
+    help="Only run rules for this invariant (e.g., --invariant decomposition)",
+)
+@click.option(
+    "--strict",
+    is_flag=True,
+    help="Treat unclassified rules as errors (prevents scope creep in CI)",
+)
+@click.option(
+    "--summary",
+    is_flag=True,
+    help="Print only invariant status line (for commits/docs)",
+)
+@click.option(
     "--explain",
     "explain_rule",
     type=str,
     default=None,
     metavar="RULE_ID",
     help="Explain a specific rule and exit (e.g., --explain layer-violation)",
+)
+@click.option(
+    "--explain-invariant",
+    "explain_invariant_id",
+    type=str,
+    default=None,
+    metavar="INVARIANT_ID",
+    help="Explain an invariant and its rules (e.g., --explain-invariant decomposition)",
 )
 @click.option(
     "--trace",
@@ -61,25 +92,38 @@ def lint(
     ctx: click.Context,
     fail_on: str,
     output_json: bool,
+    flat: bool,
+    invariant_filter: str | None,
+    strict: bool,
+    summary: bool,
     explain_rule: str | None,
+    explain_invariant_id: str | None,
     trace_note: str | None,
 ) -> None:
     """Check vault for structural violations.
 
-    Runs checks for:
-    - Forbidden edges (concept → paper)
-    - Missing structural dependencies section
-    - Alias drift (using non-canonical names)
-    - Dependency cycles
-    - Missing role in frontmatter
-    - Broken links
-    - Layer hierarchy violations
-    - Kind violations (object → operator)
+    By default, results are grouped by invariant to surface infrastructure-level
+    failure modes. Use --flat for legacy file-based output.
+
+    The 4 kernel invariants:
+    - decomposition: Objects/operators separation, role boundaries, no function merging
+    - governance: Non-exemption, enforceability, self-correction surfaces
+    - attribution: Responsibility mapping, diagnostics can't prescribe, no misplaced blame
+    - irreversibility: Persistence, erasure cost declaration, accounting requirements, rollback denial
+
+    Structural rules (dependency-cycle, broken-link, alias-drift) ensure graph coherence,
+    which emerges from joint invariant compliance.
 
     Use --explain RULE_ID to see detailed documentation for a rule.
+    Use --explain-invariant INVARIANT_ID to see what an invariant enforces.
     Use --trace NOTE to see the dependency chain for a specific note.
     """
-    from .commands.lint import run_explain, run_lint, run_trace
+    from .commands.lint import run_explain, run_explain_invariant, run_lint, run_trace
+
+    # Handle --explain-invariant mode
+    if explain_invariant_id:
+        exit_code = run_explain_invariant(explain_invariant_id)
+        sys.exit(exit_code)
 
     # Handle --explain mode
     if explain_rule:
@@ -91,7 +135,7 @@ def lint(
         exit_code = run_trace(ctx.obj["vault"], trace_note)
         sys.exit(exit_code)
 
-    exit_code = run_lint(ctx.obj["vault"], fail_on, output_json)
+    exit_code = run_lint(ctx.obj["vault"], fail_on, output_json, flat, invariant_filter, strict, summary)
     sys.exit(exit_code)
 
 

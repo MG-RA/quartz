@@ -1,4 +1,10 @@
-# Governance Invariant
+---
+role: invariant
+status: structural
+canonical: true
+---
+
+# Governance
 
 > **Status:** Structural invariant  
 > **Scope:** Vault, tools, and author behavior  
@@ -38,6 +44,7 @@ It ensures that enforcement does not replace explanation, and that clarity does 
 - Diagnostics do not convert into prescriptions by status or clarity.
 - Tools surface violations instead of silently correcting them.
 - No role grants interpretive immunity.
+- Governance responsibility operates at the structural/governance agency layer (see [[Attribution]]).
 
 ---
 
@@ -67,3 +74,11 @@ At that point, the system can no longer diagnose itself.
 ## Summary
 
 > **Governance exists to prevent exemption, not to direct outcomes.**
+
+---
+
+## Related invariants
+
+- [[Decomposition]]
+- [[Attribution]]
+- [[Irreversibility]]

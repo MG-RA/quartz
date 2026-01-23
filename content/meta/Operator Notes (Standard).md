@@ -56,3 +56,8 @@ Operator notes should be written so the “test” is explicit and audit-friendl
 
 - [[feasible-set]]: the object-level set of transitions/configurations that remain structurally available under constraints and erasure costs.
 - [[admissibility]]: the selector/predicate “is this candidate move inside the feasible set?” (optionally with context-specific gates).
+## Related invariants (optional)
+
+- [[Decomposition]]
+- [[Governance]]
+- [[Attribution]]

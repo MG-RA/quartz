@@ -13,11 +13,14 @@ if TYPE_CHECKING:
 RULE_EXPLANATIONS: dict[str, str] = {
     "forbidden-edge": """# forbidden-edge
 
+**Invariant**: Governance
+
 **What it checks:** Links from concepts or diagnostics to papers.
 
 **Why it matters:**
 - Concepts should be self-contained and not depend on paper-specific content.
 - Diagnostics should reference the Registry (canonical definitions), not papers.
+- This prevents authority bypass by ensuring papers don't become hidden dependencies.
 
 **Allowed:** Diagnostics may link to the Registry paper.
 
@@ -27,6 +30,8 @@ RULE_EXPLANATIONS: dict[str, str] = {
 """,
     "missing-dependencies": """# missing-dependencies
 
+**Invariant**: Irreversibility
+
 **What it checks:** Concepts must have a `## Structural dependencies` section.
 
 **Why it matters:**
@@ -34,7 +39,8 @@ RULE_EXPLANATIONS: dict[str, str] = {
   - Dependency graph construction
   - Layer violation detection
   - Pack generation (transitive closure)
-- Missing sections break tooling.
+- Missing sections break tooling and hide accounting costs.
+- Erasure costs cannot be declared without explicit dependency tracking.
 
 **Fix:** Add `## Structural dependencies` section with either:
 - `None (primitive)` or `None (axiomatic)` for foundational concepts
@@ -44,11 +50,14 @@ RULE_EXPLANATIONS: dict[str, str] = {
 """,
     "alias-drift": """# alias-drift
 
+**Structural Rule** (not an invariant - ensures graph coherence)
+
 **What it checks:** Notes using non-canonical aliases instead of canonical concept names.
 
 **Why it matters:**
 - Canonical names ensure consistent linking and searching.
 - Alias drift can cause confusion about which concept is referenced.
+- This is basic graph hygiene that supports all invariants.
 
 **Example:**
 - Canonical: `persistent-difference`
@@ -61,12 +70,15 @@ RULE_EXPLANATIONS: dict[str, str] = {
 """,
     "dependency-cycle": """# dependency-cycle
 
+**Structural Rule** (not an invariant - ensures graph coherence)
+
 **What it checks:** Circular dependencies among concepts.
 
 **Why it matters:**
 - Cycles prevent topological sorting for packs.
 - Cycles indicate definitional circularity (A depends on B depends on A).
 - The concept graph must be a DAG (directed acyclic graph).
+- This is foundational to all reasoning about the vault structure.
 
 **Example:** `A → B → C → A` is a cycle.
 
@@ -78,11 +90,15 @@ RULE_EXPLANATIONS: dict[str, str] = {
 """,
     "missing-role": """# missing-role
 
+**Invariant**: Governance
+
 **What it checks:** Notes without `role` in frontmatter.
 
 **Why it matters:**
 - Role determines how the note is categorized (concept, diagnostic, domain, etc.).
 - Missing role falls back to path-based inference, which may be incorrect.
+- Every note must declare its role - no actor is exempt from structural constraints.
+- Roles define authority and prevent silent failures in categorization.
 
 **Fix:** Add `role: <type>` to frontmatter. Valid roles:
 - `concept`, `diagnostic`, `domain`, `projection`, `paper`, `meta`, `support`, `template`
@@ -91,11 +107,14 @@ RULE_EXPLANATIONS: dict[str, str] = {
 """,
     "broken-link": """# broken-link
 
+**Structural Rule** (not an invariant - ensures graph coherence)
+
 **What it checks:** Wiki-links (`[[target]]`) pointing to non-existent notes.
 
 **Why it matters:**
 - Broken links indicate missing content or typos.
 - They break navigation and pack generation.
+- This is basic reference integrity that enables all other tooling.
 
 **Fix:**
 - Create the missing note
@@ -106,16 +125,18 @@ RULE_EXPLANATIONS: dict[str, str] = {
 """,
     "layer-violation": """# layer-violation
 
+**Invariant**: Decomposition
+
 **What it checks:** Concepts depending on higher-layer concepts.
 
 **Why it matters:**
-The layer hierarchy ensures primitives are self-contained:
+The layer hierarchy ensures primitives are self-contained and scope is bounded:
 1. **primitive/foundational** (layer 0): No deps or only other primitives
 2. **first-order** (layer 1): Can depend on primitives
 3. **accounting** (layer 2): Can depend on primitives and first-order
 4. **selector/failure-state/meta-analytical** (layer 3): Can depend on anything
 
-A primitive depending on an accounting concept violates this hierarchy.
+A primitive depending on an accounting concept violates this hierarchy and creates unbounded scope.
 
 **Example:**
 - `constraint` (primitive) depending on `collapse-surface` (accounting) is a violation.
@@ -128,15 +149,19 @@ A primitive depending on an accounting concept violates this hierarchy.
 """,
     "kind-violation": """# kind-violation
 
+**Invariant**: Decomposition
+
 **What it checks:** Object concepts depending on operator concepts.
 
 **Why it matters:**
-This is the object/operator seam for vault hygiene:
+This is the object/operator seam for vault hygiene - the Decomposition invariant in action:
 - **Object notes** (descriptive): Name structures in the world-model (nouns)
 - **Operator notes** (procedural): Name tests/selectors applied to objects (verbs)
 
 Objects should depend only on other objects (structural substrate).
 Operators may depend on objects freely (they consume the substrate).
+
+This separation prevents category errors and maintains clear role boundaries.
 
 **Opt-in:** Only applies when `note_kind: object` or `note_kind: operator` is declared.
 
@@ -147,6 +172,29 @@ Operators may depend on objects freely (they consume the substrate).
 **Fix:** Re-examine the dependency. If an object truly depends on an operator, one of them is likely misclassified.
 
 **Level:** error
+""",
+    "responsibility-scope": """# responsibility-scope
+
+**Invariant**: Attribution
+
+**What it checks:** Responsibility assignments in note content that lack explicit scope.
+
+**Why it matters:**
+- Responsibility must be explicit - vague assignments lead to diffusion.
+- Diagnostics cannot prescribe - they can only describe failure modes.
+- Roles define authority - responsibility without scope creates unbounded authority.
+
+**Example:**
+- "X is responsible for Y" without declaring the scope/context is a violation.
+- Diagnostic notes prescribing solutions rather than describing failure modes.
+
+**Fix:** Make responsibility assignments explicit with clear scope:
+- Who is responsible
+- For what
+- Under what conditions
+- What authority they have
+
+**Level:** info
 """,
 }
 
@@ -165,6 +213,7 @@ class LintResult:
     file: Path
     message: str
     line: int | None = None
+    invariant: str | None = None  # Which invariant this rule enforces (None for structural rules)
 
     def __str__(self) -> str:
         loc = f"{self.file.name}"
@@ -180,17 +229,47 @@ class LintRules:
         self.vault = vault
         self.graph = graph
 
-    def run_all(self) -> list[LintResult]:
-        """Run all lint checks and return findings."""
+    def run_all(self, allowed_rules: set[str] | None = None) -> list[LintResult]:
+        """
+        Run all lint checks and return findings with invariant metadata attached.
+
+        Args:
+            allowed_rules: If provided, only run rules in this set. If None, run all rules.
+
+        Returns:
+            List of lint results with invariant metadata attached.
+        """
+        from irrev.vault.invariants import get_invariant_for_rule, STRUCTURAL_RULES
+
+        # Rule ID to method mapping
+        rule_checks = {
+            "forbidden-edge": self.check_forbidden_edges,
+            "missing-dependencies": self.check_missing_structural_dependencies,
+            "alias-drift": self.check_alias_drift,
+            "dependency-cycle": self.check_cycles,
+            "missing-role": self.check_missing_role,
+            "broken-link": self.check_broken_links,
+            "layer-violation": self.check_layer_violations,
+            "kind-violation": self.check_kind_violations,
+            "responsibility-scope": self.check_responsibility_without_scope,
+        }
+
+        # Execute rules (filtered if needed)
         results = []
-        results.extend(self.check_forbidden_edges())
-        results.extend(self.check_missing_structural_dependencies())
-        results.extend(self.check_alias_drift())
-        results.extend(self.check_cycles())
-        results.extend(self.check_missing_role())
-        results.extend(self.check_broken_links())
-        results.extend(self.check_layer_violations())
-        results.extend(self.check_kind_violations())
+        for rule_id, check_method in rule_checks.items():
+            if allowed_rules is None or rule_id in allowed_rules:
+                results.extend(check_method())
+
+        # Attach invariant metadata to each result
+        for result in results:
+            inv = get_invariant_for_rule(result.rule)
+            if inv:
+                result.invariant = inv.id
+            elif result.rule not in STRUCTURAL_RULES:
+                # ANTI-CREEP LOCK: Unclassified rules are flagged
+                # This should never happen in a well-maintained codebase
+                result.invariant = None  # Explicitly mark as unclassified
+
         return results
 
     def check_forbidden_edges(self) -> list[LintResult]:
@@ -421,5 +500,41 @@ class LintRules:
                             message=f"'object' concept depends on 'operator' concept '{dep_name}'",
                         )
                     )
+
+        return results
+
+    def check_responsibility_without_scope(self) -> list[LintResult]:
+        """Info-level check for responsibility assignment without explicit scope.
+
+        Flags diagnostic/projection notes that appear to assign responsibility
+        (e.g., "X is responsible for Y") but do not declare scope.
+
+        Non-blocking by design: this is hygiene, not enforcement.
+        """
+        results: list[LintResult] = []
+
+        def has_scope(note) -> bool:
+            if "scope" in note.frontmatter:
+                return True
+            return "scope:" in note.content.lower()
+
+        patterns = (
+            "responsible for",
+            "responsibility for",
+            "who is responsible",
+            "is responsible",
+        )
+
+        for note in list(self.vault.diagnostics) + list(self.vault.projections):
+            text = note.content.lower()
+            if any(p in text for p in patterns) and not has_scope(note):
+                results.append(
+                    LintResult(
+                        level="info",
+                        rule="responsibility-scope",
+                        file=note.path,
+                        message="Assigns responsibility without an explicit scope declaration",
+                    )
+                )
 
         return results
