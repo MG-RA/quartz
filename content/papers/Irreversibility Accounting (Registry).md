@@ -57,7 +57,7 @@ Directionality: This registry points to `/concepts` (definitions) and the paper 
 |---|---|---|
 | [[tracking-mechanism]] | what makes costs legible / traceable | [[persistent-difference]], [[erasure-cost]] |
 | [[accounting-failure]] | when costs persist without tracking | [[persistent-difference]], [[erasure-cost]], [[tracking-mechanism]], [[absorption]], [[displacement]], [[constraint-load]] |
-| [[collapse-surface]] | conditional boundary where options disappear | [[admissibility]], [[constraint-accumulation]], [[persistence]], [[erasure-cost]] |
+| [[collapse-surface]] | conditional boundary where options disappear | [[feasible-set]], [[constraint-accumulation]], [[persistence]], [[erasure-cost]] |
 
 ### Concepts :: Failure states
 

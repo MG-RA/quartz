@@ -4,20 +4,22 @@ aliases:
 layer: selector
 role: concept
 canonical: true
+note_kind: operator
 ---
 
 # Admissibility
 
 ## Definition
 
-**Admissibility** is a structural selector that determines whether a transition, explanation, or action is allowed once [[constraint|constraints]] are respected. It answers the question: *Given the current constraint load, is this path still available?*
+**Admissibility** is a structural **selector / predicate** applied to a proposed transition (or explanation): *is this move still allowed by the current structure?*
 
-Admissibility operates at the interface between structure and action. It does not rank options by desirability or predict which will be chosen. It identifies which options remain structurally coherent—and which have been foreclosed by accumulated constraints.
+Operationally, admissibility is the check “does this candidate move lie inside the current [[feasible-set|feasible set]]?” It does not rank options by desirability or predict which will be chosen. It identifies which options remain structurally coherent—and which have been foreclosed by accumulated constraints.
 
 > [!note]
 > Non-claim: Admissibility does not rank options by desirability or predict which will be chosen.
 
 ## Structural dependencies
+- [[feasible-set]]
 - [[constraint]]
 - [[constraint-load]]
 
@@ -33,4 +35,4 @@ Admissibility operates at the interface between structure and action. It does no
 
 Admissibility is the selector that lenses enforce. A [[lens]] does not directly constrain the world; it filters interpretations, narratives, and proposed transitions by whether they respect the admissibility rules derived from underlying structure.
 
-When [[constraint-load]] increases, admissibility shrinks. When [[collapse-surface|collapse surfaces]] are approached, entire regions of admissibility disappear. The diagnostic question is: *What remains admissible here, and what has been foreclosed?*
+When [[constraint-load]] increases, the [[feasible-set|feasible set]] shrinks and fewer candidate moves remain admissible. When [[collapse-surface|collapse surfaces]] are approached, entire regions of the feasible set disappear. The diagnostic question is: *What remains admissible here, and what has been foreclosed?*

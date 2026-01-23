@@ -12,7 +12,7 @@ canonical: true
 
 A **constraint** is a restriction on the set of transitions a system can undergo. Constraints reduce the configuration space: they eliminate possibilities, narrow options, and foreclose paths that would otherwise be available.
 
-Constraints are not inherently negative. They may be functional (enabling coordination), protective (preventing harm), or structural (reflecting physical law). What matters diagnostically is that they **remove degrees of freedom** from the admissible set.
+Constraints are not inherently negative. They may be functional (enabling coordination), protective (preventing harm), or structural (reflecting physical law). What matters diagnostically is that they **remove degrees of freedom** from the [[feasible-set|feasible set]].
 
 ## Structural dependencies
 None (primitive).

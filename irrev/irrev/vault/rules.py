@@ -9,6 +9,153 @@ if TYPE_CHECKING:
     from .loader import Vault
 
 
+# Rule explanations for --explain flag
+RULE_EXPLANATIONS: dict[str, str] = {
+    "forbidden-edge": """# forbidden-edge
+
+**What it checks:** Links from concepts or diagnostics to papers.
+
+**Why it matters:**
+- Concepts should be self-contained and not depend on paper-specific content.
+- Diagnostics should reference the Registry (canonical definitions), not papers.
+
+**Allowed:** Diagnostics may link to the Registry paper.
+
+**Fix:** Remove direct paper links from concepts. In diagnostics, link to Registry sections instead of papers.
+
+**Level:** warning (concept→paper), info (diagnostic→paper except registry)
+""",
+    "missing-dependencies": """# missing-dependencies
+
+**What it checks:** Concepts must have a `## Structural dependencies` section.
+
+**Why it matters:**
+- Explicit dependencies enable:
+  - Dependency graph construction
+  - Layer violation detection
+  - Pack generation (transitive closure)
+- Missing sections break tooling.
+
+**Fix:** Add `## Structural dependencies` section with either:
+- `None (primitive)` or `None (axiomatic)` for foundational concepts
+- List of `[[concept]]` links for composite concepts
+
+**Level:** error
+""",
+    "alias-drift": """# alias-drift
+
+**What it checks:** Notes using non-canonical aliases instead of canonical concept names.
+
+**Why it matters:**
+- Canonical names ensure consistent linking and searching.
+- Alias drift can cause confusion about which concept is referenced.
+
+**Example:**
+- Canonical: `persistent-difference`
+- Alias: `persistent difference` (space instead of hyphen)
+- Finding: "Uses alias 'persistent difference' instead of canonical 'persistent-difference'"
+
+**Fix:** Replace alias with canonical name, or update the alias list if the usage is intentional.
+
+**Level:** info
+""",
+    "dependency-cycle": """# dependency-cycle
+
+**What it checks:** Circular dependencies among concepts.
+
+**Why it matters:**
+- Cycles prevent topological sorting for packs.
+- Cycles indicate definitional circularity (A depends on B depends on A).
+- The concept graph must be a DAG (directed acyclic graph).
+
+**Example:** `A → B → C → A` is a cycle.
+
+**Fix:** Break the cycle by:
+- Extracting a common dependency into a new primitive
+- Re-examining which concept truly depends on which
+
+**Level:** error
+""",
+    "missing-role": """# missing-role
+
+**What it checks:** Notes without `role` in frontmatter.
+
+**Why it matters:**
+- Role determines how the note is categorized (concept, diagnostic, domain, etc.).
+- Missing role falls back to path-based inference, which may be incorrect.
+
+**Fix:** Add `role: <type>` to frontmatter. Valid roles:
+- `concept`, `diagnostic`, `domain`, `projection`, `paper`, `meta`, `support`, `template`
+
+**Level:** warning
+""",
+    "broken-link": """# broken-link
+
+**What it checks:** Wiki-links (`[[target]]`) pointing to non-existent notes.
+
+**Why it matters:**
+- Broken links indicate missing content or typos.
+- They break navigation and pack generation.
+
+**Fix:**
+- Create the missing note
+- Fix the typo in the link
+- Remove the link if the reference is no longer needed
+
+**Level:** warning
+""",
+    "layer-violation": """# layer-violation
+
+**What it checks:** Concepts depending on higher-layer concepts.
+
+**Why it matters:**
+The layer hierarchy ensures primitives are self-contained:
+1. **primitive/foundational** (layer 0): No deps or only other primitives
+2. **first-order** (layer 1): Can depend on primitives
+3. **accounting** (layer 2): Can depend on primitives and first-order
+4. **selector/failure-state/meta-analytical** (layer 3): Can depend on anything
+
+A primitive depending on an accounting concept violates this hierarchy.
+
+**Example:**
+- `constraint` (primitive) depending on `collapse-surface` (accounting) is a violation.
+
+**Fix:** Re-examine the dependency. Either:
+- The dependency is incorrect and should be removed
+- The concept's layer is misclassified
+
+**Level:** error
+""",
+    "kind-violation": """# kind-violation
+
+**What it checks:** Object concepts depending on operator concepts.
+
+**Why it matters:**
+This is the object/operator seam for vault hygiene:
+- **Object notes** (descriptive): Name structures in the world-model (nouns)
+- **Operator notes** (procedural): Name tests/selectors applied to objects (verbs)
+
+Objects should depend only on other objects (structural substrate).
+Operators may depend on objects freely (they consume the substrate).
+
+**Opt-in:** Only applies when `note_kind: object` or `note_kind: operator` is declared.
+
+**Example:**
+- `feasible-set` (object) depending on `admissibility` (operator) is a violation.
+- `admissibility` (operator) depending on `feasible-set` (object) is allowed.
+
+**Fix:** Re-examine the dependency. If an object truly depends on an operator, one of them is likely misclassified.
+
+**Level:** error
+""",
+}
+
+
+def get_rule_ids() -> list[str]:
+    """Return all known rule IDs."""
+    return list(RULE_EXPLANATIONS.keys())
+
+
 @dataclass
 class LintResult:
     """A single lint finding."""
@@ -43,6 +190,7 @@ class LintRules:
         results.extend(self.check_missing_role())
         results.extend(self.check_broken_links())
         results.extend(self.check_layer_violations())
+        results.extend(self.check_kind_violations())
         return results
 
     def check_forbidden_edges(self) -> list[LintResult]:
@@ -239,5 +387,39 @@ class LintRules:
                                 message=f"'{concept.layer}' concept depends on '{dep_concept.layer}' concept '{dep_name}'",
                             )
                         )
+
+        return results
+
+    def check_kind_violations(self) -> list[LintResult]:
+        """Check that object concepts don't depend on operator concepts.
+
+        This is an orthogonal hygiene rule to prevent "object/operator seam" drift:
+        a descriptive (object) note must not depend on a procedural/predicate (operator) note.
+
+        The rule is opt-in via frontmatter:
+        - note_kind: object|operator
+        """
+        results: list[LintResult] = []
+
+        for concept in self.vault.concepts:
+            concept_kind = (concept.frontmatter.get("note_kind") or "").strip().lower()
+            if concept_kind != "object":
+                continue
+
+            for dep_name in concept.depends_on:
+                dep_note = self.vault.get(dep_name)
+                if not dep_note or not hasattr(dep_note, "frontmatter"):
+                    continue
+
+                dep_kind = (dep_note.frontmatter.get("note_kind") or "").strip().lower()
+                if dep_kind == "operator":
+                    results.append(
+                        LintResult(
+                            level="error",
+                            rule="kind-violation",
+                            file=concept.path,
+                            message=f"'object' concept depends on 'operator' concept '{dep_name}'",
+                        )
+                    )
 
         return results

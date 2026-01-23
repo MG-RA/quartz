@@ -40,8 +40,30 @@ def cli(ctx: click.Context, vault: Path) -> None:
     is_flag=True,
     help="Output results as JSON",
 )
+@click.option(
+    "--explain",
+    "explain_rule",
+    type=str,
+    default=None,
+    metavar="RULE_ID",
+    help="Explain a specific rule and exit (e.g., --explain layer-violation)",
+)
+@click.option(
+    "--trace",
+    "trace_note",
+    type=str,
+    default=None,
+    metavar="NOTE",
+    help="Show dependency chain for a specific note (e.g., --trace admissibility)",
+)
 @click.pass_context
-def lint(ctx: click.Context, fail_on: str, output_json: bool) -> None:
+def lint(
+    ctx: click.Context,
+    fail_on: str,
+    output_json: bool,
+    explain_rule: str | None,
+    trace_note: str | None,
+) -> None:
     """Check vault for structural violations.
 
     Runs checks for:
@@ -52,8 +74,22 @@ def lint(ctx: click.Context, fail_on: str, output_json: bool) -> None:
     - Missing role in frontmatter
     - Broken links
     - Layer hierarchy violations
+    - Kind violations (object → operator)
+
+    Use --explain RULE_ID to see detailed documentation for a rule.
+    Use --trace NOTE to see the dependency chain for a specific note.
     """
-    from .commands.lint import run_lint
+    from .commands.lint import run_explain, run_lint, run_trace
+
+    # Handle --explain mode
+    if explain_rule:
+        exit_code = run_explain(explain_rule)
+        sys.exit(exit_code)
+
+    # Handle --trace mode
+    if trace_note:
+        exit_code = run_trace(ctx.obj["vault"], trace_note)
+        sys.exit(exit_code)
 
     exit_code = run_lint(ctx.obj["vault"], fail_on, output_json)
     sys.exit(exit_code)

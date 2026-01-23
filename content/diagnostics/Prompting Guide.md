@@ -171,7 +171,7 @@ Prompt:
 
 When an agent answers, require:
 
-- **Citations by link:** reference concepts as `[[...]]`
+- **Citations by link:** reference concepts as `\[\[...\]\]`
 - **Scope tags:** label sentences as:
   - (Definition) derived from concept notes
   - (Inference) reasonable inference
@@ -188,7 +188,7 @@ Each boilerplate includes output discipline requirements.
 
 > Use only `/concepts` for definitions. If a term is not in `/concepts`, treat it as undefined. Do not invent new primitives.
 >
-> **Output format:** Use `[[concept-name]]` links. Tag claims as (Definition), (Inference), or (Assumption). No new terms without "Possible extractions" section.
+> **Output format:** Use `\[\[concept-name\]\]` links. Tag claims as (Definition), (Inference), or (Assumption). No new terms without "Possible extractions" section.
 
 ### "Diagnostic-only" boilerplate
 
