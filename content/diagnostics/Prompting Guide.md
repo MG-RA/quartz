@@ -216,6 +216,53 @@ Use these when an agent drifts off-track mid-conversation:
 
 ---
 
+## CLI tooling (`irrev`)
+
+The vault includes a semantic compiler CLI at `/irrev`. Use it to validate structure and generate context packs.
+
+### Pre-commit validation
+
+Before committing changes, run lint:
+
+```bash
+cd irrev && uv run irrev -v ../content lint
+```
+
+This checks:
+
+- Layer violations (e.g., accounting concepts depending on selector concepts)
+- Dependency cycles
+- Broken wiki-links
+- Missing `## Structural dependencies` sections
+- Missing `role` frontmatter
+
+### Generating context packs for agents
+
+Instead of manually selecting files, generate dependency-closed packs:
+
+```bash
+# Pack a concept with all its dependencies
+uv run irrev -v ../content pack concept persistent-difference --explain
+
+# Pack a domain with diagnostics
+uv run irrev -v ../content pack domain "2012-2026 AI Systems" --include-diagnostics
+
+# JSON output for programmatic use
+uv run irrev -v ../content pack concept irreversibility --format json
+```
+
+The `--explain` flag shows why each concept is included, which helps agents understand the dependency chain.
+
+### Registry drift detection
+
+After modifying concepts, check if the Registry tables need updating:
+
+```bash
+uv run irrev -v ../content registry diff
+```
+
+---
+
 ## Maintenance
 
 If this guide stops changing, that is a warning sign.

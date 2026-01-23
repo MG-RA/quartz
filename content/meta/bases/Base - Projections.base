@@ -5,7 +5,7 @@ filters:
         - file.inFolder("projections")
         - file.inFolder("content/projections")
     - file.name != "00_README"
-    - file.name != "Encoded Systems Index"
+    - file.name != "Projections Index"
 formulas:
   projection: link(file.path, file.name)
   tags: file.tags

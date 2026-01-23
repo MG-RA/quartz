@@ -9,18 +9,21 @@ facets:
   - misuse-risk
 ---
 
-# Encoded Systems - Index
+# Projections - Index
 
 > [!note]
 > Scope: This index is navigational; it does not imply canon, completeness, or rankings.
 
-An encoded system is a compact, copyable constraint-handling pattern that can be re-read via irreversibility without importing doctrine or metaphysics.
+A projection is a compact, copyable structural re-reading that can be used without importing doctrine or metaphysics.
 
 ## Entries (minimal)
 
 - [[Zen]]
 - [[Stoicism]]
 - [[Discordianism]]
+- [[Enochian]]
+- [[Fourth Way]]
+- [[Jung]]
 
 ## Do Not Do
 
