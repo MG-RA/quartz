@@ -53,9 +53,26 @@ facets:
 - "Accept it" framing used to erase displacement and accounting failure.
 - Claims that internal stance substitutes for tracking external persistence.
 
+## Mechanisms (operator-patterns implied)
+- **Containment**: control/not-control draws a boundary for what gets acted on versus routed into an internal ledger. [[containment]]
+- **Quarantine**: “external” volatility is isolated from evaluative updates; reintegration happens only through declared internal criteria. [[quarantine]]
+- **Ratchet risk**: repeated “route inward” moves can tighten constraints on admissible interpretations until stance becomes one-way. [[ratchet]]
+- **Rollback denial**: treats “if X changes then I’m fine” as an unreliable rollback story under real external persistence. [[rollback]]
+
+## Residuals (named remainder)
+- Internalized burden from routing work inward: persistent attention policies and identity bindings that continue constraining options as [[residual|residuals]].
+- Untracked external persistence reframed as “attitude” risk: displacement becomes harder to see and contest. [[displacement]]
+- Narrowed interpretive degrees of freedom can accumulate as [[constraint-load]] under moralized scaling.
+
 ## Links
 - [[The Structure of Agency (Derived)]]
 - [[Irreversibility Accounting (Paper)]]
 - [[displacement]]
 - [[absorption]]
 - [[accounting-failure]]
+- [[constraint-load]]
+- [[residual]]
+- [[containment]]
+- [[quarantine]]
+- [[ratchet]]
+- [[rollback]]

@@ -55,9 +55,23 @@ facets:
 - Authority structures as validation of diagnostic correctness.
 - Identity binding ("Zen person") as a substitute for constraint tracking.
 
+## Mechanisms (operator-patterns implied)
+- **Rollback**: koans function as an explicit rollback device for interpretive certainty by invalidating stable mappings. [[rollback]]
+- **Containment**: “not relying on words” constrains the surface where claims can propagate as doctrine. [[containment]]
+- **Deprecation**: repeated “anti-doctrine” can become a legacy interface (doctrine-by-negation) that persists institutionally even when its original function decays. [[deprecation]]
+
+## Residuals (named remainder)
+- Copyable slogans and identity bindings that persist after “anti-belief” moves, accumulating as [[residual|residuals]] in discourse.
+- Displaced interpretive burden onto novices/readers (ambiguity cost routed outward). [[displacement]]
+- Institutional residue (credentials, lineage claims) that increases [[constraint-load]] and erasure cost for updating.
+
 ## Links
 - [[Irreversibility Accounting (Paper)]]
 - [[Failure Modes of the Irreversibility Lens]]
 - [[rollback]]
 - [[lens]]
 - [[constraint-load]]
+- [[residual]]
+- [[displacement]]
+- [[containment]]
+- [[deprecation]]

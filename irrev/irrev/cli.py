@@ -203,8 +203,37 @@ def registry() -> None:
     type=click.Path(dir_okay=False, path_type=Path),
     help="Output file path (default: stdout)",
 )
+@click.option(
+    "--in-place",
+    is_flag=True,
+    help="Update existing registry note in-place (preserves narrative; replaces generated region)",
+)
+@click.option(
+    "--overrides",
+    type=click.Path(exists=False, dir_okay=False, path_type=Path),
+    default=None,
+    help="Optional YAML overrides file for ordering/roles (default: <vault>/meta/registry.overrides.yml if present)",
+)
+@click.option(
+    "--allow-unknown-layers",
+    is_flag=True,
+    help="Allow concepts with layers not present in LAYER_ORDER (emits an Unclassified section)",
+)
+@click.option(
+    "--registry-path",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    default=None,
+    help="Explicit registry markdown path (for in-place updates or diffs)",
+)
 @click.pass_context
-def registry_build(ctx: click.Context, out: Path | None) -> None:
+def registry_build(
+    ctx: click.Context,
+    out: Path | None,
+    in_place: bool,
+    overrides: Path | None,
+    allow_unknown_layers: bool,
+    registry_path: Path | None,
+) -> None:
     """Generate registry from vault concepts.
 
     Reads concept layers and dependencies, produces markdown tables
@@ -218,13 +247,45 @@ def registry_build(ctx: click.Context, out: Path | None) -> None:
     """
     from .commands.registry import run_build
 
-    exit_code = run_build(ctx.obj["vault"], str(out) if out else None)
+    default_overrides = (ctx.obj["vault"] / "meta" / "registry.overrides.yml").resolve()
+    overrides_path = overrides or (default_overrides if default_overrides.exists() else None)
+
+    exit_code = run_build(
+        ctx.obj["vault"],
+        str(out) if out else None,
+        in_place=in_place,
+        overrides=overrides_path,
+        allow_unknown_layers=allow_unknown_layers,
+        registry_path=registry_path,
+    )
     sys.exit(exit_code)
 
 
 @registry.command("diff")
+@click.option(
+    "--overrides",
+    type=click.Path(exists=False, dir_okay=False, path_type=Path),
+    default=None,
+    help="Optional YAML overrides file for ordering/roles (default: <vault>/meta/registry.overrides.yml if present)",
+)
+@click.option(
+    "--allow-unknown-layers",
+    is_flag=True,
+    help="Allow concepts with layers not present in LAYER_ORDER (emits an Unclassified section)",
+)
+@click.option(
+    "--registry-path",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    default=None,
+    help="Explicit registry markdown path to compare against",
+)
 @click.pass_context
-def registry_diff(ctx: click.Context) -> None:
+def registry_diff(
+    ctx: click.Context,
+    overrides: Path | None,
+    allow_unknown_layers: bool,
+    registry_path: Path | None,
+) -> None:
     """Compare generated registry with existing Registry file.
 
     Shows differences between what the concepts define and what
@@ -232,7 +293,15 @@ def registry_diff(ctx: click.Context) -> None:
     """
     from .commands.registry import run_diff
 
-    exit_code = run_diff(ctx.obj["vault"])
+    default_overrides = (ctx.obj["vault"] / "meta" / "registry.overrides.yml").resolve()
+    overrides_path = overrides or (default_overrides if default_overrides.exists() else None)
+
+    exit_code = run_diff(
+        ctx.obj["vault"],
+        overrides=overrides_path,
+        allow_unknown_layers=allow_unknown_layers,
+        registry_path=registry_path,
+    )
     sys.exit(exit_code)
 
 

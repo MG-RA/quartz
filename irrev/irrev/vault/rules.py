@@ -123,6 +123,37 @@ RULE_EXPLANATIONS: dict[str, str] = {
 
 **Level:** warning
 """,
+    "registry-drift": """# registry-drift
+
+**Structural Rule** (not an invariant - prevents registry drift)
+
+**What it checks:** The committed Registry dependency tables are out of sync with the generated tables.
+
+**Why it matters:**
+- Concepts are the source of truth for layers and structural dependencies.
+- The Registry is an interface artifact; drift creates two competing vocabularies.
+- Treating the Registry tables as generated prevents silent exclusion and stale snapshots.
+
+**Fix:** Regenerate the tables in-place:
+
+- `irrev -v <vault> registry build --in-place`
+
+**Level:** error
+""",
+    "mechanism-missing-residuals": """# mechanism-missing-residuals
+
+**Invariant**: Irreversibility
+
+**What it checks:** Mechanism-layer concepts must include a `## Residuals` section.
+
+**Why it matters:**
+- Mechanisms are the operational bridge where persistence becomes concrete.
+- Without explicit residuals, mechanism notes tend to imply “clean” operations and hide accumulation.
+
+**Fix:** Add a `## Residuals` section describing what persists after the mechanism completes (no prescription).
+
+**Level:** error
+""",
     "layer-violation": """# layer-violation
 
 **Invariant**: Decomposition
@@ -133,8 +164,9 @@ RULE_EXPLANATIONS: dict[str, str] = {
 The layer hierarchy ensures primitives are self-contained and scope is bounded:
 1. **primitive/foundational** (layer 0): No deps or only other primitives
 2. **first-order** (layer 1): Can depend on primitives
-3. **accounting** (layer 2): Can depend on primitives and first-order
-4. **selector/failure-state/meta-analytical** (layer 3): Can depend on anything
+3. **mechanism** (layer 2): Can depend on primitives and first-order
+4. **accounting** (layer 3): Can depend on primitives, first-order, and mechanisms
+5. **selector/failure-state/meta-analytical** (layer 4): Can depend on anything
 
 A primitive depending on an accounting concept violates this hierarchy and creates unbounded scope.
 
@@ -245,10 +277,12 @@ class LintRules:
         rule_checks = {
             "forbidden-edge": self.check_forbidden_edges,
             "missing-dependencies": self.check_missing_structural_dependencies,
+            "mechanism-missing-residuals": self.check_mechanism_missing_residuals,
             "alias-drift": self.check_alias_drift,
             "dependency-cycle": self.check_cycles,
             "missing-role": self.check_missing_role,
             "broken-link": self.check_broken_links,
+            "registry-drift": self.check_registry_drift,
             "layer-violation": self.check_layer_violations,
             "kind-violation": self.check_kind_violations,
             "responsibility-scope": self.check_responsibility_without_scope,
@@ -325,6 +359,26 @@ class LintRules:
                         rule="missing-dependencies",
                         file=concept.path,
                         message="Concept missing '## Structural dependencies' section",
+                    )
+                )
+
+        return results
+
+    def check_mechanism_missing_residuals(self) -> list[LintResult]:
+        """Check that mechanism-layer concepts explicitly declare residuals."""
+        results: list[LintResult] = []
+
+        for concept in self.vault.concepts:
+            if (concept.layer or "").strip().lower() != "mechanism":
+                continue
+
+            if "## Residuals" not in (concept.content or ""):
+                results.append(
+                    LintResult(
+                        level="error",
+                        rule="mechanism-missing-residuals",
+                        file=concept.path,
+                        message="Mechanism concept missing '## Residuals' section",
                     )
                 )
 
@@ -427,14 +481,79 @@ class LintRules:
 
         return results
 
+    def check_registry_drift(self) -> list[LintResult]:
+        """Check that registry dependency tables are kept in sync."""
+        registry_notes = [p for p in self.vault.papers if (p.role or "").strip().lower() == "registry"]
+        if not registry_notes:
+            registry_notes = [p for p in self.vault.papers if "registry" in p.name.lower()]
+
+        if not registry_notes:
+            return []
+
+        if len(registry_notes) > 1:
+            return [
+                LintResult(
+                    level="error",
+                    rule="registry-drift",
+                    file=registry_notes[0].path,
+                    message="Multiple registry candidates found; pass --registry-path to `irrev registry build --in-place`",
+                )
+            ]
+
+        registry_path = registry_notes[0].path
+        existing_content = registry_path.read_text(encoding="utf-8")
+
+        overrides_path = (self.vault.path / "meta" / "registry.overrides.yml").resolve()
+        overrides_data: dict = {}
+        if overrides_path.exists():
+            try:
+                import yaml  # type: ignore
+
+                overrides_data = yaml.safe_load(overrides_path.read_text(encoding="utf-8")) or {}
+            except Exception as e:
+                return [
+                    LintResult(
+                        level="error",
+                        rule="registry-drift",
+                        file=overrides_path,
+                        message=f"Failed to load registry overrides: {e}",
+                    )
+                ]
+
+        from irrev.commands.registry import _extract_dependency_tables, _generate_dependency_tables
+
+        try:
+            generated_tables = _generate_dependency_tables(
+                self.vault,
+                self.graph,
+                overrides_data=overrides_data,
+                allow_unknown_layers=False,
+            )
+        except ValueError as e:
+            return [LintResult(level="error", rule="registry-drift", file=registry_path, message=str(e))]
+
+        existing_tables = _extract_dependency_tables(existing_content)
+        if existing_tables != generated_tables:
+            return [
+                LintResult(
+                    level="error",
+                    rule="registry-drift",
+                    file=registry_path,
+                    message="Registry tables out of sync; run `irrev -v <vault> registry build --in-place`",
+                )
+            ]
+
+        return []
+
     def check_layer_violations(self) -> list[LintResult]:
         """Check that primitives don't depend on non-primitives.
 
         Layer hierarchy (lower can't depend on higher):
         1. primitive / foundational (no deps or only other primitives)
         2. first-order (can depend on primitives)
-        3. accounting (can depend on primitives and first-order)
-        4. selector / failure-state / meta-analytical (can depend on anything)
+        3. mechanism (can depend on primitives and first-order)
+        4. accounting (can depend on primitives, first-order, and mechanisms)
+        5. selector / failure-state / meta-analytical (can depend on anything)
         """
         results = []
 
@@ -443,10 +562,11 @@ class LintRules:
             "primitive": 0,
             "foundational": 0,
             "first-order": 1,
-            "accounting": 2,
-            "selector": 3,
-            "failure-state": 3,
-            "meta-analytical": 3,
+            "mechanism": 2,
+            "accounting": 3,
+            "selector": 4,
+            "failure-state": 4,
+            "meta-analytical": 4,
             "unknown": 99,
         }
 

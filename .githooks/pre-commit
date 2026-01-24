@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+IRREV_BIN="$REPO_ROOT/irrev/.venv/Scripts/irrev.exe"
+VAULT_PATH="$REPO_ROOT/content"
+REGISTRY_NOTE="$REPO_ROOT/content/papers/Irreversibility Accounting (Registry).md"
+
+if [[ ! -x "$IRREV_BIN" ]]; then
+  echo "pre-commit: missing $IRREV_BIN" >&2
+  echo "pre-commit: install the irrev venv (cd irrev && uv sync) or adjust the hook." >&2
+  exit 1
+fi
+
+echo "pre-commit: updating registry tables..."
+"$IRREV_BIN" -v "$VAULT_PATH" registry build --in-place
+
+if [[ -f "$REGISTRY_NOTE" ]]; then
+  git add "$REGISTRY_NOTE" || true
+fi
+
+echo "pre-commit: running vault lint..."
+"$IRREV_BIN" -v "$VAULT_PATH" lint
+

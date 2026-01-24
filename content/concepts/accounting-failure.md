@@ -11,7 +11,7 @@ canonical: true
 
 ## Definition
 
-**Accounting failure** is a structural condition in which a system produces persistent differences without effective mechanisms to track, assign, or absorb the associated erasure costs. In such systems, persistent effects accumulate, erasure costs are displaced across actors, subsystems, or time, and responsibility for those costs becomes diffused, contested, or unassigned.
+**Accounting failure** is a structural condition in which a system produces persistent differences without effective mechanisms to track, assign, or absorb the associated erasure costs. In such systems, [[residual|residuals]] accumulate, erasure costs are displaced across actors, subsystems, or time, and responsibility for those costs becomes diffused, contested, or unassigned.
 
 Under accounting failure, corrective actions may occur repeatedly, but they do not reduce underlying constraint load. Apparent improvement reflects local adjustment rather than resolution of accumulated persistence.
 
@@ -22,6 +22,7 @@ Under accounting failure, corrective actions may occur repeatedly, but they do n
 - [[absorption]]
 - [[displacement]]
 - [[constraint-load]]
+- [[residual]]
 
 ## What this is NOT
 

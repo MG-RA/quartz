@@ -24,6 +24,7 @@ Directionality: This registry points to `/concepts` (definitions) and the paper 
 > [!note]
 > Scope: Higher layers assume lower layers. This grouping does not imply reading order.
 
+<!-- GENERATED: Dependency tables below are generated from /concepts -->
 ### Concepts :: Primitives
 
 | Concept | Role | Depends On |
@@ -35,45 +36,57 @@ Directionality: This registry points to `/concepts` (definitions) and the paper 
 | [[erasure-cost]] | removal work / burden location | [[persistence]] |
 | [[asymmetry]] | non-symmetric cost structure | [[difference]], [[persistence]] |
 | [[accumulation]] | stacking of constraints | [[constraint]] |
-| [[irreversibility-quanta]] | minimum action-sized difference whose erasure exports cost beyond local system | [[transformation-space]], [[difference]], [[persistence]], [[erasure-cost]], [[asymmetry]] |
+| [[irreversibility-quanta]] | minimum action-sized difference whose erasure exports cost beyond local system | [[asymmetry]], [[difference]], [[erasure-cost]], [[persistence]], [[transformation-space]] |
 
 ### Concepts :: First-order composites
 
 | Concept | Role | Depends On |
 |---|---|---|
-| [[persistent-difference]] | re-identifiable persistence within scope | [[persistence]], [[erasure-cost]] |
+| [[persistent-difference]] | re-identifiable persistence within scope | [[erasure-cost]], [[persistence]] |
 | [[erasure-asymmetry]] | production vs removal imbalance | [[asymmetry]], [[erasure-cost]], [[persistent-difference]] |
 | [[displacement]] | where removal work relocates | [[erasure-cost]], [[persistent-difference]] |
-| [[absorption]] | where removal work is paid locally | [[erasure-cost]], [[displacement]], [[persistent-difference]] |
+| [[absorption]] | where removal work is paid locally | [[displacement]], [[erasure-cost]], [[persistent-difference]] |
 | [[propagation]] | how differences copy/spread | [[persistent-difference]] |
-| [[constraint-load]] | accumulated incompatibilities (bookkeeping) | [[constraint]], [[erasure-cost]] |
-| [[constraint-accumulation]] | process by which load grows | [[constraint-load]], [[persistent-difference]] |
-| [[irreversibility]] | composite relation across persistence and costs | [[persistence]], [[erasure-cost]], [[asymmetry]], [[transformation-space]] |
-| [[rollback]] | mechanism that can appear sufficient locally | [[persistent-difference]], [[propagation]], [[displacement]] |
+| [[residual]] | persistent remainder left after mechanisms act | [[constraint]], [[displacement]], [[persistent-difference]] |
+| [[constraint-load]] | accumulated incompatibilities (bookkeeping) | [[constraint]], [[erasure-cost]], [[residual]] |
+| [[constraint-accumulation]] | process by which load grows | [[constraint-load]], [[persistent-difference]], [[residual]] |
+| [[irreversibility]] | composite relation across persistence and costs | [[asymmetry]], [[erasure-cost]], [[persistence]], [[transformation-space]] |
 | [[persistence-gradient]] | "for whom is this irreversible?" | [[irreversibility]] |
+
+### Concepts :: Mechanisms
+
+| Concept | Role | Depends On |
+|---|---|---|
+| [[rollback]] | mechanism that can appear sufficient locally | [[displacement]], [[persistent-difference]], [[propagation]], [[residual]] |
+| [[containment]] | boundary operator that limits propagation | [[constraint]], [[displacement]], [[persistent-difference]], [[propagation]], [[residual]] |
+| [[quarantine]] | isolation operator with gated reintegration | [[constraint]], [[displacement]], [[persistent-difference]], [[propagation]], [[residual]] |
+| [[ratchet]] | one-way tightening operator that accumulates constraints | [[asymmetry]], [[constraint]], [[constraint-load]], [[erasure-cost]], [[residual]] |
+| [[deprecation]] | staged withdrawal operator that leaves legacy residue | [[constraint-load]], [[displacement]], [[persistent-difference]], [[propagation]], [[residual]] |
+| [[migration]] | transition operator that relocates structure under coordination | [[displacement]], [[erasure-cost]], [[persistent-difference]], [[propagation]], [[residual]] |
 
 ### Concepts :: Accounting
 
 | Concept | Role | Depends On |
 |---|---|---|
-| [[tracking-mechanism]] | what makes costs legible / traceable | [[persistent-difference]], [[erasure-cost]] |
-| [[accounting-failure]] | when costs persist without tracking | [[persistent-difference]], [[erasure-cost]], [[tracking-mechanism]], [[absorption]], [[displacement]], [[constraint-load]] |
-| [[collapse-surface]] | conditional boundary where options disappear | [[feasible-set]], [[constraint-accumulation]], [[persistence]], [[erasure-cost]] |
+| [[tracking-mechanism]] | what makes costs legible / traceable | [[erasure-cost]], [[persistent-difference]] |
+| [[accounting-failure]] | when costs persist without tracking | [[absorption]], [[constraint-load]], [[displacement]], [[erasure-cost]], [[persistent-difference]], [[residual]], [[tracking-mechanism]] |
+| [[feasible-set]] | set of transitions remaining structurally available | [[constraint]], [[constraint-load]], [[erasure-cost]], [[persistent-difference]], [[transformation-space]] |
+| [[collapse-surface]] | conditional boundary where options disappear | [[constraint-accumulation]], [[erasure-cost]], [[feasible-set]], [[persistence]], [[residual]] |
 
 ### Concepts :: Failure states
 
 | Concept | Role | Depends On |
 |---|---|---|
-| [[brittleness]] | small perturbations -> disproportionate failure | [[admissibility]], [[constraint-load]] |
-| [[saturation]] | no room to move; options reduce to maintenance | [[constraint-load]], [[admissibility]], [[erasure-cost]] |
+| [[brittleness]] | small perturbations -> disproportionate failure | [[admissibility]], [[constraint-load]], [[residual]] |
+| [[saturation]] | no room to move; options reduce to maintenance | [[admissibility]], [[constraint-load]], [[erasure-cost]], [[residual]] |
 
 ### Concepts :: Diagnostic apparatus
 
 | Concept | Role | Depends On |
 |---|---|---|
 | [[lens]] | meta-concept for the diagnostic operator | [[admissibility]], [[difference]], [[persistence]] |
-| [[admissibility]] | what transitions remain coherent | [[constraint]], [[constraint-load]] |
-
+| [[admissibility]] | what transitions remain coherent | [[constraint]], [[constraint-load]], [[feasible-set]] |
+<!-- END GENERATED -->
 ## Operator (diagnostic sequence)
 
 1. What differences is this system producing?

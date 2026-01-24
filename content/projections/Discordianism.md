@@ -53,9 +53,24 @@ facets:
 - Harassment cover via "it was just a joke."
 - Any claim that irony eliminates persistence or accountability.
 
+## Mechanisms (operator-patterns implied)
+- **Rollback**: “do not believe” acts as an explicit rollback clause for interpretation, attempting to keep commitment reversible. [[rollback]]
+- **Containment**: satire/paradox constrains closure by making stable inference paths unreliable (limits what can propagate as canon). [[containment]]
+- **Deprecation**: frame-swapping can function as staged withdrawal from any single “final map,” leaving legacy references behind. [[deprecation]]
+
+## Residuals (named remainder)
+- Meme-hardening: jokes become [[residual|residuals]] that persist and propagate faster than their context. [[propagation]]
+- Displaced coordination/interpretive costs onto outsiders and newcomers who lack the context to reverse effects. [[displacement]]
+- Identity binding to “anti-belief” posture that accumulates [[constraint-load]] for later updates (irony as a one-way badge).
+
 ## Links
 - [[Failure Modes of the Irreversibility Lens]]
 - [[rollback]]
 - [[propagation]]
 - [[persistent-difference]]
 - [[erasure-cost]]
+- [[residual]]
+- [[displacement]]
+- [[constraint-load]]
+- [[containment]]
+- [[deprecation]]

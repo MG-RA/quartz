@@ -59,6 +59,17 @@ Historically associated with the teachings of George Gurdjieff, the system funct
 - Any authority structure treated as evidence of correctness.
 - Claims that protocol compliance implies safety, validity, or easy rollback.
 
+## Mechanisms (operator-patterns implied)
+- **Containment**: embedding practice “in life” constrains evasion by forcing contact with the same trigger surfaces where automation occurs. [[containment]]
+- **Quarantine**: teacher/protocol gating isolates interpretation and reintegration criteria inside the method, reducing external auditability. [[quarantine]]
+- **Ratchet risk**: sunk-cost binding and escalating commitments can tighten constraints one-way, raising erasure cost for exit. [[ratchet]]
+- **Rollback denial**: stopping practice does not symmetrically restore prior identity/relationship/attention structure. [[rollback]]
+
+## Residuals (named remainder)
+- Identity, relationship, and attention-policy changes that persist as [[residual|residuals]] even if participation ends.
+- Displaced costs onto dependents/outside relationships under secrecy or escalating commitments. [[displacement]]
+- Accumulated jargon/authority surfaces that increase [[constraint-load]] and invite [[accounting-failure]] under scale.
+
 ## Links
 - [[Irreversibility Accounting (Paper)]]
 - [[Irreversibility Accounting (Registry)#Operator (diagnostic sequence)]]
@@ -66,3 +77,8 @@ Historically associated with the teachings of George Gurdjieff, the system funct
 - [[constraint-load]]
 - [[erasure-cost]]
 - [[displacement]]
+- [[residual]]
+- [[containment]]
+- [[quarantine]]
+- [[ratchet]]
+- [[rollback]]

@@ -53,6 +53,7 @@ Generate and compare registry tables.
 ```bash
 uv run irrev -v ../content registry build
 uv run irrev -v ../content registry build --out Registry.generated.md
+uv run irrev -v ../content registry build --in-place
 uv run irrev -v ../content registry diff
 ```
 
@@ -76,14 +77,27 @@ Check registry drift after modifying concepts:
 uv run irrev -v ../content registry diff
 ```
 
+## Git pre-commit hook (registry + lint)
+
+This repo includes a versioned hook script in `.githooks/pre-commit` that:
+- regenerates the Registry tables in-place
+- runs `irrev lint`
+
+Enable it for this repo:
+
+```powershell
+.\scripts\setup-githooks.ps1
+```
+
 ## Layer hierarchy
 
 The linter enforces this dependency hierarchy (lower cannot depend on higher):
 
 1. **primitive / foundational**: `transformation-space`, `difference`, `persistence`, `erasure-cost`, `asymmetry`, `constraint`, `accumulation`
 2. **first-order**: `persistent-difference`, `irreversibility`, `displacement`, `absorption`, etc.
-3. **accounting**: `tracking-mechanism`, `accounting-failure`, `collapse-surface`
-4. **selector / failure-state / meta-analytical**: `admissibility`, `brittleness`, `saturation`, `lens`
+3. **mechanism**: `rollback`, etc.
+4. **accounting**: `tracking-mechanism`, `accounting-failure`, `collapse-surface`
+5. **selector / failure-state / meta-analytical**: `admissibility`, `brittleness`, `saturation`, `lens`
 
 ## Development
 

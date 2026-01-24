@@ -60,10 +60,39 @@ facets:
 - Interpretation allegiance as a substitute for accounting discipline.
 - Treating measurement as solved by decoherence when decoherence itself defers the cost question.
 
+## Mechanisms (operator-patterns implied)
+- **Containment / quarantine-shaped moves**: decoherence functions like an isolation-and-boundary move for phase information; interference becomes practically unavailable without being structurally erased. [[containment]] [[quarantine]]
+- **Ratchet-shaped moves**: once a record is created, admissible futures shift; reversal becomes a non-local coordination problem rather than a local inverse. [[ratchet]]
+- **Rollback-shaped moves**: “in principle reversible with total environmental control” acts as a rollback promise whose preconditions silently include the entire environment. [[rollback]]
+
+## Residuals (named remainder)
+- Durable records as [[persistent-difference|persistent differences]] plus their accompanying [[residual|residuals]] (copies, correlations, derivative traces).
+- Environmental entanglement and discarded phase correlations treated as “irrelevant,” but still constraining what can be restored.
+- Increasing [[constraint-load]] from accumulated measurement records: later options must route around what is now fixed.
+
+## Interaction with Accounting
+- A coherent analysis needs a [[tracking-mechanism]] for what gets discarded, copied, or made durable, not just for what is observed.
+- When residuals are treated as perspective-only, the system becomes consistent with [[accounting-failure]]: costs persist without attribution or scope.
+
+## Failure-state mapping (under scale)
+- **Brittleness**: small perturbations to the measurement chain yield large option loss because admissible restoration paths are already narrow. [[brittleness]]
+- **Saturation**: “for all practical purposes” hardens into “no admissible reversal path remains,” leaving only maintenance of the existing record stack. [[saturation]]
+- **Collapse surfaces**: conditional boundaries where competing histories stop being recoverable even if unitary evolution remains formal. [[collapse-surface]]
+
 ## Links
 - [[Cosmology]]
 - [[Irreversibility Accounting (Paper)]]
 - [[persistent-difference]]
 - [[erasure-cost]]
 - [[constraint-load]]
+- [[residual]]
+- [[tracking-mechanism]]
+- [[accounting-failure]]
 - [[displacement]]
+- [[containment]]
+- [[quarantine]]
+- [[ratchet]]
+- [[rollback]]
+- [[brittleness]]
+- [[saturation]]
+- [[collapse-surface]]

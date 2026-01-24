@@ -16,6 +16,8 @@ facets:
 
 A projection is a compact, copyable structural re-reading that can be used without importing doctrine or metaphysics.
 
+Template: [[Projection]]
+
 ## Entries (minimal)
 
 - [[Zen]]
@@ -26,6 +28,7 @@ A projection is a compact, copyable structural re-reading that can be used witho
 - [[Jung]]
 - [[Cosmology]]
 - [[Quantum Measurement]]
+- [[Plato's Republic]]
 
 ## Do Not Do
 

@@ -64,10 +64,37 @@ facets:
 - Assumption that all irreversibility is either front-loaded (initial conditions) or emergent (coarse-graining).
 - Treating the absence of a reversal mechanism as equivalent to reversal being possible.
 
+## Mechanisms (operator-patterns implied)
+- **Containment-shaped moves**: coarse-graining declares a boundary of relevance and treats discarded correlations as non-identifying (limits what counts as “the same state”). [[containment]]
+- **Quarantine-shaped moves**: decoherence routes phase information into an environment where reintegration is formally imaginable but operationally unreachable. [[quarantine]]
+- **Ratchet-shaped moves**: low-entropy initial conditions and amplification narratives create one-way tightening of admissible histories: reversibility remains rhetorical while the required coordination grows non-locally. [[ratchet]]
+- **Rollback-shaped moves**: “in principle reversible” functions as an implicit rollback claim that local reasoning can stand in for global restoration. [[rollback]]
+
+## Residuals (named remainder)
+- Discarded correlations / phase relations treated as “statistically irrelevant,” but still present as [[residual|residuals]] that constrain what can be reconstructed.
+- Horizon- and amplification-created structure that persists even when described as “just initial conditions” or “just decoherence.”
+- Coordination and information requirements for reversal that accumulate as invisible [[constraint-load]] rather than explicit costs.
+
+## Interaction with Accounting
+- A coherent registry would require a [[tracking-mechanism]] for which differences were declared non-identifying, where they were routed, and what reversal would demand under the declared transformation space.
+- Treating “overwhelming probability” as explanation without specifying where residuals land becomes consistent with [[accounting-failure]]: persistence accumulates without a ledger for cost, ownership, or scope.
+
+## Failure-state mapping (under scale)
+- **Brittleness**: small perturbations produce large option loss when hidden residuals push the system near a boundary of admissible histories. [[brittleness]]
+- **Saturation**: the space of practical reversals collapses into maintenance because reversal requires discontinuous global coordination. [[saturation]]
+- **Collapse surfaces**: conditional points where “undo” stops being available even as a formal inverse remains expressible. [[collapse-surface]]
+
 ## Links
 - [[Irreversibility Accounting (Paper)]]
 - [[persistent-difference]]
 - [[erasure-cost]]
 - [[constraint-load]]
+- [[residual]]
+- [[tracking-mechanism]]
+- [[accounting-failure]]
 - [[rollback]]
+- [[containment]]
+- [[quarantine]]
+- [[ratchet]]
+- [[collapse-surface]]
 - [[displacement]]

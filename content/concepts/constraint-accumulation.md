@@ -10,13 +10,14 @@ canonical: true
 
 ## Definition
 
-**Constraint accumulation** is the cumulative growth of constraint load arising from persistent differences that are not effectively tracked or absorbed. As such differences are produced and maintained, the incompatibilities they introduce compound, progressively narrowing the set of configurations the system can occupy without additional erasure cost.
+**Constraint accumulation** is the cumulative growth of constraint load arising from persistent differences and [[residual|residuals]] that are not effectively tracked or absorbed. As such differences are produced and maintained, the incompatibilities they introduce compound, progressively narrowing the set of configurations the system can occupy without additional erasure cost.
 
 This process is often invisible at the point of action. Its presence is typically inferred only when effects emerge as **brittleness** or **saturation**, at which point corrective actions tend to address surface symptoms while leaving the underlying constraint load unchanged or further increased.
 
 ## Structural dependencies
 - [[constraint-load]]
 - [[persistent-difference]]
+- [[residual]]
 
 ## What this is NOT
 

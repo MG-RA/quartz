@@ -57,6 +57,17 @@ Transformation space assumed: popularized “Jungian” concepts, self-help adap
 - Interpretive dominance as epistemic authority (“I can explain you, therefore I’m right”).
 - Claims that naming an archetype equals resolution, or that “insight” implies cheap rollback.
 
+## Mechanisms (operator-patterns implied)
+- **Containment**: symbolic vocabulary bounds what counts as explanation by routing experience into constrained classes. [[containment]]
+- **Quarantine**: “disowned material” is isolated (shadow framing) until reintegration conditions are met; reintegration work is non-local. [[quarantine]]
+- **Ratchet risk**: interpretive regimes can tighten one-way into self-sealing closure, raising erasure cost for exiting the frame. [[ratchet]]
+- **Rollback denial**: “insight” does not symmetrically restore prior identity bindings or social effects once the frame has propagated. [[rollback]]
+
+## Residuals (named remainder)
+- Identity bindings and attention-policy changes that persist as [[residual|residuals]] after adoption, constraining future interpretations.
+- Displacement of social/structural constraints into private meaning-work, obscuring where costs land. [[displacement]]
+- Interpretive closure residue that increases [[constraint-load]] while appearing as “coherence.” [[accounting-failure]]
+
 ## Links
 - [[Irreversibility Accounting (Paper)]]
 - [[Irreversibility Accounting (Registry)#Operator (diagnostic sequence)]]
@@ -64,3 +75,10 @@ Transformation space assumed: popularized “Jungian” concepts, self-help adap
 - [[erasure-cost]]
 - [[displacement]]
 - [[lens]]
+- [[constraint-load]]
+- [[residual]]
+- [[accounting-failure]]
+- [[containment]]
+- [[quarantine]]
+- [[ratchet]]
+- [[rollback]]

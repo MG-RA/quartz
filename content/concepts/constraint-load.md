@@ -10,7 +10,7 @@ canonical: true
 
 **Constraint load** is a bookkeeping shorthand for the accumulation of incompatibilities that reduce the set of configurations a system can occupy without additional cost. Here, incompatibility refers not to error or contradiction, but to conditions that cannot be jointly satisfied without exporting erasure cost elsewhere.
 
-Constraint load describes how stability conditions, commitments, and persistent differences have propagated through a domain, progressively narrowing the space of viable actions.
+Constraint load describes how stability conditions, commitments, [[residual|residuals]], and persistent differences have propagated through a domain, progressively narrowing the space of viable actions.
 
 > [!note]
 > Interpretation constraint: Diagnostic descriptor only; not an ontological claim, and has no privileged unit, scale, or metric.
@@ -18,6 +18,7 @@ Constraint load describes how stability conditions, commitments, and persistent 
 ## Structural dependencies
 - [[constraint]]
 - [[erasure-cost]]
+- [[residual]]
 
 ## What this is NOT
 

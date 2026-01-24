@@ -55,6 +55,16 @@ facets:
 - Status hierarchies that treat interpretive access as evidence of correctness.
 - Claims that protocol compliance implies external validity, or that "undoing" is easy.
 
+## Mechanisms (operator-patterns implied)
+- **Containment**: procedural gating constrains admissible interpretations by bounding what outputs “count” and through which interfaces they can travel. [[containment]]
+- **Quarantine**: in-group legibility (specialized language/protocol) isolates the system from external audit while creating reintegration friction. [[quarantine]]
+- **Ratchet risk**: authority displacement to a non-local source can tighten commitments one-way; reversal requires non-local social rebuild. [[ratchet]]
+
+## Residuals (named remainder)
+- Commitments and identity bindings produced by “external authority” outputs that persist as [[residual|residuals]] even when practice stops.
+- Displaced coordination costs onto novices/dependents/outsiders who carry fallout and boundary maintenance. [[displacement]]
+- Canon and procedure residue that accumulates as [[constraint-load]] (deviations become costly to represent or reconcile).
+
 ## Links
 - [[Irreversibility Accounting (Paper)]]
 - [[Irreversibility Accounting (Registry)#Operator (diagnostic sequence)]]
@@ -62,3 +72,8 @@ facets:
 - [[persistent-difference]]
 - [[erasure-cost]]
 - [[displacement]]
+- [[residual]]
+- [[constraint-load]]
+- [[containment]]
+- [[quarantine]]
+- [[ratchet]]

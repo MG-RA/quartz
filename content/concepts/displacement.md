@@ -12,7 +12,7 @@ canonical: true
 
 **Displacement** is the relocation of erasure costs away from the locus where a persistent difference would otherwise be absorbed, and onto other actors, subsystems, or future states. When a difference is corrected, deferred, ignored, or locally mitigated, the associated erasure cost does not vanish; it is **reassigned across space, time, or organizational boundaries**.
 
-Displacement is the primary mechanism through which accounting failures compound. Costs remain real and operative, but become **unassigned or weakly attributed**, allowing constraint load to accumulate outside the field of local decision-making.
+Displacement is the primary mechanism through which accounting failures compound. Costs remain real and operative, but become **unassigned or weakly attributed**, allowing [[residual|residuals]] and constraint load to accumulate outside the field of local decision-making.
 
 ## Structural dependencies
 - [[erasure-cost]]

@@ -1,0 +1,110 @@
+section_orders:
+  Primitives:
+    - transformation-space
+    - constraint
+    - difference
+    - persistence
+    - erasure-cost
+    - asymmetry
+    - accumulation
+    - irreversibility-quanta
+  First-order composites:
+    - persistent-difference
+    - erasure-asymmetry
+    - displacement
+    - absorption
+    - propagation
+    - residual
+    - constraint-load
+    - constraint-accumulation
+    - irreversibility
+    - persistence-gradient
+  Mechanisms:
+    - rollback
+    - containment
+    - quarantine
+    - ratchet
+    - deprecation
+    - migration
+  Accounting:
+    - tracking-mechanism
+    - accounting-failure
+    - feasible-set
+    - collapse-surface
+  Failure states:
+    - brittleness
+    - saturation
+  Diagnostic apparatus:
+    - lens
+    - admissibility
+
+concept_overrides:
+  transformation-space:
+    role: declared scope for persistence claims
+  constraint:
+    role: restriction on transitions
+  difference:
+    role: what changes / what is tracked
+  persistence:
+    role: what remains across change
+  erasure-cost:
+    role: removal work / burden location
+  asymmetry:
+    role: non-symmetric cost structure
+  accumulation:
+    role: stacking of constraints
+  irreversibility-quanta:
+    role: minimum action-sized difference whose erasure exports cost beyond local system
+
+  persistent-difference:
+    role: re-identifiable persistence within scope
+  erasure-asymmetry:
+    role: production vs removal imbalance
+  displacement:
+    role: where removal work relocates
+  absorption:
+    role: where removal work is paid locally
+  propagation:
+    role: how differences copy/spread
+  residual:
+    role: persistent remainder left after mechanisms act
+  constraint-load:
+    role: accumulated incompatibilities (bookkeeping)
+  constraint-accumulation:
+    role: process by which load grows
+  irreversibility:
+    role: composite relation across persistence and costs
+  persistence-gradient:
+    role: "\"for whom is this irreversible?\""
+
+  rollback:
+    role: mechanism that can appear sufficient locally
+  containment:
+    role: boundary operator that limits propagation
+  quarantine:
+    role: isolation operator with gated reintegration
+  ratchet:
+    role: one-way tightening operator that accumulates constraints
+  deprecation:
+    role: staged withdrawal operator that leaves legacy residue
+  migration:
+    role: transition operator that relocates structure under coordination
+
+  tracking-mechanism:
+    role: what makes costs legible / traceable
+  accounting-failure:
+    role: when costs persist without tracking
+  feasible-set:
+    role: set of transitions remaining structurally available
+  collapse-surface:
+    role: conditional boundary where options disappear
+
+  brittleness:
+    role: small perturbations -> disproportionate failure
+  saturation:
+    role: no room to move; options reduce to maintenance
+
+  lens:
+    role: meta-concept for the diagnostic operator
+  admissibility:
+    role: what transitions remain coherent

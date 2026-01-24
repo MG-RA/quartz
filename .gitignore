@@ -18,3 +18,5 @@ irrev/*.egg-info/
 irrev/.pytest_cache/
 *.pyc
 .python-version
+# Local assistant/IDE metadata
+.claude/
