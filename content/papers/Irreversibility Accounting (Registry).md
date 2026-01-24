@@ -33,7 +33,7 @@ Directionality: This registry points to `/concepts` (definitions) and the paper 
 | [[constraint]] | restriction on transitions | None (primitive) |
 | [[difference]] | what changes / what is tracked | [[transformation-space]] |
 | [[persistence]] | what remains across change | [[difference]], [[transformation-space]] |
-| [[erasure-cost]] | removal work / burden location | [[persistence]] |
+| [[erasure-cost]] | removal work / burden location (hub: Primitive hub) | [[persistence]] |
 | [[asymmetry]] | non-symmetric cost structure | [[difference]], [[persistence]] |
 | [[accumulation]] | stacking of constraints | [[constraint]] |
 | [[irreversibility-quanta]] | minimum action-sized difference whose erasure exports cost beyond local system | [[asymmetry]], [[difference]], [[erasure-cost]], [[persistence]], [[transformation-space]] |
@@ -47,8 +47,8 @@ Directionality: This registry points to `/concepts` (definitions) and the paper 
 | [[displacement]] | where removal work relocates | [[erasure-cost]], [[persistent-difference]] |
 | [[absorption]] | where removal work is paid locally | [[displacement]], [[erasure-cost]], [[persistent-difference]] |
 | [[propagation]] | how differences copy/spread | [[persistent-difference]] |
-| [[residual]] | persistent remainder left after mechanisms act | [[constraint]], [[displacement]], [[persistent-difference]] |
-| [[constraint-load]] | accumulated incompatibilities (bookkeeping) | [[constraint]], [[erasure-cost]], [[residual]] |
+| [[residual]] | persistent remainder left after mechanisms act (hub: Mechanism-output hub) | [[constraint]], [[displacement]], [[persistent-difference]] |
+| [[constraint-load]] | accumulated incompatibilities (bookkeeping) (hub: Aggregation hub) | [[constraint]], [[erasure-cost]], [[residual]] |
 | [[constraint-accumulation]] | process by which load grows | [[constraint-load]], [[persistent-difference]], [[residual]] |
 | [[irreversibility]] | composite relation across persistence and costs | [[asymmetry]], [[erasure-cost]], [[persistence]], [[transformation-space]] |
 | [[persistence-gradient]] | "for whom is this irreversible?" | [[irreversibility]] |

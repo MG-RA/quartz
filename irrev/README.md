@@ -57,6 +57,33 @@ uv run irrev -v ../content registry build --in-place
 uv run irrev -v ../content registry diff
 ```
 
+### `irrev hubs`
+
+Detect latent hub candidates by cross-layer dependency concentration (mechanisms + accounting + failure states).
+
+```bash
+uv run irrev -v ../content hubs
+uv run irrev -v ../content hubs --top 50
+uv run irrev -v ../content hubs --all
+uv run irrev -v ../content hubs --all-notes
+uv run irrev -v ../content hubs --rank score --w-mechanism 1.5 --w-failure 1.25
+```
+
+### Hub policy (`content/meta/hubs.yml`)
+
+If `content/meta/hubs.yml` exists, lint enforces that hub concepts include required headings
+(`hub-required-headings`). This is intended to keep load-bearing concepts structurally explicit
+without changing the layer system.
+
+### `irrev graph`
+
+Inspect graph structure (concept dependencies vs full vault wiki-links).
+
+```bash
+uv run irrev -v ../content graph --concepts-only
+uv run irrev -v ../content graph --all-notes --format dot --out vault.dot
+```
+
 ## Integration with vault workflow
 
 Run lint before committing changes:

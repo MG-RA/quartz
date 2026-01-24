@@ -154,6 +154,22 @@ RULE_EXPLANATIONS: dict[str, str] = {
 
 **Level:** error
 """,
+    "hub-required-headings": """# hub-required-headings
+
+**Invariant**: Irreversibility
+
+**What it checks:** Hub concepts must include required sections to prevent drift.
+
+**Why it matters:**
+- Hubs are concepts explanations repeatedly converge through.
+- Missing structural sections tends to reintroduce metaphor, scope creep, and hand-waving where the vault is load-bearing.
+
+**Config:** `content/meta/hubs.yml` defines which concepts are hubs and which headings are required.
+
+**Fix:** Add the missing headings (short, structural content is enough; avoid prescription).
+
+**Level:** error
+""",
     "layer-violation": """# layer-violation
 
 **Invariant**: Decomposition
@@ -278,6 +294,7 @@ class LintRules:
             "forbidden-edge": self.check_forbidden_edges,
             "missing-dependencies": self.check_missing_structural_dependencies,
             "mechanism-missing-residuals": self.check_mechanism_missing_residuals,
+            "hub-required-headings": self.check_hub_required_headings,
             "alias-drift": self.check_alias_drift,
             "dependency-cycle": self.check_cycles,
             "missing-role": self.check_missing_role,
@@ -381,6 +398,69 @@ class LintRules:
                         message="Mechanism concept missing '## Residuals' section",
                     )
                 )
+
+        return results
+
+    def check_hub_required_headings(self) -> list[LintResult]:
+        """Check that hub concepts include required headings (configured by the vault)."""
+        hubs_path = (self.vault.path / "meta" / "hubs.yml").resolve()
+        if not hubs_path.exists():
+            return []
+
+        try:
+            import yaml  # type: ignore
+        except Exception:
+            return [
+                LintResult(
+                    level="error",
+                    rule="hub-required-headings",
+                    file=hubs_path,
+                    message="Hub policy file present but PyYAML not available to parse it",
+                )
+            ]
+
+        try:
+            data = yaml.safe_load(hubs_path.read_text(encoding="utf-8")) or {}
+        except Exception as e:
+            return [
+                LintResult(
+                    level="error",
+                    rule="hub-required-headings",
+                    file=hubs_path,
+                    message=f"Failed to parse hub policy file: {e}",
+                )
+            ]
+
+        hubs = data.get("hubs") or {}
+        if not isinstance(hubs, dict):
+            return []
+
+        results: list[LintResult] = []
+
+        for concept_key, spec in hubs.items():
+            if not isinstance(concept_key, str) or not isinstance(spec, dict):
+                continue
+
+            concept = self.vault.get(concept_key)
+            if not concept or not hasattr(concept, "content"):
+                continue
+
+            required = spec.get("required_headings") or []
+            if not isinstance(required, list):
+                continue
+
+            for heading in required:
+                if not isinstance(heading, str) or not heading.strip():
+                    continue
+                if heading not in concept.content:
+                    results.append(
+                        LintResult(
+                            level="error",
+                            rule="hub-required-headings",
+                            file=concept.path,
+                            message=f"Hub concept missing required heading: {heading}",
+                        )
+                    )
 
         return results
 

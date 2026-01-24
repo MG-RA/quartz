@@ -1,14 +1,16 @@
 ---
+aliases:
+  - residuals
 layer: first-order # first-class remainder object; accounting consumes it
 role: concept
 canonical: true
 ---
 
-# Residuals
+# Residual
 
 ## Definition
 
-**Residuals** are **persistent state differences** left behind by mechanisms after an action is “done”: changes that remain in the world-model and continue to constrain future options even when no one is actively managing them.
+A **residual** is a **persistent state difference** left behind by mechanisms after an action is “done”: a change that remains in the world-model and continues to constrain future options even when no one is actively managing it.
 
 Residuals are not the intended outcome of an operation; they are the **named remainder**: what still needs to be carried, coordinated around, paid down, or routed—often across boundaries of time, actors, or subsystems.
 
@@ -53,4 +55,3 @@ Residuals tend to **accumulate** because erasing them requires coordination, tim
 - Personal commitments: choices that close futures (relocation, obligations) even when “reversible” in narrative; the residual is what coordination must now route around.
 - Epistemic environments: public claims that cannot be cleanly retracted, leaving attention structures and trust gradients as residual constraints.
 - Supply chains: contingency reroutes that keep delivery moving but leave contractual, inventory, and quality residue that constrains subsequent operations.
-

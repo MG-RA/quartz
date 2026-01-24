@@ -31,3 +31,11 @@ Paying erasure cost does not guarantee net reduction of burden; in practice, rem
 ## Structural role
 
 Erasure cost constrains what claims of _reversal_ can mean. Any assertion that a difference has been undone must specify **what resources were expended and where their burden landed**. If no such account exists, either the difference was not persistent in the first place, or the erasure cost was displaced, deferred, or rendered invisible.
+
+## Asymmetry
+
+Erasure cost is asymmetric in practice: creating a difference can be locally cheap while removing it requires non-local coordination, reconstruction, or negotiation across dependencies.
+
+## What erasure does not remove
+
+Paying erasure cost can remove a target difference while leaving [[residual|residuals]]: propagated copies, downstream commitments, and compatibility constraints that continue to narrow future options.

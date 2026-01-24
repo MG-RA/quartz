@@ -32,3 +32,15 @@ Constraint load describes how stability conditions, commitments, [[residual|resi
 ## Structural role
 
 Constraint load constrains what _flexibility_ can mean in a system. As constraint load increases, fewer configurations are reachable without paying additional erasure cost, and remaining options increasingly require **routing cost rather than resolving it**. The diagnostic question is not whether a system appears stable, but whether that stability reflects resilience or merely the absence of remaining room to move.
+
+## Aggregation rule
+
+Constraint load aggregates heterogeneous [[residual|residuals]] and persistent differences into a single diagnostic quantity: “how many incompatibilities must be routed around to act at all.”
+
+## Effect on admissibility
+
+As constraint load rises, the [[feasible-set|feasible set]] shrinks and fewer transitions remain [[admissibility|admissible]] without paying additional non-local erasure cost.
+
+## Saturation behavior
+
+Under sustained accumulation, constraint load tends to express as [[saturation]]: action collapses into maintenance because most moves primarily reroute cost instead of reducing it.

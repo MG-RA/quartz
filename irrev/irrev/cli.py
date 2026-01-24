@@ -305,6 +305,117 @@ def registry_diff(
     sys.exit(exit_code)
 
 
+@cli.command()
+@click.option(
+    "--concepts-only/--all-notes",
+    "concepts_only",
+    default=True,
+    show_default=True,
+    help="Use concept structural dependencies only, or include all-note wiki-links as additional dependents",
+)
+@click.option("--top", type=int, default=25, show_default=True, help="Max candidates to display")
+@click.option("--min-mechanisms", type=int, default=1, show_default=True, help="Min mechanism-layer dependents")
+@click.option("--min-accounting", type=int, default=1, show_default=True, help="Min accounting-layer dependents")
+@click.option("--min-failure-states", type=int, default=1, show_default=True, help="Min failure-state dependents")
+@click.option(
+    "--rank",
+    type=click.Choice(["legacy", "score"]),
+    default="legacy",
+    show_default=True,
+    help="Ranking strategy (legacy keeps current ordering; score uses weighted score)",
+)
+@click.option("--w-mechanism", type=float, default=1.0, show_default=True, help="Weight for mechanism-layer refs")
+@click.option("--w-accounting", type=float, default=1.0, show_default=True, help="Weight for accounting-layer refs")
+@click.option("--w-failure", type=float, default=1.0, show_default=True, help="Weight for failure-state refs")
+@click.option("--w-selector", type=float, default=1.0, show_default=True, help="Weight for selector/meta refs")
+@click.option("--w-layers", type=float, default=1.0, show_default=True, help="Weight for distinct dependent layers")
+@click.option(
+    "--all",
+    "show_all",
+    is_flag=True,
+    default=False,
+    help="Show all concepts (ignore min thresholds)",
+)
+@click.option(
+    "--exclude-layer",
+    "exclude_layers",
+    multiple=True,
+    default=("mechanism", "failure-state"),
+    show_default=True,
+    help="Exclude concepts of this layer from being candidates (repeatable)",
+)
+@click.pass_context
+def hubs(
+    ctx: click.Context,
+    concepts_only: bool,
+    top: int,
+    min_mechanisms: int,
+    min_accounting: int,
+    min_failure_states: int,
+    rank: str,
+    w_mechanism: float,
+    w_accounting: float,
+    w_failure: float,
+    w_selector: float,
+    w_layers: float,
+    show_all: bool,
+    exclude_layers: tuple[str, ...],
+) -> None:
+    """Detect latent hub candidates from cross-layer dependency concentration."""
+    from .commands.hubs import run_hubs
+
+    exit_code = run_hubs(
+        ctx.obj["vault"],
+        concepts_only=concepts_only,
+        top=top,
+        min_mechanisms=min_mechanisms,
+        min_accounting=min_accounting,
+        min_failure_states=min_failure_states,
+        candidates_only=not show_all,
+        exclude_layers=set(exclude_layers),
+        rank=rank,
+        w_mechanism=w_mechanism,
+        w_accounting=w_accounting,
+        w_failure=w_failure,
+        w_selector=w_selector,
+        w_layers=w_layers,
+    )
+    sys.exit(exit_code)
+
+
+@cli.command()
+@click.option(
+    "--concepts-only/--all-notes",
+    "concepts_only",
+    default=True,
+    show_default=True,
+    help="Use concept structural dependencies only, or include all-note wiki-links",
+)
+@click.option(
+    "--format",
+    "fmt",
+    type=click.Choice(["md", "json", "dot"]),
+    default="md",
+    show_default=True,
+    help="Output format",
+)
+@click.option("--out", type=click.Path(dir_okay=False, path_type=Path), default=None, help="Write output to a file")
+@click.option("--top", type=int, default=25, show_default=True, help="How many nodes to show in top lists")
+@click.pass_context
+def graph(
+    ctx: click.Context,
+    concepts_only: bool,
+    fmt: str,
+    out: Path | None,
+    top: int,
+) -> None:
+    """Inspect dependency/link graph structure."""
+    from .commands.graph_cmd import run_graph
+
+    exit_code = run_graph(ctx.obj["vault"], concepts_only=concepts_only, fmt=fmt, out=out, top=top)
+    sys.exit(exit_code)
+
+
 def main() -> None:
     """Main entrypoint."""
     cli()

@@ -21,6 +21,7 @@ Role = Literal[
 Layer = Literal[
     "primitive",
     "first-order",
+    "mechanism",
     "accounting",
     "selector",
     "foundational",

@@ -1,0 +1,18 @@
+hubs:
+  erasure-cost:
+    class: Primitive hub
+    required_headings:
+      - "## Asymmetry"
+      - "## What erasure does not remove"
+  constraint-load:
+    class: Aggregation hub
+    required_headings:
+      - "## Aggregation rule"
+      - "## Effect on admissibility"
+      - "## Saturation behavior"
+  residual:
+    class: Mechanism-output hub
+    required_headings:
+      - "## Relation to Mechanisms"
+      - "## Relation to Accounting"
+      - "## Relation to Irreversibility"

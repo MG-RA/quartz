@@ -220,8 +220,11 @@ def _generate_dependency_tables(vault, graph: DependencyGraph, overrides_data: d
 
             override = concept_overrides.get(concept.name.lower(), {})
             role = (override.get("role") or "").strip()
+            hub_class = (override.get("hub_class") or "").strip()
             if not role:
                 role = _extract_role(concept)
+            if hub_class:
+                role = f"{role} (hub: {hub_class})"
 
             # Format dependencies
             if not concept.depends_on:

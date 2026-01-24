@@ -55,7 +55,7 @@ INVARIANTS = {
         name="Irreversibility",
         statement="Persistence must be tracked; erasure costs must be declared; rollback cannot be assumed; accounting is mandatory.",
         failure_mode="Silent data loss, cost externalization, false reversibility assumptions, hidden state changes",
-        rules=["missing-dependencies", "mechanism-missing-residuals"]  # Will expand with future accounting checks
+        rules=["missing-dependencies", "mechanism-missing-residuals", "hub-required-headings"]  # Will expand with future accounting checks
     )
 }
 

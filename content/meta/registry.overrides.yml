@@ -49,6 +49,7 @@ concept_overrides:
     role: what remains across change
   erasure-cost:
     role: removal work / burden location
+    hub_class: Primitive hub
   asymmetry:
     role: non-symmetric cost structure
   accumulation:
@@ -68,8 +69,10 @@ concept_overrides:
     role: how differences copy/spread
   residual:
     role: persistent remainder left after mechanisms act
+    hub_class: Mechanism-output hub
   constraint-load:
     role: accumulated incompatibilities (bookkeeping)
+    hub_class: Aggregation hub
   constraint-accumulation:
     role: process by which load grows
   irreversibility:
