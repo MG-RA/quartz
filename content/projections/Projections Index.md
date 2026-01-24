@@ -24,6 +24,8 @@ A projection is a compact, copyable structural re-reading that can be used witho
 - [[Enochian]]
 - [[Fourth Way]]
 - [[Jung]]
+- [[Cosmology]]
+- [[Quantum Measurement]]
 
 ## Do Not Do
 

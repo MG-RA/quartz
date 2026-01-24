@@ -77,9 +77,9 @@ When a concept depends on others, load dependencies first:
 
 ### Layer-aware loading
 
-Concepts are organized by structural layer (see [[Decomposition Map]]):
+Concepts are organized by structural layer (see [[Decomposition]]):
 
-**Primitives:** `difference`, `persistence`, `persistent-difference`, `erasure-cost`, `erasure-asymmetry`, `asymmetry`, `constraint`, `accumulation`
+**Primitives:** `difference`, `persistence`, `persistent-difference`, `erasure-cost`, `erasure-asymmetry`, `asymmetry`, `constraint`, `accumulation`, `irreversibility-quanta`
 
 **First-order composites:** `irreversibility`, `displacement`, `absorption`, `propagation`, `constraint-load`, `constraint-accumulation`, `persistence-gradient`
 

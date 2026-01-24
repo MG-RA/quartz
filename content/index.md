@@ -47,7 +47,7 @@ These are *compiled views* over the concept graph.
 Canonical concept definitions live in `/concepts`.
 
 - Layer bundles / dependency classes: [[Irreversibility Accounting (Registry)#Dependency classes (by layer)]]
-- Structural hierarchy: [[Decomposition Map]]
+- Structural hierarchy: [[Decomposition]]
 
 ---
 ## Diagnostics
@@ -66,7 +66,7 @@ They do not propose solutions.
 
 These notes constrain misuse, overreach, and self-sealing interpretations.
 
-- [[Decomposition Map]] - Structural clarification of primitive vs composed concepts
+- [[Decomposition]] - Structural clarification of primitive vs composed concepts
 - *(Non-claims, limits, scope clarifications)*
 
 If the framework starts to feel obvious, total, or morally loaded, return here.

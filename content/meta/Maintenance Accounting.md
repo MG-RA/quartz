@@ -24,7 +24,7 @@ Maintenance is defined as:
 
 > Any change that alters reference topology, layer designation, or invariant phrasing.
 
-(See: Decomposition Map §11)
+(See: [[Decomposition]])
 
 This definition is structural, not procedural.
 It does not imply frequency, cadence, or obligation.

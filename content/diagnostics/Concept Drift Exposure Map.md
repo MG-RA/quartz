@@ -274,6 +274,6 @@ The canonical definition of persistent-difference explicitly states: "Not irreve
 
 ## Maintenance Note
 
-This document was generated as part of structural audit. Per [Decomposition Map §11](../meta/Decomposition%20Map.md), maintenance = any change that alters reference topology, layer designation, or invariant phrasing.
+This document was generated as part of structural audit. Per [[Decomposition]], maintenance = any change that alters reference topology, layer designation, or invariant phrasing.
 
 If concept definitions change, this drift map should be re-run.

@@ -35,6 +35,7 @@ Directionality: This registry points to `/concepts` (definitions) and the paper 
 | [[erasure-cost]] | removal work / burden location | [[persistence]] |
 | [[asymmetry]] | non-symmetric cost structure | [[difference]], [[persistence]] |
 | [[accumulation]] | stacking of constraints | [[constraint]] |
+| [[irreversibility-quanta]] | minimum action-sized difference whose erasure exports cost beyond local system | [[transformation-space]], [[difference]], [[persistence]], [[erasure-cost]], [[asymmetry]] |
 
 ### Concepts :: First-order composites
 
