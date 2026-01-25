@@ -19,7 +19,7 @@ Include scope assumptions, authority assumptions, and state requirements.
 ## Operation
 
 Describe the state transition this mechanism performs.
-Use neutral A â†’ B language where possible.
+Use neutral A → B language where possible.
 
 ## Residuals
 
@@ -57,7 +57,7 @@ Link to relevant concepts (e.g. [[residual]], [[persistent-difference]], [[const
 
 ## Examples
 
-Provide 2â€“3 brief, concrete examples across different domains.
+Provide 2–3 brief, concrete examples across different domains.
 
 ## Why this template change matters (brief, structural)
 
@@ -65,4 +65,3 @@ Provide 2â€“3 brief, concrete examples across different domains.
 - Mechanisms stop pretending to be clean operations.
 - Accounting is pulled downstream of operation, where it belongs.
 - Governance and attribution stop hiding inside prose.
-

@@ -81,4 +81,4 @@ At that point, the system can no longer diagnose itself.
 
 - [[Decomposition]]
 - [[Attribution]]
-- [[Irreversibility]]
+- [[Irreversibility (Invariant)]]

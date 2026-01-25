@@ -5,6 +5,9 @@ depends_on:
 role: projection
 type: encoded
 canonical: false
+# Axes (optional; helps slice the graph)
+# time_phase: pre-commitment | mid-flight | post-failure
+# compression: kernel | working | wrapper | example
 facets:
   - implicit-constraint
   - anti-belief

@@ -9,6 +9,8 @@ cd irrev
 uv sync
 ```
 
+This creates a virtual environment at `irrev/.venv/` and installs the `irrev` CLI into it.
+
 ## Commands
 
 ### `irrev lint`
@@ -19,16 +21,15 @@ Check vault for structural violations.
 uv run irrev -v ../content lint
 uv run irrev -v ../content lint --json
 uv run irrev -v ../content lint --fail-on warning
+uv run irrev -v ../content lint --summary
+uv run irrev -v ../content lint --invariant decomposition
+uv run irrev -v ../content lint --explain layer-violation
+uv run irrev -v ../content lint --trace admissibility
 ```
 
-Checks:
-- **layer-violation**: Concepts depending on higher-layer concepts (e.g., accounting → selector)
-- **dependency-cycle**: Circular dependencies among concepts
-- **missing-dependencies**: Concepts without `## Structural dependencies` section
-- **broken-link**: Wiki-links pointing to non-existent notes
-- **forbidden-edge**: Concepts linking directly to papers
-- **alias-drift**: Using non-canonical names instead of canonical concept names
-- **missing-role**: Notes without `role` in frontmatter
+Notes:
+- Default output is grouped by invariant (decomposition/governance/attribution/irreversibility) to keep failures interpretable.
+- Use `--explain RULE_ID` for authoritative rule docs instead of relying on a hardcoded list here.
 
 ### `irrev pack`
 
@@ -39,6 +40,7 @@ uv run irrev -v ../content pack concept irreversibility
 uv run irrev -v ../content pack concept irreversibility --explain
 uv run irrev -v ../content pack domain "2012-2026 AI Systems" --include-diagnostics
 uv run irrev -v ../content pack projection Stoicism --format json
+uv run irrev -v ../content pack projection OpenAI --include-diagnostics --format md --explain > openai.pack.md
 ```
 
 Options:
@@ -67,6 +69,7 @@ uv run irrev -v ../content hubs --top 50
 uv run irrev -v ../content hubs --all
 uv run irrev -v ../content hubs --all-notes
 uv run irrev -v ../content hubs --rank score --w-mechanism 1.5 --w-failure 1.25
+uv run irrev -v ../content hubs --min-mechanisms 2 --min-accounting 2 --min-failure-states 1
 ```
 
 ### Hub policy (`content/meta/hubs.yml`)
@@ -82,6 +85,9 @@ Inspect graph structure (concept dependencies vs full vault wiki-links).
 ```bash
 uv run irrev -v ../content graph --concepts-only
 uv run irrev -v ../content graph --all-notes --format dot --out vault.dot
+uv run irrev -v ../content graph --concepts-only --format svg --out concepts-only.svg
+uv run irrev -v ../content graph --all-notes --format html --out all-notes.htm
+uv run irrev -v ../content graph --all-notes --format svg --plain --out all-notes.plain.svg
 ```
 
 ## Integration with vault workflow
@@ -102,6 +108,12 @@ Check registry drift after modifying concepts:
 
 ```bash
 uv run irrev -v ../content registry diff
+```
+
+Update the checked-in graph artifacts (SVG + HTML) under `content/meta/graphs/`:
+
+```powershell
+.\scripts\update-graphs.ps1
 ```
 
 ## Git pre-commit hook (registry + lint)
@@ -125,6 +137,16 @@ The linter enforces this dependency hierarchy (lower cannot depend on higher):
 3. **mechanism**: `rollback`, etc.
 4. **accounting**: `tracking-mechanism`, `accounting-failure`, `collapse-surface`
 5. **selector / failure-state / meta-analytical**: `admissibility`, `brittleness`, `saturation`, `lens`
+
+## Windows shortcut (no `uv run`)
+
+After `uv sync`, you can run the CLI directly (from the repo root):
+
+```powershell
+.\irrev\.venv\Scripts\irrev.exe -v .\content lint
+.\irrev\.venv\Scripts\irrev.exe -v .\content registry diff
+.\irrev\.venv\Scripts\irrev.exe -v .\content pack projection "OpenAI" --include-diagnostics --format md --explain
+```
 
 ## Development
 

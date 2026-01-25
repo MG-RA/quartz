@@ -22,7 +22,7 @@ note_kind: operator
 
 ## State transition (schematic)
 
-Exposed system â†’ isolated region + gated reintegration
+Exposed system → isolated region + gated reintegration
 
 ## Residuals
 
@@ -53,4 +53,3 @@ Quarantine is legible when reintegration work and divergence residue are tracked
 - Technical: quarantining compromised machines; residuals include rebuild queues, credential rotation work, and reintegration drift.
 - Institutions: isolating a failed program; residuals include exceptions, parallel processes, and later reconciliation conflicts.
 - Epistemic: “set aside” a claim pending verification; residuals include attention structures and downstream citations that persist.
-

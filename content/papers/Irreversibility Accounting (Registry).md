@@ -107,6 +107,16 @@ The lens applies where:
 - [[persistent-difference]] accumulates faster than local [[rollback]] can unwind.
 - marginal [[erasure-cost]] dominates marginal action capacity.
 
+### Regime detection (convergent symptoms)
+
+No single indicator is decisive. When several of the following appear together, you're likely in an accumulation-dominant regime even if surface innovation is high:
+
+- **Rollback asymmetry**: rollback restores local state but does not restore global options (erasure work remains non-local). [[rollback]] [[erasure-cost]]
+- **Option non-restoration**: repeated fixes reduce errors locally without reopening the [[feasible-set|feasible set]] (constraints keep stacking). [[constraint-load]] [[feasible-set]]
+- **Reform fragility**: small perturbations or policy changes trigger disproportionate option loss due to tight coupling. [[brittleness]]
+- **Exception inflation**: the system preserves function by adding shims, gates, and special cases that persist as [[residual|residuals]]. [[constraint-accumulation]] [[residual]]
+- **Historical irreversibility**: once a threshold is crossed, earlier states are no longer reachable at comparable cost (even with intent). [[irreversibility]]
+
 The lens does not apply where:
 - effects are local, ephemeral, and symmetric.
 - [[rollback]] is cheap, immediate, and coordination-free.

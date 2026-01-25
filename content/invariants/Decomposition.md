@@ -153,4 +153,4 @@ This document exists so that future clarity does not reintroduce old failure mod
 
 - [[Governance]]
 - [[Attribution]]
-- [[Irreversibility]]
+- [[Irreversibility (Invariant)]]

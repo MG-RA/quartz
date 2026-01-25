@@ -4,7 +4,7 @@ status: structural
 canonical: true
 ---
 
-# Irreversibility
+# Irreversibility (Invariant)
 
 > [!note]
 > Scope: Structural clarification only. This is not a theory, diagnostic, projection, or advice.
@@ -15,7 +15,7 @@ Irreversibility is a **structural property**: within a declared [[transformation
 
 ## Minimal decomposition
 
-- [[transformation-space]] declares what counts as “the same thing.”
+- [[transformation-space]] declares what counts as "the same thing."
 - [[persistent-difference]] names what remains re-identifiable under that scope.
 - [[erasure-cost]] is the operational burden required to eliminate a persistent difference.
 - [[erasure-asymmetry]] names the non-symmetry between producing and erasing differences.
@@ -29,10 +29,10 @@ Irreversibility is a **structural property**: within a declared [[transformation
 
 ## What this prevents
 
-- “Undo later” treated as a default without specifying where erasure work lands
+- "Undo later" treated as a default without specifying where erasure work lands
 - Explanations that treat persistence as a moral property instead of a bookkeeping property
 - Claims of reversibility without a declared transformation space
-- Hidden displacement via “cleanup will happen” language
+- Hidden displacement via "cleanup will happen" language
 
 ## What this does NOT claim
 

@@ -22,7 +22,7 @@ note_kind: operator
 
 ## State transition (schematic)
 
-Supported behavior â†’ legacy behavior + transition window â†’ removal (optional)
+Supported behavior → legacy behavior + transition window → removal (optional)
 
 ## Residuals
 
@@ -53,4 +53,3 @@ Deprecation is legible when the shim surface and lingering legacy paths are trac
 - Technical: API deprecation with a version window; residuals include shims, documentation drift, and split client behaviors.
 - Institutions: phased policy withdrawal; residuals include grandfathered exceptions and parallel enforcement regimes.
 - Epistemic: deprecating a term/claim; residuals include archival usage, citations, and partial semantic carryover.
-

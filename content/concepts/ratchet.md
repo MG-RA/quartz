@@ -22,7 +22,7 @@ A **ratchet** is an operator-pattern that makes certain transitions effectively 
 
 ## State transition (schematic)
 
-Low constraint load â†’ higher constraint load (reversal requires non-local work)
+Low constraint load → higher constraint load (reversal requires non-local work)
 
 ## Residuals
 
@@ -53,4 +53,3 @@ Ratchets become legible when additions and removals are tracked symmetrically: w
 - Technical: accumulating feature flags/config branches that never retire, leaving long-lived routing and test-surface residue.
 - Institutions: policy exceptions that persist as precedents, creating a one-way growth of special cases.
 - Personal: commitments that accumulate coordination obligations (calendars, dependents), narrowing feasible future moves.
-

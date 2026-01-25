@@ -28,6 +28,7 @@ Template: [[Projection]]
 - [[Jung]]
 - [[Cosmology]]
 - [[Quantum Measurement]]
+- [[OpenAI]]
 - [[Plato's Republic]]
 
 ## Do Not Do

@@ -81,4 +81,4 @@ Attribution that a role controlled (or failed to control) the rules and enforcem
 
 - See [[Decomposition]] for the object/operator/boundary/governance decomposition this supports.
 - See [[Governance]] for the non-exemption constraint that stabilizes governance responsibility.
-- See [[Irreversibility]] for the structural condition that makes cost-routing and option loss non-trivial under scale.
+- See [[Irreversibility (Invariant)]] for the structural condition that makes cost-routing and option loss non-trivial under scale.

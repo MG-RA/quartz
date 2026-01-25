@@ -24,7 +24,7 @@ Containment is an ordinary mechanism under scale: it trades global spread for lo
 
 ## State transition (schematic)
 
-Unbounded spread of difference â†’ bounded region + boundary enforcement
+Unbounded spread of difference → bounded region + boundary enforcement
 
 ## Residuals
 
@@ -55,4 +55,3 @@ Containment becomes legible when the boundary’s residual maintenance is tracke
 - Technical: sandboxing or feature flags that keep a risky behavior in a bounded cohort while creating long-lived routing and compatibility residue.
 - Institutions: emergency powers scoped to a jurisdiction that leave precedents and enforcement surfaces as residual constraints.
 - Personal: “keep work separate” rules that reduce spillover while creating ongoing boundary-maintenance and exception handling.
-

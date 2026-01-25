@@ -22,7 +22,7 @@ note_kind: operator
 
 ## State transition (schematic)
 
-Scheme A â†’ mixed A/B (dual-run) â†’ scheme B (with residue)
+Scheme A → mixed A/B (dual-run) → scheme B (with residue)
 
 ## Residuals
 
@@ -53,4 +53,3 @@ Migration is legible when mapping residue and reconciliation work are tracked: w
 - Technical: database migration; residuals include backfill pipelines, schema shims, and reconciliation jobs.
 - Institutions: reorganizations; residuals include parallel reporting lines and split authority surfaces.
 - Personal: moving cities; residuals include social/contractual obligations and new coordination seams that persist.
-

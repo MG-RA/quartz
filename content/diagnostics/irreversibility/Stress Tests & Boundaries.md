@@ -34,4 +34,4 @@ canonical: true
 ## Links
 
 - [[Failure Modes of the Irreversibility Lens]]
-- [[Irreversibility Accounting (Paper)]]
+- [[Irreversibility Accounting (Registry)]]

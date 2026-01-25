@@ -12,7 +12,7 @@ note_kind: operator
 # Rollback
 
 ## Definition
-An operation that attempts to restore a prior state by reversing or undoing recent changes. Rollback assumes that the path from state A to state B can be traversed in reverse at comparable cost. In systems with persistent differences, rollback may restore local state while leaving propagated effects, displaced costs, and accumulated constraints intactâ€”i.e., leaving [[residual|residuals]] behind. Rollback is the implicit mechanism behind correction narratives.
+An operation that attempts to restore a prior state by reversing or undoing recent changes. Rollback assumes that the path from state A to state B can be traversed in reverse at comparable cost. In systems with persistent differences, rollback may restore local state while leaving propagated effects, displaced costs, and accumulated constraints intact—i.e., leaving [[residual|residuals]] behind. Rollback is the implicit mechanism behind correction narratives.
 
 ## Residuals
 

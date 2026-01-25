@@ -39,5 +39,5 @@ Scope: irreversibility-first diagnosis (persistence + erasure-cost asymmetry) fo
 - [[Diagnostic Checklist]]
 - [[Stress Tests & Boundaries]]
 - [[Failure Signatures]]
-- [[Irreversibility Accounting (Paper)]]
+- [[Irreversibility Accounting (Registry)]]
 - [[Failure Modes of the Irreversibility Lens]]

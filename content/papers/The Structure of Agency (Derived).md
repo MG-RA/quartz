@@ -34,6 +34,44 @@ This interpretation is relevant in regimes where:
 
 It is less informative in novelty-dominant or reversibility-dominant regimes (e.g. early exploration, low-stakes trial-and-error, artistic experimentation).
 
+### Regime detection (convergent symptoms)
+
+No single indicator is decisive. When several of these appear together, you're likely in an accumulation-dominant regime even if surface innovation is high:
+
+- rollback restores local state but does not restore global options ([[rollback]] + non-local [[erasure-cost]])
+- the [[feasible-set|feasible set]] does not reopen after repeated fixes (option non-restoration)
+- small reforms trigger disproportionate option loss under coupling ([[brittleness]])
+- preserving function increasingly requires shims/exceptions that persist as [[residual|residuals]] ([[constraint-accumulation]])
+- once crossed, prior states are not reachable at comparable cost ([[irreversibility]])
+
+### Novelty taxonomy (diagnostic, not a law)
+
+This framework treats "novelty" as a structural classification, not a celebration term.
+
+- **Local novelty:** new configurations inside an existing regime (new features, new tactics, new phrasing) that do not sustainably expand the feasible set; often redistributes or displaces costs.
+- **Transformational novelty:** sustained expansion of admissible transitions that survives stress without exporting hidden erasure costs; rare, but real.
+- **Regime-shift novelty:** changes the substrate/coupling conditions such that what counts as feasible changes (new coordination capacity, new interfaces, new transformation space); can temporarily break accumulation patterns.
+
+#### Adversarial replay test (ex ante)
+
+For a claimed "transformational" move: would the option expansion survive adversarial replay without exporting hidden costs?
+
+- Specify the claimed expansion (what new transitions become admissible).
+- Stress it: replay under perturbation, partial failure, and worst-case coordination assumptions.
+- Track where erasure work lands; if expansion requires untracked displacement, it's not transformational.
+
+In other words: not "did we grow," but "did the growth remain coherent under stress without silently routing its erasure costs elsewhere?"
+
+#### Conservation pattern (regime-conditional)
+
+In accumulation-dominant regimes, option expansion often appears "conserved" as a strong pattern: apparent gains are offset by new constraints somewhere else (finite coordination capacity + persistence coupling + asymmetric erasure).
+
+This is not a law. Breaks are expected in:
+
+- early-stage, low-coupling exploration
+- genuinely new substrates/interfaces that reduce coupling
+- contexts with real local absorption capacity (costs are paid down, not displaced)
+
 ---
 
 ## 1. Preconditions (Assumed, Not Re-derived)
