@@ -1,0 +1,295 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Concept dependency graph (concepts-only)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { margin: 0; background: #0f1115; color: #e6e6e6; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
+    .wrap { padding: 12px; }
+    .toolbar { display: flex; gap: 8px; align-items: center; margin: 0 0 10px 0; }
+    .btn { background: #1b1f2a; color: #e6e6e6; border: 1px solid #3a4154; border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+    .btn:hover { border-color: #5b6782; }
+    .hint { color: #9aa4b2; font-size: 12px; }
+    .viewport { border: 1px solid #3a4154; border-radius: 10px; overflow: hidden; }
+    svg { width: 100%; height: auto; display: block; touch-action: none; user-select: none; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="toolbar">
+      <button class="btn" id="resetBtn" type="button">Reset</button>
+      <button class="btn" id="zoomInBtn" type="button">Zoom +</button>
+      <button class="btn" id="zoomOutBtn" type="button">Zoom -</button>
+      <span class="hint">Drag to pan • Scroll to zoom</span>
+    </div>
+    <div class="viewport" id="viewport">
+<svg xmlns="http://www.w3.org/2000/svg" width="1840" height="700" viewBox="0 0 1840 700" style="background:#0f1115">
+<text x="40" y="42" fill="#e6e6e6" font-family="Helvetica" font-size="16">Concept dependency graph (concepts-only)</text>
+<rect x="40" y="668" width="10" height="10" fill="#f9d65c" stroke="#3a4154"/>
+<text x="54" y="678" fill="#e6e6e6" font-family="Helvetica" font-size="11">Primitives</text>
+<rect x="180" y="668" width="10" height="10" fill="#8ecae6" stroke="#3a4154"/>
+<text x="194" y="678" fill="#e6e6e6" font-family="Helvetica" font-size="11">First-order</text>
+<rect x="320" y="668" width="10" height="10" fill="#90be6d" stroke="#3a4154"/>
+<text x="334" y="678" fill="#e6e6e6" font-family="Helvetica" font-size="11">Mechanisms</text>
+<rect x="460" y="668" width="10" height="10" fill="#f4a261" stroke="#3a4154"/>
+<text x="474" y="678" fill="#e6e6e6" font-family="Helvetica" font-size="11">Accounting</text>
+<rect x="600" y="668" width="10" height="10" fill="#e76f51" stroke="#3a4154"/>
+<text x="614" y="678" fill="#e6e6e6" font-family="Helvetica" font-size="11">Failure</text>
+<rect x="740" y="668" width="10" height="10" fill="#b5179e" stroke="#3a4154"/>
+<text x="754" y="678" fill="#e6e6e6" font-family="Helvetica" font-size="11">Diagnostic</text>
+<g id="edges" stroke-linecap="round" fill="none">
+<path d="M 605.0,99.5 C 645.0,99.5 528.0,264.5 568.0,264.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 605.0,96.5 C 697.0,96.5 249.9,323.5 342.0,323.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 605.0,98.0 C 645.0,98.0 522.0,490.0 562.0,490.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1044.0,92.0 C 1208.2,92.0 410.9,104.0 575.0,104.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1044.0,96.5 C 1210.6,96.5 401.4,211.5 568.0,211.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1044.0,102.5 C 1210.6,102.5 401.4,261.5 568.0,261.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1044.0,96.5 C 1289.7,96.5 96.3,323.5 342.0,323.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1044.0,93.5 C 1212.7,93.5 393.3,494.5 562.0,494.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1044.0,104.0 C 1212.0,104.0 396.0,596.0 564.0,596.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1044.0,99.5 C 1084.0,99.5 975.0,264.5 1015.0,264.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 384.0,98.0 C 424.0,98.0 308.0,210.0 348.0,210.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1487.0,92.0 C 1885.7,92.0 -50.6,216.0 348.0,216.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1487.0,101.0 C 1808.7,101.0 246.4,207.0 568.0,207.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1487.0,104.0 C 1652.5,104.0 848.5,204.0 1014.0,204.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 388.0,155.5 C 428.0,155.5 312.0,264.5 352.0,264.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 388.0,158.5 C 428.0,158.5 309.0,429.5 349.0,429.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1264.0,101.0 C 1330.2,101.0 1386.8,95.0 1453.0,95.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1264.0,92.0 C 1507.6,92.0 324.4,216.0 568.0,216.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1264.0,95.0 C 1509.0,95.0 319.0,605.0 564.0,605.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1044.0,148.0 C 1208.2,148.0 410.9,160.0 575.0,160.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1044.0,155.5 C 1289.7,155.5 96.3,320.5 342.0,320.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1044.0,158.5 C 1084.0,158.5 974.0,205.5 1014.0,205.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1044.0,160.0 C 1287.2,160.0 105.8,428.0 349.0,428.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1044.0,158.5 C 1212.0,158.5 396.0,597.5 564.0,597.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 605.0,154.0 C 645.0,154.0 528.0,210.0 568.0,210.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 605.0,151.0 C 645.0,151.0 522.0,493.0 562.0,493.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 605.0,157.0 C 645.0,157.0 524.0,599.0 564.0,599.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 612.0,208.5 C 704.4,208.5 255.6,211.5 348.0,211.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 612.0,205.5 C 706.5,205.5 247.5,326.5 342.0,326.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 612.0,213.0 C 652.0,213.0 524.0,599.0 564.0,599.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,95.0 C 990.6,95.0 181.4,213.0 348.0,213.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,101.0 C 913.6,101.0 478.4,263.0 568.0,263.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,99.5 C 915.7,99.5 470.3,488.5 562.0,488.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,93.5 C 912.5,93.5 482.4,550.5 571.0,550.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,92.0 C 915.0,92.0 473.0,608.0 564.0,608.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,151.0 C 913.6,151.0 478.4,213.0 568.0,213.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,157.0 C 913.6,157.0 478.4,263.0 568.0,263.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,148.0 C 915.7,148.0 470.3,496.0 562.0,496.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,152.5 C 912.5,152.5 482.4,547.5 571.0,547.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,158.5 C 915.0,158.5 473.0,597.5 564.0,597.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 388.0,270.5 C 477.9,270.5 41.1,93.5 131.0,93.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 612.0,263.0 C 706.5,263.0 247.5,325.0 342.0,325.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 612.0,267.5 C 652.0,267.5 522.0,488.5 562.0,488.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 604.0,326.5 C 692.2,326.5 263.8,149.5 352.0,149.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 604.0,325.0 C 695.7,325.0 250.3,319.0 342.0,319.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 604.0,322.0 C 644.0,322.0 522.0,490.0 562.0,490.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 398.0,320.5 C 438.0,320.5 309.0,435.5 349.0,435.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1046.0,211.5 C 1290.3,211.5 103.7,208.5 348.0,208.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1046.0,210.0 C 1213.3,210.0 400.7,210.0 568.0,210.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1046.0,216.0 C 1292.4,216.0 95.6,316.0 342.0,316.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1046.0,213.0 C 1215.4,213.0 392.6,487.0 562.0,487.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1046.0,211.5 C 1366.2,211.5 -189.2,96.5 131.0,96.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 605.0,375.0 C 693.5,375.0 263.4,157.0 352.0,157.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 605.0,382.5 C 697.0,382.5 249.9,317.5 342.0,317.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 605.0,375.0 C 694.6,375.0 259.4,437.0 349.0,437.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 605.0,378.0 C 770.9,378.0 -34.9,98.0 131.0,98.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 384.0,375.0 C 424.0,375.0 312.0,157.0 352.0,157.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 384.0,372.0 C 424.0,372.0 312.0,272.0 352.0,272.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 384.0,379.5 C 424.0,379.5 302.0,320.5 342.0,320.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 384.0,378.0 C 424.0,378.0 309.0,434.0 349.0,434.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 384.0,375.0 C 472.6,375.0 42.5,101.0 131.0,101.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1704.0,99.5 C 1791.8,99.5 1365.2,96.5 1453.0,96.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1704.0,104.0 C 2177.2,104.0 -121.2,260.0 352.0,260.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1704.0,98.0 C 2178.2,98.0 -125.2,434.0 349.0,434.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,211.5 C 913.6,211.5 478.4,264.5 568.0,264.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,205.5 C 992.7,205.5 173.3,326.5 342.0,326.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,216.0 C 915.7,216.0 470.3,484.0 562.0,484.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,204.0 C 912.5,204.0 482.4,552.0 571.0,552.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,213.0 C 915.0,213.0 473.0,599.0 564.0,599.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 391.0,428.0 C 431.0,428.0 312.0,272.0 352.0,272.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 391.0,434.0 C 482.0,434.0 40.0,98.0 131.0,98.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 604.0,440.0 C 644.0,440.0 535.0,372.0 575.0,372.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 618.0,485.5 C 714.6,485.5 245.4,326.5 342.0,326.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 618.0,487.0 C 712.1,487.0 254.9,437.0 349.0,437.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 609.0,546.0 C 649.0,546.0 522.0,490.0 562.0,490.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,266.0 C 990.6,266.0 181.4,210.0 348.0,210.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,263.0 C 913.6,263.0 478.4,269.0 568.0,269.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,267.5 C 915.7,267.5 470.3,488.5 562.0,488.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,269.0 C 912.5,269.0 482.4,543.0 571.0,543.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,270.5 C 915.0,270.5 473.0,597.5 564.0,597.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,325.0 C 989.2,325.0 186.8,151.0 352.0,151.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,322.0 C 990.6,322.0 181.4,210.0 348.0,210.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,320.5 C 913.6,320.5 478.4,211.5 568.0,211.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,319.0 C 992.7,319.0 173.3,325.0 342.0,325.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,320.5 C 915.0,320.5 473.0,603.5 564.0,603.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 616.0,606.5 C 709.8,606.5 254.2,205.5 348.0,205.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 616.0,606.5 C 656.0,606.5 528.0,261.5 568.0,261.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 616.0,597.5 C 656.0,597.5 522.0,494.5 562.0,494.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,379.5 C 913.6,379.5 478.4,264.5 568.0,264.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,381.0 C 915.7,381.0 470.3,487.0 562.0,487.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,372.0 C 912.5,372.0 482.4,552.0 571.0,552.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 824.0,378.0 C 915.0,378.0 473.0,602.0 564.0,602.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1264.0,151.0 C 1330.2,151.0 1386.8,101.0 1453.0,101.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1264.0,149.5 C 1507.6,149.5 324.4,214.5 568.0,214.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1264.0,155.5 C 1586.7,155.5 19.3,320.5 342.0,320.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1264.0,149.5 C 1509.0,149.5 319.0,606.5 564.0,606.5" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1045.0,263.0 C 1291.0,263.0 96.0,325.0 342.0,325.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+<path d="M 1045.0,260.0 C 1214.0,260.0 393.0,496.0 562.0,496.0" stroke="#3a4154" stroke-width="1.0" opacity="0.8"/>
+</g>
+<g id="nodes">
+<circle cx="590.0" cy="98.0" r="15.0" fill="#8ecae6" stroke="#3a4154" stroke-width="1.0"/>
+<text x="590.0" y="127.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">absorption</text>
+<circle cx="1030.0" cy="98.0" r="14.0" fill="#f4a261" stroke="#3a4154" stroke-width="1.0"/>
+<text x="1030.0" y="126.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">accounting-failure</text>
+<circle cx="370.0" cy="98.0" r="14.0" fill="#f9d65c" stroke="#3a4154" stroke-width="1.0"/>
+<text x="370.0" y="126.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">accumulation</text>
+<circle cx="1470.0" cy="98.0" r="17.0" fill="#b5179e" stroke="#3a4154" stroke-width="1.0"/>
+<text x="1470.0" y="129.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">admissibility</text>
+<circle cx="370.0" cy="154.0" r="18.0" fill="#f9d65c" stroke="#3a4154" stroke-width="1.0"/>
+<text x="370.0" y="186.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">asymmetry</text>
+<circle cx="1250.0" cy="98.0" r="14.0" fill="#e76f51" stroke="#3a4154" stroke-width="1.0"/>
+<text x="1250.0" y="126.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">brittleness</text>
+<circle cx="1030.0" cy="154.0" r="14.0" fill="#f4a261" stroke="#3a4154" stroke-width="1.0"/>
+<text x="1030.0" y="182.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">collapse-surface</text>
+<circle cx="370.0" cy="210.0" r="22.0" fill="#f9d65c" stroke="#3a4154" stroke-width="1.0"/>
+<text x="370.0" y="246.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">constraint</text>
+<circle cx="590.0" cy="154.0" r="15.0" fill="#8ecae6" stroke="#3a4154" stroke-width="1.0"/>
+<text x="590.0" y="183.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">constraint-accumulation</text>
+<rect x="565.8" y="192.4" width="48.4" height="35.2" rx="8" fill="#8ecae6" stroke="#e6e6e6" stroke-width="2.2"/>
+<text x="590.0" y="246.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">constraint-load (hub: Aggregation hub)</text>
+<circle cx="810.0" cy="98.0" r="14.0" fill="#90be6d" stroke="#3a4154" stroke-width="1.0"/>
+<text x="810.0" y="126.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">containment</text>
+<circle cx="810.0" cy="154.0" r="14.0" fill="#90be6d" stroke="#3a4154" stroke-width="1.0"/>
+<text x="810.0" y="182.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">deprecation</text>
+<circle cx="370.0" cy="266.0" r="18.0" fill="#f9d65c" stroke="#3a4154" stroke-width="1.0"/>
+<text x="370.0" y="298.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">difference</text>
+<circle cx="590.0" cy="266.0" r="22.0" fill="#8ecae6" stroke="#3a4154" stroke-width="1.0"/>
+<text x="590.0" y="302.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">displacement</text>
+<circle cx="590.0" cy="322.0" r="14.0" fill="#8ecae6" stroke="#3a4154" stroke-width="1.0"/>
+<text x="590.0" y="350.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">erasure-asymmetry</text>
+<circle cx="370.0" cy="322.0" r="28.0" fill="#f9d65c" stroke="#e6e6e6" stroke-width="2.2"/>
+<circle cx="370.0" cy="322.0" r="23.0" fill="none" stroke="#e6e6e6" stroke-width="2.2"/>
+<text x="370.0" y="364.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">erasure-cost (hub: Primitive hub)</text>
+<circle cx="1030.0" cy="210.0" r="16.0" fill="#f4a261" stroke="#3a4154" stroke-width="1.0"/>
+<text x="1030.0" y="240.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">feasible-set</text>
+<circle cx="590.0" cy="378.0" r="15.0" fill="#8ecae6" stroke="#3a4154" stroke-width="1.0"/>
+<text x="590.0" y="407.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">irreversibility</text>
+<circle cx="370.0" cy="378.0" r="14.0" fill="#f9d65c" stroke="#3a4154" stroke-width="1.0"/>
+<text x="370.0" y="406.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">irreversibility-quanta</text>
+<circle cx="1690.0" cy="98.0" r="14.0" fill="#b5179e" stroke="#3a4154" stroke-width="1.0"/>
+<text x="1690.0" y="126.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">lens</text>
+<circle cx="810.0" cy="210.0" r="14.0" fill="#90be6d" stroke="#3a4154" stroke-width="1.0"/>
+<text x="810.0" y="238.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">migration</text>
+<circle cx="370.0" cy="434.0" r="21.0" fill="#f9d65c" stroke="#3a4154" stroke-width="1.0"/>
+<text x="370.0" y="469.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">persistence</text>
+<circle cx="590.0" cy="434.0" r="14.0" fill="#8ecae6" stroke="#3a4154" stroke-width="1.0"/>
+<text x="590.0" y="462.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">persistence-gradient</text>
+<circle cx="590.0" cy="490.0" r="28.0" fill="#8ecae6" stroke="#3a4154" stroke-width="1.0"/>
+<text x="590.0" y="532.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">persistent-difference</text>
+<circle cx="590.0" cy="546.0" r="19.0" fill="#8ecae6" stroke="#3a4154" stroke-width="1.0"/>
+<text x="590.0" y="579.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">propagation</text>
+<circle cx="810.0" cy="266.0" r="14.0" fill="#90be6d" stroke="#3a4154" stroke-width="1.0"/>
+<text x="810.0" y="294.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">quarantine</text>
+<circle cx="810.0" cy="322.0" r="14.0" fill="#90be6d" stroke="#3a4154" stroke-width="1.0"/>
+<text x="810.0" y="350.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">ratchet</text>
+<polygon points="618.8,613.9 601.9,630.8 578.1,630.8 561.2,613.9 561.2,590.1 578.1,573.2 601.9,573.2 618.8,590.1" fill="#8ecae6" stroke="#e6e6e6" stroke-width="2.2"/>
+<text x="590.0" y="642.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">residual (hub: Mechanism-output hub)</text>
+<circle cx="810.0" cy="378.0" r="14.0" fill="#90be6d" stroke="#3a4154" stroke-width="1.0"/>
+<text x="810.0" y="406.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">rollback</text>
+<circle cx="1250.0" cy="154.0" r="14.0" fill="#e76f51" stroke="#3a4154" stroke-width="1.0"/>
+<text x="1250.0" y="182.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">saturation</text>
+<circle cx="1030.0" cy="266.0" r="15.0" fill="#f4a261" stroke="#3a4154" stroke-width="1.0"/>
+<text x="1030.0" y="295.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">tracking-mechanism</text>
+<circle cx="150.0" cy="98.0" r="19.0" fill="#f9d65c" stroke="#3a4154" stroke-width="1.0"/>
+<text x="150.0" y="131.0" fill="#e6e6e6" font-family="Helvetica" font-size="11" text-anchor="middle">transformation-space</text>
+</g>
+</svg>
+
+    </div>
+  </div>
+  <script>
+    (function () {
+      const viewportEl = document.getElementById('viewport');
+      const svg = viewportEl.querySelector('svg');
+      if (!svg) return;
+      if (!svg.getAttribute('viewBox')) {
+        const w = svg.getAttribute('width') || 1000;
+        const h = svg.getAttribute('height') || 800;
+        svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      }
+
+      const vb = svg.viewBox.baseVal;
+      const initial = { x: vb.x, y: vb.y, width: vb.width, height: vb.height };
+
+      const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+      const zoomAt = (clientX, clientY, factor) => {
+        const rect = svg.getBoundingClientRect();
+        const px = (clientX - rect.left) / rect.width;
+        const py = (clientY - rect.top) / rect.height;
+
+        const newW = vb.width / factor;
+        const newH = vb.height / factor;
+
+        const dx = (vb.width - newW) * px;
+        const dy = (vb.height - newH) * py;
+
+        vb.x += dx;
+        vb.y += dy;
+        vb.width = newW;
+        vb.height = newH;
+      };
+
+      let isPanning = false;
+      let start = { x: 0, y: 0, vbX: 0, vbY: 0 };
+
+      svg.addEventListener('pointerdown', (e) => {
+        isPanning = true;
+        svg.setPointerCapture(e.pointerId);
+        start = { x: e.clientX, y: e.clientY, vbX: vb.x, vbY: vb.y };
+      });
+      svg.addEventListener('pointerup', () => { isPanning = false; });
+      svg.addEventListener('pointercancel', () => { isPanning = false; });
+      svg.addEventListener('pointermove', (e) => {
+        if (!isPanning) return;
+        const rect = svg.getBoundingClientRect();
+        const dx = (e.clientX - start.x) * (vb.width / rect.width);
+        const dy = (e.clientY - start.y) * (vb.height / rect.height);
+        vb.x = start.vbX - dx;
+        vb.y = start.vbY - dy;
+      });
+
+      svg.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const direction = e.deltaY > 0 ? -1 : 1;
+        const factor = direction > 0 ? 1.15 : 1 / 1.15;
+
+        const minW = initial.width * 0.08;
+        const maxW = initial.width * 3.5;
+        const beforeW = vb.width;
+        zoomAt(e.clientX, e.clientY, factor);
+        vb.width = clamp(vb.width, minW, maxW);
+        vb.height = vb.width * (initial.height / initial.width);
+        // If clamped, keep center stable-ish.
+        if (vb.width !== beforeW / factor) {
+          const cx = vb.x + vb.width / 2;
+          const cy = vb.y + vb.height / 2;
+          vb.x = cx - vb.width / 2;
+          vb.y = cy - vb.height / 2;
+        }
+      }, { passive: false });
+
+      const reset = () => {
+        vb.x = initial.x;
+        vb.y = initial.y;
+        vb.width = initial.width;
+        vb.height = initial.height;
+      };
+      document.getElementById('resetBtn')?.addEventListener('click', reset);
+      document.getElementById('zoomInBtn')?.addEventListener('click', () => zoomAt(window.innerWidth / 2, 140, 1.2));
+      document.getElementById('zoomOutBtn')?.addEventListener('click', () => zoomAt(window.innerWidth / 2, 140, 1 / 1.2));
+    })();
+  </script>
+</body>
+</html>
