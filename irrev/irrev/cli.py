@@ -517,6 +517,50 @@ def junctions_concept_audit(
     sys.exit(exit_code)
 
 
+@junctions.command("definition-analysis")
+@click.option("--top", type=int, default=25, show_default=True, help="How many concepts to analyze (by in-degree)")
+@click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["md", "json"]),
+    default="md",
+    show_default=True,
+    help="Output format",
+)
+@click.option("--out", type=click.Path(dir_okay=False, path_type=Path), default=None, help="Write output to a file")
+@click.option("--all", "include_all", is_flag=True, default=False, help="Analyze all concepts (ignores --top)")
+@click.pass_context
+def junctions_definition_analysis(
+    ctx: click.Context,
+    top: int,
+    output_format: str,
+    out: Path | None,
+    include_all: bool,
+) -> None:
+    """Analyze definition semantics: verbs, patterns, implicit deps (Phase 1b).
+
+    Examines concept definitions for:
+
+    \b
+    - Verb patterns (state/action/modal/causal)
+    - Negation density and operational framing
+    - Cost language and spatial metaphors
+    - Implicit dependencies (mentioned but not linked)
+    - Role purity (prescriptive vs descriptive)
+    - Definition scope metrics (sentences vs NOT items)
+
+    Examples:
+
+        irrev junctions definition-analysis --top 10
+
+        irrev junctions definition-analysis --all --format json
+    """
+    from .commands.junctions import run_definition_analysis
+
+    exit_code = run_definition_analysis(ctx.obj["vault"], out=out, top=top, fmt=output_format, include_all=include_all)
+    sys.exit(exit_code)
+
+
 def main() -> None:
     """Main entrypoint."""
     cli()

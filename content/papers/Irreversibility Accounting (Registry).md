@@ -48,8 +48,8 @@ Directionality: This registry points to `/concepts` (definitions) and the paper 
 | [[absorption]] | where removal work is paid locally | [[displacement]], [[erasure-cost]], [[persistent-difference]] |
 | [[propagation]] | how differences copy/spread | [[persistent-difference]] |
 | [[residual]] | persistent remainder left after mechanisms act (hub: Mechanism-output hub) | [[constraint]], [[displacement]], [[persistent-difference]] |
-| [[constraint-load]] | accumulated incompatibilities (bookkeeping) (hub: Aggregation hub) | [[constraint]], [[erasure-cost]], [[residual]] |
-| [[constraint-accumulation]] | process by which load grows | [[constraint-load]], [[persistent-difference]], [[residual]] |
+| [[constraint-load]] | accumulated incompatibilities (bookkeeping) (hub: Aggregation hub) | [[constraint]], [[difference]], [[erasure-cost]], [[residual]] |
+| [[constraint-accumulation]] | process by which load grows | [[accumulation]], [[constraint]], [[constraint-load]], [[difference]], [[persistent-difference]], [[residual]] |
 | [[irreversibility]] | composite relation across persistence and costs | [[asymmetry]], [[erasure-cost]], [[persistence]], [[transformation-space]] |
 | [[persistence-gradient]] | "for whom is this irreversible?" | [[irreversibility]] |
 

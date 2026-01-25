@@ -11,9 +11,9 @@ canonical: true
 
 ## Definition
 
-**Erasure cost** is the set of resources required to remove a persistent difference, or to reduce it such that it no longer constrains future options. These resources may take multiple forms, including time, energy, attention, coordination, or the acceptance of new constraints elsewhere.
+**Erasure cost** is the set of resources required to remove a [[persistent-difference|persistent difference]], or to reduce it such that it no longer constrains future options. These resources may take multiple forms, including time, energy, attention, coordination, or the acceptance of new [[constraint|constraints]] elsewhere.
 
-Erasure cost functions as the **operational test for persistence**: if a difference can be removed locally, immediately, and without non-trivial expenditure, then it was not persistent in the relevant transformation space. Where removal appears cheap, scrutiny must focus on whether costs were hidden, deferred, or exported beyond the local frame.
+Erasure cost functions as the **operational test for [[persistence]]**: if a [[difference]] can be removed locally, immediately, and without non-trivial expenditure, then it was not persistent in the relevant [[transformation-space|transformation space]]. Where removal appears cheap, scrutiny must focus on whether costs were hidden, deferred, or exported beyond the local frame.
 
 Paying erasure cost does not guarantee net reduction of burden; in practice, removal often redistributes cost across time, agents, or systems rather than eliminating it outright.
 

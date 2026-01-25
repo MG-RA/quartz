@@ -141,7 +141,7 @@ This is a success condition:
 
 ---
 
-## 7. Agency boundary (not yet derived)
+## 7. Agency boundary (derived)
 
 Agency does not appear as a primitive.
 
@@ -153,6 +153,8 @@ It emerges at the interface of:
 - [[displacement]] / [[absorption]]
 
 Agency must therefore be **derived**, not assumed.
+
+Derived articulation: [[The Structure of Agency (Derived)]].
 
 ---
 

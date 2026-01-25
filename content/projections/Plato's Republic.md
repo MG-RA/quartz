@@ -7,6 +7,7 @@ facets:
   - anti-belief
   - scale-fragile
   - misuse-risk
+failure_modes: []
 ---
 
 # Plato's Republic

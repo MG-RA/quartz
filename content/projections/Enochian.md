@@ -8,6 +8,7 @@ facets:
   - canon-resistant
   - scale-fragile
   - misuse-risk
+failure_modes: []
 ---
 
 # Enochian

@@ -3,14 +3,16 @@ role: paper
 type: derived
 canonical: false
 depends_on:
-  - "[[Irreversibility Accounting (Paper)]]"
+  - "[[Ontology of Irreversibility#Agency boundary (derived)]]"
+  - "[[Irreversibility Accounting (Registry)#Dependency classes (by layer)]]"
+  - "[[Irreversibility Accounting (Registry)#Operator (diagnostic sequence)]]"
 ---
 
 # The Structure of Agency (Derived)
 
 **Status:** Companion paper  
 **Type:** Structural interpretation  
-**Depends on:** [[Irreversibility Accounting (Paper)]]
+**Depends on:** [[Ontology of Irreversibility]]; [[Irreversibility Accounting (Registry)]]
 
 *A constraint-first interpretation of agency in accumulation-dominated regimes.*
 
@@ -20,12 +22,14 @@ depends_on:
 
 This document offers a **constraint-first interpretation of agency** under conditions where irreversible accumulation constrains action.
 
-It does **not** propose a fundamental ontology of agency, consciousness, freedom, or value. Instead, it assumes the diagnostic concepts introduced in [[Irreversibility Accounting (Paper)]] and asks a narrower question:
+It does **not** propose a fundamental ontology of agency, consciousness, freedom, or value. Instead, it assumes the core concept spine defined in `/concepts` and assembled in [[Irreversibility Accounting (Registry)]] and asks a narrower question:
 
 > [!note]
 > Scope: Derived interpretation; not an ontology of agency, consciousness, freedom, or value.
 
 > **Where does agency operate once irreversibility is taken seriously?**
+
+The ontology note flags an **agency boundary**: agency is not primitive; it emerges at the interface of [[feasible-set]], [[admissibility]], [[constraint-load]], and [[displacement]] / [[absorption]]. This paper is the derived articulation of that boundary. [[Ontology of Irreversibility#Agency boundary (derived)]]
 
 This interpretation is relevant in regimes where:
 - actions produce [[persistent-difference|persistent differences]]
@@ -33,6 +37,24 @@ This interpretation is relevant in regimes where:
 - [[constraint-accumulation|constraint accumulation]] dominates over novelty
 
 It is less informative in novelty-dominant or reversibility-dominant regimes (e.g. early exploration, low-stakes trial-and-error, artistic experimentation).
+
+### Minimal derivation sketch (where “agency” enters)
+
+The explanatory spine stays fixed:
+
+```
+[[persistent-difference]]
+        ↓
+[[erasure-cost]] / [[erasure-asymmetry]]
+        ↓
+[[residual]]
+        ↓
+[[constraint-load]] / [[constraint-accumulation]]
+        ↓
+[[admissibility]] / [[feasible-set]]
+```
+
+Agency enters only once there is a **non-trivial boundary** between admissible and inadmissible moves: a situation where a localized system can still select among multiple admissible transitions, but selection changes where the next [[irreversibility-quanta|irreversibility quantum]] lands.
 
 ### Regime detection (convergent symptoms)
 
@@ -52,15 +74,11 @@ This framework treats "novelty" as a structural classification, not a celebratio
 - **Transformational novelty:** sustained expansion of admissible transitions that survives stress without exporting hidden erasure costs; rare, but real.
 - **Regime-shift novelty:** changes the substrate/coupling conditions such that what counts as feasible changes (new coordination capacity, new interfaces, new transformation space); can temporarily break accumulation patterns.
 
-#### Adversarial replay test (ex ante)
+#### Coherence question (diagnostic)
 
-For a claimed "transformational" move: would the option expansion survive adversarial replay without exporting hidden costs?
+For a claimed "transformational" move: would the option expansion survive adversarial replay without exporting hidden erasure work?
 
-- Specify the claimed expansion (what new transitions become admissible).
-- Stress it: replay under perturbation, partial failure, and worst-case coordination assumptions.
-- Track where erasure work lands; if expansion requires untracked displacement, it's not transformational.
-
-In other words: not "did we grow," but "did the growth remain coherent under stress without silently routing its erasure costs elsewhere?"
+In other words: not "did we grow," but "did the growth remain coherent under stress without silently routing its [[erasure-cost|erasure costs]] elsewhere?"
 
 #### Conservation pattern (regime-conditional)
 
@@ -107,6 +125,10 @@ They select **paths within it**.
 Agency appears wherever constraints are:
 - sufficiently dense to matter
 - but not yet total
+
+### Agency in the irreversibility-quanta sense (routing, not avoidance)
+
+Agency is not the freedom to avoid irreversibility. Agency is the capacity to choose where the next [[irreversibility-quanta|irreversibility quantum]] lands. Strong agency localizes and contains quanta. Weak agency disperses them while assuming future rollback. [[irreversibility-quanta#Relation to agency]]
 
 ---
 
@@ -217,7 +239,7 @@ This represents not a loss of agency, but a **change in its operating regime**.
 For systems operating under irreversible accumulation, the following ordering is **sufficient for analysis**:
 
 1. [[persistent-difference|Persistence]]
-2. [[erasure-asymmetry|Irreversibility]]
+2. [[irreversibility]] / [[erasure-asymmetry]]
 3. [[constraint-load]] / [[constraint-accumulation]]
 4. Agency
 5. Intent, meaning, values

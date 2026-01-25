@@ -1,3 +1,14 @@
+---
+role: report
+tags:
+  - audit
+  - generated
+generated: 2026-01-25
+tool: irrev
+source: bases
+canonical: false
+---
+
 # Vault Structural Audit Report
 
 > **Generated:** 2026-01-25

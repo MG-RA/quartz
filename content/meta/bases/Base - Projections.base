@@ -9,6 +9,8 @@ filters:
 formulas:
   projection: link(file.path, file.name)
   tags: file.tags
+  failure_modes: note.failure_modes
+  missing_failure_modes: if(note.failure_modes && note.failure_modes.length > 0, "no", "yes")
   has_failure_mode_link: if(file.hasLink("Failure Modes of the Irreversibility Lens"), "yes", "no")
   has_rollback_link: if(file.hasLink("rollback"), "yes", "no")
   has_lens_link: if(file.hasLink("lens"), "yes", "no")
@@ -21,8 +23,12 @@ properties:
     displayName: projection
   formula.tags:
     displayName: tags
-  formula.has_failure_mode_link:
+  formula.failure_modes:
     displayName: failure_modes
+  formula.missing_failure_modes:
+    displayName: missing_failure_modes
+  formula.has_failure_mode_link:
+    displayName: failure_modes_note
   formula.has_rollback_link:
     displayName: rollback
   formula.has_lens_link:
@@ -41,6 +47,8 @@ views:
     order:
       - formula.projection
       - formula.tags
+      - formula.missing_failure_modes
+      - formula.failure_modes
       - formula.has_failure_mode_link
       - formula.has_rollback_link
       - formula.has_lens_link
@@ -55,6 +63,7 @@ views:
     name: Concept coverage
     order:
       - formula.projection
+      - formula.missing_failure_modes
       - formula.has_displacement_link
       - formula.has_constraint_load_link
       - formula.has_residual_link

@@ -7,6 +7,7 @@ facets:
   - anti-belief
   - rollback-friendly
   - scale-fragile
+failure_modes: []
 ---
 
 # Discordianism

@@ -9,6 +9,7 @@ tsconfig.tsbuildinfo
 private/
 .replit
 replit.nix
+*.csv
 
 # Python (irrev CLI)
 irrev/.venv/
@@ -24,3 +25,6 @@ content/concepts/Untitled.canvas
 *.dot
 /concept-graph.svg
 /concept-graph.html
+
+# Generated audit reports
+content/exports bases/*Generated*.md
