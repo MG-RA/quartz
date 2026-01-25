@@ -21,3 +21,6 @@ irrev/.pytest_cache/
 # Local assistant/IDE metadata
 .claude/
 content/concepts/Untitled.canvas
+*.dot
+/concept-graph.svg
+/concept-graph.html

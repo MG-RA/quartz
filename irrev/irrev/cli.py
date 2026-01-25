@@ -7,23 +7,43 @@ import click
 
 from . import __version__
 
+def _auto_detect_vault(start: Path) -> Path | None:
+    """Find a ./content vault folder by walking up from `start`."""
+    cur = start.resolve()
+    for p in (cur, *cur.parents):
+        if p.is_dir() and p.name.lower() == "content":
+            return p
+        candidate = p / "content"
+        if candidate.is_dir():
+            return candidate
+    return None
+
 
 @click.group()
 @click.version_option(__version__, prog_name="irrev")
 @click.option(
     "--vault",
     "-v",
-    type=click.Path(exists=True, file_okay=False, dir_okay=True, path_type=Path),
-    default="./content",
-    help="Path to vault content directory",
+    type=click.Path(exists=False, file_okay=False, dir_okay=True, path_type=Path),
+    default=None,
+    help="Path to vault content directory (defaults to auto-detected ./content)",
 )
 @click.pass_context
-def cli(ctx: click.Context, vault: Path) -> None:
+def cli(ctx: click.Context, vault: Path | None) -> None:
     """irrev - Semantic compiler for the irreversibility vault.
 
     Lint, pack, and generate registry artifacts from your vault.
     """
     ctx.ensure_object(dict)
+    if vault is None:
+        detected = _auto_detect_vault(Path.cwd())
+        if detected is None:
+            raise click.ClickException("Vault not found. Pass --vault /path/to/content or run from inside the repo.")
+        vault = detected
+
+    if not vault.exists() or not vault.is_dir():
+        raise click.BadParameter(f"Directory '{vault}' does not exist.", param_hint="--vault / -v")
+
     ctx.obj["vault"] = vault.resolve()
 
 
@@ -394,10 +414,17 @@ def hubs(
 @click.option(
     "--format",
     "fmt",
-    type=click.Choice(["md", "json", "dot"]),
+    type=click.Choice(["rich", "md", "json", "dot", "svg", "html"]),
     default="md",
     show_default=True,
     help="Output format",
+)
+@click.option(
+    "--styled/--plain",
+    "styled",
+    default=True,
+    show_default=True,
+    help="For dot/svg/html output: annotate nodes with layer colors and hub class badges",
 )
 @click.option("--out", type=click.Path(dir_okay=False, path_type=Path), default=None, help="Write output to a file")
 @click.option("--top", type=int, default=25, show_default=True, help="How many nodes to show in top lists")
@@ -406,13 +433,14 @@ def graph(
     ctx: click.Context,
     concepts_only: bool,
     fmt: str,
+    styled: bool,
     out: Path | None,
     top: int,
 ) -> None:
     """Inspect dependency/link graph structure."""
     from .commands.graph_cmd import run_graph
 
-    exit_code = run_graph(ctx.obj["vault"], concepts_only=concepts_only, fmt=fmt, out=out, top=top)
+    exit_code = run_graph(ctx.obj["vault"], concepts_only=concepts_only, fmt=fmt, out=out, top=top, styled=styled)
     sys.exit(exit_code)
 
 

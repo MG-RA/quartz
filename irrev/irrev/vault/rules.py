@@ -548,6 +548,13 @@ class LintRules:
         # Check all links
         for note in self.vault.all_notes:
             for link in note.links:
+                # Allow embeds/links to existing non-note assets (e.g., SVG exports for Quartz/Obsidian).
+                raw = link.split("|", 1)[0].split("#", 1)[0].split("^", 1)[0].strip()
+                try:
+                    if raw and Path(raw).suffix and (self.vault.path / raw).exists():
+                        continue
+                except Exception:
+                    pass
                 normalized = self.vault.normalize_name(link)
                 if normalized not in known_names and link not in known_names:
                     results.append(
