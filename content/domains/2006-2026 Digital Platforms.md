@@ -20,6 +20,15 @@ This is one possible slice for "the last 20 years" relative to 2026-01-21: **200
 - **Time window:** 2006-01-21 to 2026-01-21 (Assumption)
 - **Resolution:** platform/ecosystem level; not individual-level psychology (Assumption)
 
+## Primitive grounding
+
+- (Assumption) [[persistence]] in this domain manifests as behavioral data, network structures, and policy dependencies that remain re-identifiable across platform changes.
+- (Assumption) [[difference]] is defined by changes to user behavior, content distribution, or governance that leave detectable traces in platform state.
+- (Inference) [[constraint]] operates through technical architectures (APIs, data schemas), network effects, and regulatory requirements that limit which transformations are feasible.
+- (Inference) [[residual]] appears as data trails, accumulated moderation debt, compliance machinery, and lock-in effects that persist after interventions.
+
+---
+
 ## 1) Transformation space
 
 - (Assumption) Transformations allowed when testing persistence: platform rebrands/ownership changes, policy and regulation changes, interface changes, geographic rollout differences, migration between services.

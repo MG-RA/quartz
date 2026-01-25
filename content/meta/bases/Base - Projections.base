@@ -12,6 +12,9 @@ formulas:
   has_failure_mode_link: if(file.hasLink("Failure Modes of the Irreversibility Lens"), "yes", "no")
   has_rollback_link: if(file.hasLink("rollback"), "yes", "no")
   has_lens_link: if(file.hasLink("lens"), "yes", "no")
+  has_displacement_link: if(file.hasLink("displacement"), "yes", "no")
+  has_constraint_load_link: if(file.hasLink("constraint-load"), "yes", "no")
+  has_residual_link: if(file.hasLink("residual"), "yes", "no")
   link_count: file.links.length
 properties:
   formula.projection:
@@ -24,6 +27,12 @@ properties:
     displayName: rollback
   formula.has_lens_link:
     displayName: lens
+  formula.has_displacement_link:
+    displayName: displacement
+  formula.has_constraint_load_link:
+    displayName: constraint_load
+  formula.has_residual_link:
+    displayName: residual
   formula.link_count:
     displayName: links
 views:
@@ -35,7 +44,24 @@ views:
       - formula.has_failure_mode_link
       - formula.has_rollback_link
       - formula.has_lens_link
+      - formula.has_displacement_link
+      - formula.has_constraint_load_link
+      - formula.has_residual_link
     summaries:
       formula.projection: Filled
     columnSize:
       formula.tags: 515
+  - type: table
+    name: Concept coverage
+    order:
+      - formula.projection
+      - formula.has_displacement_link
+      - formula.has_constraint_load_link
+      - formula.has_residual_link
+      - formula.link_count
+    sort:
+      - property: formula.link_count
+        direction: DESC
+    summaries:
+      formula.projection: Filled
+      formula.link_count: Average

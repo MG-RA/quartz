@@ -27,6 +27,7 @@ views:
     order:
       - formula.diagnostic
       - formula.folder
+      - formula.has_depends_on
       - formula.tags
       - formula.link_count
     sort:
@@ -34,3 +35,18 @@ views:
         direction: ASC
     summaries:
       formula.diagnostic: Filled
+  - type: table
+    name: By subfolder
+    groupBy:
+      property: formula.folder
+      direction: ASC
+    order:
+      - formula.diagnostic
+      - formula.has_depends_on
+      - formula.link_count
+    sort:
+      - property: formula.diagnostic
+        direction: ASC
+    summaries:
+      formula.diagnostic: Filled
+      formula.link_count: Sum

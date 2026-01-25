@@ -326,6 +326,46 @@ def registry_diff(
 
 
 @cli.command()
+@click.argument(
+    "csv_folder",
+    type=click.Path(exists=True, file_okay=False, dir_okay=True, path_type=Path),
+)
+@click.option(
+    "--out",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=None,
+    help="Write output to a file (default: stdout)",
+)
+def audit(csv_folder: Path, out: Path | None) -> None:
+    """Generate structural vault report from CSV exports.
+
+    Parses Obsidian Bases CSV exports and generates a Markdown report
+    using the irreversibility accounting framework vocabulary.
+
+    CSV_FOLDER should contain exports like:
+
+    \b
+    - Concept topology.csv
+    - Dependency audit.csv
+    - Primitive coverage audit.csv
+    - Diagnostics inventory.csv
+    - Projections.csv
+    - Invariants inventory.csv
+    - Full vault audit.csv
+
+    Examples:
+
+        irrev audit "./content/exports bases"
+
+        irrev audit "./content/exports bases" --out report.md
+    """
+    from .commands.audit import run_audit
+
+    exit_code = run_audit(csv_folder, out=out)
+    sys.exit(exit_code)
+
+
+@cli.command()
 @click.option(
     "--concepts-only/--all-notes",
     "concepts_only",
@@ -441,6 +481,39 @@ def graph(
     from .commands.graph_cmd import run_graph
 
     exit_code = run_graph(ctx.obj["vault"], concepts_only=concepts_only, fmt=fmt, out=out, top=top, styled=styled)
+    sys.exit(exit_code)
+
+
+@cli.group()
+def junctions() -> None:
+    """Detect routing pressure and candidate missing concepts."""
+    pass
+
+
+@junctions.command("concept-audit")
+@click.option("--top", type=int, default=25, show_default=True, help="How many concepts to audit (by in-degree)")
+@click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["md", "json"]),
+    default="md",
+    show_default=True,
+    help="Output format",
+)
+@click.option("--out", type=click.Path(dir_okay=False, path_type=Path), default=None, help="Write output to a file")
+@click.option("--all", "include_all", is_flag=True, default=False, help="Audit all concepts (ignores --top)")
+@click.pass_context
+def junctions_concept_audit(
+    ctx: click.Context,
+    top: int,
+    output_format: str,
+    out: Path | None,
+    include_all: bool,
+) -> None:
+    """Generate a concept audit report (Phase 1)."""
+    from .commands.junctions import run_concept_audit
+
+    exit_code = run_concept_audit(ctx.obj["vault"], out=out, top=top, fmt=output_format, include_all=include_all)
     sys.exit(exit_code)
 
 

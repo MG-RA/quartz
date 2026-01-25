@@ -17,55 +17,56 @@ filters:
 formulas:
   note: link(file.path, file.name)
   folder: file.folder
-  modified: file.mtime
-  links: file.links.length
-  has_tags: if(file.tags.length > 0, "yes", "no")
+  outlinks: file.links.length
+  is_orphan: if(file.links.length == 0, "yes", "no")
+  is_high_link: if(file.links.length >= 20, "yes", "no")
 properties:
   formula.note:
     displayName: note
   formula.folder:
     displayName: location
-  formula.modified:
-    displayName: modified
-  formula.links:
+  formula.outlinks:
     displayName: outlinks
-  formula.has_tags:
-    displayName: tagged
+  formula.is_orphan:
+    displayName: orphan
+  formula.is_high_link:
+    displayName: high_link
 views:
   - type: table
-    name: Full vault audit
+    name: Orphan notes (no outlinks)
+    filters: formula.outlinks == 0
     order:
       - formula.note
       - formula.folder
-      - formula.modified
-      - formula.links
-      - formula.has_tags
     sort:
-      - property: formula.modified
-        direction: DESC
-    summaries:
-      formula.links: Sum
-      formula.note: Filled
-  - type: table
-    name: By location
-    groupBy:
-      property: formula.folder
-      direction: ASC
-    order:
-      - formula.note
-      - formula.modified
-      - formula.links
+      - property: formula.folder
+        direction: ASC
     summaries:
       formula.note: Filled
   - type: table
-    name: Orphan notes
-    filters: formula.links == 0
+    name: High-link notes (20+)
+    filters: formula.outlinks >= 20
     order:
       - formula.note
       - formula.folder
-      - formula.modified
+      - formula.outlinks
     sort:
-      - property: formula.modified
+      - property: formula.outlinks
         direction: DESC
     summaries:
       formula.note: Filled
+      formula.outlinks: Average
+  - type: table
+    name: Link distribution
+    order:
+      - formula.note
+      - formula.folder
+      - formula.outlinks
+      - formula.is_orphan
+      - formula.is_high_link
+    sort:
+      - property: formula.outlinks
+        direction: DESC
+    summaries:
+      formula.note: Filled
+      formula.outlinks: Average

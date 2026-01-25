@@ -20,6 +20,15 @@ This is one possible slice for "financial infrastructure post-2008" relative to 
 - **Time window:** 2008-01-21 to 2026-01-21 (Assumption)
 - **Resolution:** institution/ecosystem level; not household finance or macroeconomic theory as such (Assumption)
 
+## Primitive grounding
+
+- (Assumption) [[persistence]] in this domain manifests as settlement dependencies, regulatory obligations, collateral arrangements, and intermediation chains that remain re-identifiable across institutional changes.
+- (Assumption) [[difference]] is defined by changes to payment flows, risk allocation, or market structure that leave detectable traces in contracts, ledgers, and compliance records.
+- (Inference) [[constraint]] operates through regulatory requirements, clearing rules, collateral eligibility criteria, and operational interdependencies that limit which transformations are feasible.
+- (Inference) [[residual]] appears as compliance machinery, reporting obligations, margin calls, and operational debt that persist after interventions or rule changes.
+
+---
+
 ## 1) Transformation space
 
 - (Assumption) Transformations allowed when testing persistence: regulation changes, institutional mergers/failures, vendor/outsourcing changes, payment-rail upgrades, market-structure redesigns (e.g., more central clearing), digitization and automation, new intermediaries/fintech integration, jurisdictional fragmentation/harmonization.

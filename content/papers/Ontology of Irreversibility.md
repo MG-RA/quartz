@@ -29,17 +29,17 @@ If a concept can be removed without breaking explanation, it is scaffolding. If 
 The concept-only dependency graph reveals a stable spine that explanations repeatedly route through:
 
 ```
-persistent-difference
+[[persistent-difference]]
         ↓
-   erasure-cost
+   [[erasure-cost]]
         ↓
-     residual
+     [[residual]]
         ↓
-  constraint-load
+  [[constraint-load]]
         ↓
- admissibility / feasible-set
+ [[admissibility]] / [[feasible-set]]
         ↓
- collapse-surface / saturation
+ [[collapse-surface]] / [[saturation]]
 ```
 
 This is not a narrative choice. It is enforced by in-degree concentration and shortest-path routing.
@@ -52,23 +52,23 @@ These concepts are **not interchangeable** and should not be flattened.
 
 Latent hub detection identifies three distinct hub roles:
 
-### Primitive hub — _erasure-cost_
+### Primitive hub — [[erasure-cost]]
 
 - Grounds asymmetry
 - Makes persistence testable
 - Anchors irreversibility without mechanisms
 
-### Mechanism-output hub — _residual_
+### Mechanism-output hub — [[residual]]
 
 - Names what remains after action
 - Junction between mechanisms and accumulation
 - Exists regardless of accounting
 
-### Aggregation hub — _constraint-load_
+### Aggregation hub — [[constraint-load]]
 
 - Integrates heterogeneous residuals
 - Behaves like pressure, not count
-- Governs admissibility collapse
+- Governs [[admissibility]] collapse
 
 Hubs are not promoted in layer rank. They are **obligations on explanation**.
 
@@ -80,11 +80,11 @@ Hubs are not promoted in layer rank. They are **obligations on explanation**.
 
 These are unavoidable explanatory junctions:
 
-- persistent-difference
-- erasure-cost
-- residual
-- displacement
-- constraint-load
+- [[persistent-difference]]
+- [[erasure-cost]]
+- [[residual]]
+- [[displacement]]
+- [[constraint-load]]
 
 They ground explanation. They are depended on.
 
@@ -92,12 +92,12 @@ They ground explanation. They are depended on.
 
 These are operators or diagnostics:
 
-- accounting-failure
-- ratchet
-- quarantine
-- migration
-- rollback
-- collapse-surface
+- [[accounting-failure]]
+- [[ratchet]]
+- [[quarantine]]
+- [[migration]]
+- [[rollback]]
+- [[collapse-surface]]
 
 They apply structure. Nothing explains them; they explain others.
 
@@ -111,7 +111,7 @@ Mechanisms:
 
 - have near-zero in-degree
 - high out-degree
-- produce residuals
+- produce [[residual|residuals]]
 - never resolve persistence cleanly
 
 Structure:
@@ -128,8 +128,8 @@ There are no “clean” mechanisms in the ontology.
 
 Concepts such as:
 
-- lens
-- tracking-mechanism
+- [[lens]]
+- [[tracking-mechanism]]
 - registries
 
 Remain peripheral in the concept-only graph.
@@ -147,10 +147,10 @@ Agency does not appear as a primitive.
 
 It emerges at the interface of:
 
-- feasible-set
-- admissibility
-- constraint-load
-- displacement / absorption
+- [[feasible-set]]
+- [[admissibility]]
+- [[constraint-load]]
+- [[displacement]] / [[absorption]]
 
 Agency must therefore be **derived**, not assumed.
 
@@ -158,7 +158,7 @@ Agency must therefore be **derived**, not assumed.
 
 ## 8. Failure states
 
-Failure states (brittleness, saturation, collapse-surface):
+Failure states ([[brittleness]], [[saturation]], [[collapse-surface]]):
 
 - have zero in-degree
 - appear downstream of accumulation
@@ -172,10 +172,10 @@ Failure is not primary. It is the late-stage symptom of unmanaged persistence.
 Without adding rules, the structure enforces:
 
 - Persistence implies cost
-- Action implies residue
+- Action implies [[residual|residue]]
 - Untracked residue implies accumulation
-- Accumulation implies loss of admissibility
-- Reversibility claims must pay erasure costs
+- Accumulation implies loss of [[admissibility]]
+- Reversibility claims must pay [[erasure-cost|erasure costs]]
 
 These are not ethical claims. They are conservation laws of explanation.
 

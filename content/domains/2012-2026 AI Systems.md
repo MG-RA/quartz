@@ -20,6 +20,15 @@ This is one possible slice for "modern AI" relative to 2026-01-21: **2012-01-21 
 - **Time window:** 2012-01-21 to 2026-01-21 (Assumption)
 - **Resolution:** ecosystem + organization level; not individual cognition or philosophy of mind (Assumption)
 
+## Primitive grounding
+
+- (Assumption) [[persistence]] in this domain manifests as training data imprints, model weights, evaluation baselines, and deployment dependencies that remain re-identifiable across versioning and provider changes.
+- (Assumption) [[difference]] is defined by changes to model behavior, capability boundaries, or deployment contexts that leave detectable traces in outputs, benchmarks, and operational logs.
+- (Inference) [[constraint]] operates through compute availability, data licensing, benchmark optimization pressure, and governance requirements that limit which transformations are feasible.
+- (Inference) [[residual]] appears as cached outputs, fine-tuned derivatives, embedded workflows, and accumulated guardrails that persist after model updates or policy changes.
+
+---
+
 ## 1) Transformation space
 
 - (Assumption) Transformations allowed when testing persistence: retraining, fine-tuning, distillation, model versioning, architecture changes, provider changes, dataset refreshes, deployment/context changes, policy/regulatory changes.

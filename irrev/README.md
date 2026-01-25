@@ -90,6 +90,58 @@ uv run irrev -v ../content graph --all-notes --format html --out all-notes.htm
 uv run irrev -v ../content graph --all-notes --format svg --plain --out all-notes.plain.svg
 ```
 
+### `irrev audit`
+
+Generate a structural vault report from Obsidian Bases CSV exports.
+
+```bash
+uv run irrev audit "./content/exports bases"
+uv run irrev audit "./content/exports bases" --out report.md
+```
+
+This command parses CSV files exported from Obsidian Bases and generates a Markdown report using the irreversibility accounting framework vocabulary.
+
+**Expected CSV files** (all optional; uses what's available):
+
+- `Concept topology.csv` - layer distribution
+- `Dependency audit.csv` - hub spine (high-outlink concepts)
+- `Primitive coverage audit.csv` - domain primitive gaps
+- `Diagnostics inventory.csv` - diagnostics without dependencies
+- `Projections.csv` - projection concept coverage
+- `Invariants inventory.csv` - invariant integrity
+- `Full vault audit.csv` - orphan/high-link detection
+
+**Report sections:**
+
+1. Executive Summary - key findings (orphans, hub candidates, primitive gaps)
+2. Concept Graph Topology - layer distribution, hub spine
+3. Domain Primitive Coverage - missing foundational concept links
+4. Orphan and High-Link Notes - unintegrated content, reference hubs
+5. Diagnostics Inventory - grouped by subfolder, dependency gaps
+6. Projections Coverage - core concept linkage matrix
+7. Invariants Integrity - structural invariant status
+8. Constraint-Load Summary - where cost accumulates, routing pressure points
+9. Recommended Actions - prioritized fixes
+
+The report uses framework vocabulary: constraint-load, routing pressure, accounting-failure, residual, displacement, etc.
+
+### `irrev junctions concept-audit`
+
+Generate a concept audit report (Phase 1 of junctions detection).
+
+```bash
+uv run irrev -v ../content junctions concept-audit
+uv run irrev -v ../content junctions concept-audit --top 10
+uv run irrev -v ../content junctions concept-audit --all --format json
+uv run irrev -v ../content junctions concept-audit --out audit.md
+```
+
+Audits load-bearing concepts for:
+
+- Role purity (no operator/prescription bleed)
+- Dependency fidelity (deps actually used in body)
+- Structural completeness (Definition, Structural dependencies, What this is NOT sections)
+
 ## Integration with vault workflow
 
 Run lint before committing changes:

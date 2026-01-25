@@ -9,6 +9,7 @@ formulas:
   layer: note.layer
   depends_on: file.links
   dependency_count: file.links.length
+  is_primitive: if(note.layer == "primitive" || note.layer == "foundational", "yes", "no")
 properties:
   formula.concept:
     displayName: concept
@@ -18,6 +19,8 @@ properties:
     displayName: depends_on
   formula.dependency_count:
     displayName: links
+  formula.is_primitive:
+    displayName: primitive
 views:
   - type: table
     name: Concept topology
@@ -46,5 +49,25 @@ views:
         direction: DESC
       - property: formula.depends_on
         direction: ASC
+    columnSize:
+      formula.dependency_count: 85
+  - type: table
+    name: Primitives and foundational
+    filters:
+      or:
+        - note.layer == "primitive"
+        - note.layer == "foundational"
+    order:
+      - formula.concept
+      - formula.layer
+      - formula.dependency_count
+      - formula.depends_on
+    sort:
+      - property: formula.layer
+        direction: ASC
+      - property: formula.dependency_count
+        direction: DESC
+    summaries:
+      formula.concept: Filled
     columnSize:
       formula.dependency_count: 85

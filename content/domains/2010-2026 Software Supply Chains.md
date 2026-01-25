@@ -20,6 +20,15 @@ This is one possible slice for "software supply chains" relative to 2026-01-21: 
 - **Time window:** 2010-01-21 to 2026-01-21 (Assumption)
 - **Resolution:** ecosystem + organization level; not general cybersecurity, malware taxonomy, or hardware supply chains (Assumption)
 
+## Primitive grounding
+
+- (Assumption) [[persistence]] in this domain manifests as dependency graphs, build artifacts, signing keys, and trust relationships that remain re-identifiable across tooling and organizational changes.
+- (Assumption) [[difference]] is defined by changes to dependencies, build configurations, or distribution channels that leave detectable traces in lockfiles, manifests, and artifact registries.
+- (Inference) [[constraint]] operates through version compatibility requirements, trust hierarchies, signing policies, and provenance requirements that limit which transformations are feasible.
+- (Inference) [[residual]] appears as cached artifacts, mirrored copies, embedded dependencies, and maintenance obligations that persist after upgrades or deprecations.
+
+---
+
 ## 1) Transformation space
 
 - (Assumption) Transformations allowed when testing persistence: dependency upgrades/downgrades, lockfile changes, repackaging (library vs service), repo forks/migrations, build pipeline refactors, CI/CD vendor changes, language/runtime changes, containerization, signing key rotation, registry migration/mirroring, policy/compliance changes.

@@ -1,0 +1,59 @@
+filters:
+  and:
+    - file.ext == "md"
+    - or:
+        - file.inFolder("invariants")
+        - file.inFolder("content/invariants")
+formulas:
+  invariant: link(file.path, file.name)
+  role: note.role
+  status: note.status
+  canonical: note.canonical
+  related_invariants: file.links
+  link_count: file.links.length
+properties:
+  formula.invariant:
+    displayName: invariant
+  formula.role:
+    displayName: role
+  formula.status:
+    displayName: status
+  formula.canonical:
+    displayName: canonical
+  formula.related_invariants:
+    displayName: related_invariants
+  formula.link_count:
+    displayName: links
+views:
+  - type: table
+    name: Invariants by status
+    groupBy:
+      property: formula.status
+      direction: ASC
+    order:
+      - formula.invariant
+      - formula.role
+      - formula.status
+      - formula.canonical
+    sort:
+      - property: formula.invariant
+        direction: ASC
+    summaries:
+      formula.invariant: Filled
+  - type: table
+    name: Invariants inventory
+    order:
+      - formula.invariant
+      - formula.role
+      - formula.status
+      - formula.canonical
+      - formula.related_invariants
+      - formula.link_count
+    sort:
+      - property: formula.canonical
+        direction: DESC
+      - property: formula.invariant
+        direction: ASC
+    summaries:
+      formula.invariant: Filled
+      formula.link_count: Sum

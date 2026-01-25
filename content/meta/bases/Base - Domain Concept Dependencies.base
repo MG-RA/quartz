@@ -11,6 +11,9 @@ formulas:
   erasure_cost_declared: if(file.hasLink("erasure-cost"), "yes", "no")
   persistence_declared: if(file.hasLink("persistence"), "yes", "no")
   constraint_load_declared: if(file.hasLink("constraint-load"), "yes", "no")
+  difference_declared: if(file.hasLink("difference"), "yes", "no")
+  constraint_declared: if(file.hasLink("constraint"), "yes", "no")
+  residual_declared: if(file.hasLink("residual"), "yes", "no")
   link_count: file.links.length
 properties:
   formula.domain_note:
@@ -25,6 +28,12 @@ properties:
     displayName: persistence
   formula.constraint_load_declared:
     displayName: constraint_load
+  formula.difference_declared:
+    displayName: difference
+  formula.constraint_declared:
+    displayName: constraint
+  formula.residual_declared:
+    displayName: residual
   formula.link_count:
     displayName: links
 views:
@@ -45,3 +54,6 @@ views:
       - formula.erasure_cost_declared
       - formula.persistence_declared
       - formula.constraint_load_declared
+      - formula.difference_declared
+      - formula.constraint_declared
+      - formula.residual_declared

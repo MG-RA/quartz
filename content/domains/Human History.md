@@ -13,6 +13,15 @@ Use this note to apply the constraint-first diagnostic lens to "human history" *
 
 Recommended: pick one historical transformation and treat it as a system producing [[persistent-difference]] under a specified [[transformation-space]].
 
+## Primitive grounding
+
+When applying this lens to any historical slice, these primitives must be explicitly grounded:
+
+- [[persistence]] in historical domains manifests as institutions, infrastructure, records, and practices that remain re-identifiable across political and technological transformations.
+- [[difference]] is defined by changes to social arrangements, material conditions, or governance structures that leave detectable traces in archives, artifacts, and inherited constraints.
+- [[constraint]] operates through material limits (geography, resources), institutional rules (law, custom), and coordination requirements (trade, defense) that limit which historical transformations were feasible.
+- [[residual]] appears as path dependencies, sunk costs, institutional debt, and inherited obligations that persist after reforms, revolutions, or regime changes.
+
 ---
 
 ## What you can learn (lens outcomes)
