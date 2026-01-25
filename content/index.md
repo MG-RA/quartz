@@ -13,6 +13,9 @@ This vault contains a **constraint-first diagnostic lens** for analyzing systems
 
 It constrains explanations by tracking what persists, where costs go, and which options disappear over time.
 
+> [!note]
+> Naming note: “Accounting” is used in the literal sense — keeping a ledger of residuals, erasure costs, and constraint accumulation — not in the finance-only sense.
+
 ---
 ## How to Read This Vault
 
@@ -41,10 +44,22 @@ These are *compiled views* over the concept graph.
   - Reclassifies agency as navigation under constraint
   - Depends on Irreversibility Accounting
 
+- [[Ontology of Irreversibility]]
+  - Frozen orientation note from concept-only graph + hub detection
+  - Clarifies the ontology vs. operator boundary
+
 ---
 ## Concept Vocabulary
 
 Canonical concept definitions live in `/concepts`.
+
+- Core spine / hubs:
+  - [[persistent-difference]]
+  - [[erasure-cost]]
+  - [[residual]]
+  - [[constraint-load]]
+  - [[admissibility]]
+  - [[feasible-set]]
 
 - Layer bundles / dependency classes: [[Irreversibility Accounting (Registry)#Dependency classes (by layer)]]
 - Structural hierarchy: [[Decomposition]]
@@ -70,6 +85,14 @@ These notes constrain misuse, overreach, and self-sealing interpretations.
 - *(Non-claims, limits, scope clarifications)*
 
 If the framework starts to feel obvious, total, or morally loaded, return here.
+
+---
+## Structural Maps (Graphs)
+
+- [[Concept Graphs]]
+  - Concepts-only (structural dependencies)
+  - All-notes (wiki-links across vault)
+  - Includes interactive pan/zoom versions for web + local
 
 ---
 ## Domains (Applications)
