@@ -19,7 +19,7 @@ Primary outcomes:
 - [x] Loader MVP: `irrev -v content neo4j load`
 - [x] Read-only MCP server with bounded Cypher validator
 - [x] Junctions + communities analysis commands (`irrev junctions …`, `irrev communities …`)
-- [x] Typed dependency edges in Neo4j (`STRUCTURAL_DEPENDS_ON`, `FRONTMATTER_DEPENDS_ON`)
+- [x] Typed dependency edge in Neo4j (`DEPENDS_ON` with provenance flags)
 - [x] Persist greedy communities + bridge scores on concept nodes during load
 - [ ] Add a publishable visualization artifact (community color + layer annotation)
 - [ ] Add text-level implicit-dependency lint (definition mentions without declared edges)
@@ -91,11 +91,10 @@ Core edges:
   - `kinds`: optional set like `["wikilink", "md_link"]`
   - `contexts` (optional): coarse usage contexts like `["definition", "not", "example", "failure-mode"]`
 
-Frontmatter-derived edges (optional but useful):
-- `(:Note)-[:FRONTMATTER_DEPENDS_ON]->(:Note)` from frontmatter `depends_on` lists
-
-Content-derived edges (useful for dependency accounting):
-- `(:Note)-[:STRUCTURAL_DEPENDS_ON]->(:Note)` from a concept’s `## Structural dependencies` section
+Dependency edges (for “what the structure requires”):
+- `(:Note)-[:DEPENDS_ON {from_frontmatter, from_structural}]->(:Note)`
+  - promoted from frontmatter `depends_on`
+  - and from a concept’s `## Structural dependencies` section
 
 Tag edges (optional):
 - `(:Note)-[:TAGGED_WITH]->(:Tag {name})`

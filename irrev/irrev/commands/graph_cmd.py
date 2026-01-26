@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+from datetime import date
 import html
 import json
 import math
@@ -519,6 +520,17 @@ def _normalized_mutual_information(table: dict[str, Counter[str]], *, total: int
 def _communities_to_markdown(payload: dict) -> str:
     s = payload["summary"]
     lines: list[str] = []
+    lines.append("---")
+    lines.append("role: report")
+    lines.append("tags:")
+    lines.append("  - generated")
+    lines.append("  - communities")
+    lines.append(f"generated: {date.today().isoformat()}")
+    lines.append("tool: irrev")
+    lines.append("source: communities")
+    lines.append("canonical: false")
+    lines.append("---")
+    lines.append("")
     lines.append(f"# {payload['title']}")
     lines.append("")
     lines.append(f"- Vault: `{payload['vault']}`")

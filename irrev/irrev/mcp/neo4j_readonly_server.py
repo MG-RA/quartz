@@ -494,8 +494,7 @@ def _schema_summary() -> dict[str, Any]:
         ],
         "relationships": [
             {"type": "LINKS_TO", "from": "Note", "to": "Note", "properties": ["count"]},
-            {"type": "STRUCTURAL_DEPENDS_ON", "from": "Note", "to": "Note", "properties": []},
-            {"type": "FRONTMATTER_DEPENDS_ON", "from": "Note", "to": "Note", "properties": []},
+            {"type": "DEPENDS_ON", "from": "Note", "to": "Note", "properties": ["from_frontmatter", "from_structural"]},
         ],
         "derivedProperties": [
             "community_links_greedy",

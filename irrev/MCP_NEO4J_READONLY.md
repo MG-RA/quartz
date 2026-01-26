@@ -166,8 +166,8 @@ Params:
 ### Structural dependencies of a concept
 
 ```cypher
-MATCH (c:Note {note_id: $note_id})-[:STRUCTURAL_DEPENDS_ON]->(d:Note:Concept)
-RETURN d.note_id, d.title, d.layer
+MATCH (c:Note {note_id: $note_id})-[r:DEPENDS_ON]->(d:Note:Concept)
+RETURN d.note_id, d.title, d.layer, r.from_frontmatter, r.from_structural
 ORDER BY d.note_id ASC
 LIMIT 200
 ```
@@ -175,15 +175,6 @@ LIMIT 200
 Params:
 ```json
 { "note_id": "concepts/erasure-cost" }
-```
-
-### Frontmatter-declared dependencies of a concept
-
-```cypher
-MATCH (c:Note {note_id: $note_id})-[:FRONTMATTER_DEPENDS_ON]->(d:Note:Concept)
-RETURN d.note_id, d.title, d.layer
-ORDER BY d.note_id ASC
-LIMIT 200
 ```
 
 ### Bounded path search (≤ 4 hops)
@@ -208,8 +199,7 @@ Neo4j-derived graph.
 
 Note: the Neo4j graph exposes:
 - `LINKS_TO` (resolved wiki-links, occurrence-counted via `r.count`)
-- `STRUCTURAL_DEPENDS_ON` (from a concept’s `## Structural dependencies` section)
-- `FRONTMATTER_DEPENDS_ON` (from frontmatter `depends_on`)
+- `DEPENDS_ON` (structural requirements; promoted from frontmatter `depends_on` and concept `## Structural dependencies`)
 
 Link counts may differ from Obsidian Bases exports because the Neo4j graph counts resolved note-to-note links
 (and can track per-edge occurrences via `r.count`), while Bases uses Obsidian’s `file.links`.
