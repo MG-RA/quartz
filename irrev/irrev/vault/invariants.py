@@ -32,7 +32,7 @@ INVARIANTS = {
     "decomposition": Invariant(
         id="decomposition",
         name="Decomposition",
-        statement="Objects and operators must be separated by role; role boundaries must not merge incompatible functions.",
+        statement="Objects and operators are separated by role; role boundaries do not merge incompatible functions.",
         failure_mode="Category errors, role confusion, function merging",
         rules=["kind-violation", "layer-violation"]
     ),

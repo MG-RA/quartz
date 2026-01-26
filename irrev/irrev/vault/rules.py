@@ -24,7 +24,7 @@ RULE_EXPLANATIONS: dict[str, str] = {
 
 **Allowed:** Diagnostics may link to the Registry paper.
 
-**Fix:** Remove direct paper links from concepts. In diagnostics, link to Registry sections instead of papers.
+**Condition observed:** The note contains direct links to papers. Concepts exhibiting this pattern have external authority dependencies that bypass the concept graph. Diagnostics linking to papers (other than the Registry) may be referencing non-canonical sources.
 
 **Level:** warning (concept→paper), info (diagnostic→paper except registry)
 """,
@@ -42,9 +42,7 @@ RULE_EXPLANATIONS: dict[str, str] = {
 - Missing sections break tooling and hide accounting costs.
 - Erasure costs cannot be declared without explicit dependency tracking.
 
-**Fix:** Add `## Structural dependencies` section with either:
-- `None (primitive)` or `None (axiomatic)` for foundational concepts
-- List of `[[concept]]` links for composite concepts
+**Condition observed:** The concept lacks a `## Structural dependencies` section. Foundational concepts typically declare `None (primitive)` or `None (axiomatic)`. Composite concepts list their dependencies as `[[concept]]` links.
 
 **Level:** error
 """,
@@ -64,7 +62,7 @@ RULE_EXPLANATIONS: dict[str, str] = {
 - Alias: `persistent difference` (space instead of hyphen)
 - Finding: "Uses alias 'persistent difference' instead of canonical 'persistent-difference'"
 
-**Fix:** Replace alias with canonical name, or update the alias list if the usage is intentional.
+**Condition observed:** The note uses a non-canonical alias. This may indicate inconsistent naming conventions or intentional alias usage that hasn't been canonicalized.
 
 **Level:** info
 """,
@@ -82,9 +80,7 @@ RULE_EXPLANATIONS: dict[str, str] = {
 
 **Example:** `A → B → C → A` is a cycle.
 
-**Fix:** Break the cycle by:
-- Extracting a common dependency into a new primitive
-- Re-examining which concept truly depends on which
+**Condition observed:** The dependency chain forms a closed loop. Cycles typically indicate definitional circularity where concepts mutually define each other, or a misattributed dependency. Common resolutions involve extracting a shared primitive or re-examining the direction of dependency.
 
 **Level:** error
 """,
@@ -100,8 +96,7 @@ RULE_EXPLANATIONS: dict[str, str] = {
 - Every note must declare its role - no actor is exempt from structural constraints.
 - Roles define authority and prevent silent failures in categorization.
 
-**Fix:** Add `role: <type>` to frontmatter. Valid roles:
-- `concept`, `diagnostic`, `domain`, `projection`, `paper`, `meta`, `support`, `template`
+**Condition observed:** The note lacks a `role` declaration in frontmatter. Valid roles include: `concept`, `diagnostic`, `domain`, `projection`, `paper`, `meta`, `support`, `template`. Without explicit role declaration, categorization falls back to path-based inference.
 
 **Level:** warning
 """,
@@ -116,10 +111,7 @@ RULE_EXPLANATIONS: dict[str, str] = {
 - They break navigation and pack generation.
 - This is basic reference integrity that enables all other tooling.
 
-**Fix:**
-- Create the missing note
-- Fix the typo in the link
-- Remove the link if the reference is no longer needed
+**Condition observed:** The wiki-link target does not resolve to any known note. This may indicate a typo in the link, a missing note that hasn't been created, or an obsolete reference to removed content.
 
 **Level:** warning
 """,
@@ -134,9 +126,7 @@ RULE_EXPLANATIONS: dict[str, str] = {
 - The Registry is an interface artifact; drift creates two competing vocabularies.
 - Treating the Registry tables as generated prevents silent exclusion and stale snapshots.
 
-**Fix:** Regenerate the tables in-place:
-
-- `irrev -v <vault> registry build --in-place`
+**Condition observed:** The committed Registry tables differ from the tables generated from current concept definitions. The command `irrev -v <vault> registry build --in-place` regenerates the tables from source.
 
 **Level:** error
 """,
@@ -148,9 +138,9 @@ RULE_EXPLANATIONS: dict[str, str] = {
 
 **Why it matters:**
 - Mechanisms are the operational bridge where persistence becomes concrete.
-- Without explicit residuals, mechanism notes tend to imply “clean” operations and hide accumulation.
+- Without explicit residuals, mechanism notes tend to imply "clean" operations and hide accumulation.
 
-**Fix:** Add a `## Residuals` section describing what persists after the mechanism completes (no prescription).
+**Condition observed:** The mechanism-layer concept lacks a `## Residuals` section. Mechanisms without explicit residual declarations tend to imply clean operations when accumulation may occur.
 
 **Level:** error
 """,
@@ -166,7 +156,7 @@ RULE_EXPLANATIONS: dict[str, str] = {
 
 **Config:** `content/meta/hubs.yml` defines which concepts are hubs and which headings are required.
 
-**Fix:** Add the missing headings (short, structural content is enough; avoid prescription).
+**Condition observed:** The hub concept is missing one or more headings specified in the hub policy. Hub notes without required structural sections tend toward metaphor, scope creep, and abstraction where the vault is load-bearing.
 
 **Level:** error
 """,
@@ -189,9 +179,7 @@ A primitive depending on an accounting concept violates this hierarchy and creat
 **Example:**
 - `constraint` (primitive) depending on `collapse-surface` (accounting) is a violation.
 
-**Fix:** Re-examine the dependency. Either:
-- The dependency is incorrect and should be removed
-- The concept's layer is misclassified
+**Condition observed:** A lower-layer concept depends on a higher-layer concept. This typically indicates either a misattributed dependency or a misclassified layer assignment.
 
 **Level:** error
 """,
@@ -217,7 +205,7 @@ This separation prevents category errors and maintains clear role boundaries.
 - `feasible-set` (object) depending on `admissibility` (operator) is a violation.
 - `admissibility` (operator) depending on `feasible-set` (object) is allowed.
 
-**Fix:** Re-examine the dependency. If an object truly depends on an operator, one of them is likely misclassified.
+**Condition observed:** An object concept depends on an operator concept. Objects (descriptive/structural) depending on operators (procedural/predicates) indicates a potential category error or misclassification.
 
 **Level:** error
 """,
@@ -236,11 +224,7 @@ This separation prevents category errors and maintains clear role boundaries.
 - "X is responsible for Y" without declaring the scope/context is a violation.
 - Diagnostic notes prescribing solutions rather than describing failure modes.
 
-**Fix:** Make responsibility assignments explicit with clear scope:
-- Who is responsible
-- For what
-- Under what conditions
-- What authority they have
+**Condition observed:** The note assigns responsibility without explicit scope declaration. Responsibility assignments without context (who, for what, under what conditions, with what authority) tend toward diffusion and unbounded authority.
 
 **Level:** info
 """,

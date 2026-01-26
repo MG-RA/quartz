@@ -24,6 +24,107 @@ START_MARKER = "<!-- GENERATED: Dependency tables below are generated from /conc
 END_MARKER = "<!-- END GENERATED -->"
 
 
+# -----------------------------------------------------------------------------
+# Decomposition-compliant pattern: compute (diagnostic) / execute (action)
+# -----------------------------------------------------------------------------
+
+
+def compute_registry_plan(
+    vault_path: Path,
+    in_place: bool = False,
+    overrides: Path | None = None,
+    allow_unknown_layers: bool = False,
+    registry_path: Path | None = None,
+) -> "RegistryBuildPlan":
+    """
+    Compute what the registry build would produce without writing.
+
+    This is the diagnostic phase - pure computation, no side effects.
+    """
+    from irrev.planning import RegistryBuildPlan
+
+    console = Console(stderr=True)
+
+    # Load vault
+    vault = load_vault(vault_path)
+    graph = DependencyGraph.from_concepts(vault.concepts, vault._aliases)
+
+    overrides_data = _load_overrides(overrides, console)
+
+    # Generate registry tables
+    tables = _generate_dependency_tables(
+        vault,
+        graph,
+        overrides_data=overrides_data,
+        allow_unknown_layers=allow_unknown_layers,
+    )
+
+    target_path = None
+    existing_content = ""
+    updated_content = ""
+
+    if in_place:
+        target_path = registry_path or _find_registry_path(vault, console)
+        if target_path:
+            existing_content = target_path.read_text(encoding="utf-8")
+            updated_content = _upsert_generated_region(existing_content, tables)
+
+    return RegistryBuildPlan(
+        vault_path=vault_path,
+        in_place=in_place,
+        target_path=target_path,
+        tables_content=tables,
+        existing_content=existing_content,
+        updated_content=updated_content,
+    )
+
+
+def execute_registry_plan(
+    plan: "RegistryBuildPlan",
+    out: str | None = None,
+    console: Console | None = None,
+) -> "RegistryBuildResult":
+    """
+    Execute a registry build plan.
+
+    This is the action phase - performs writes and returns result.
+    """
+    from irrev.planning import RegistryBuildResult
+    from irrev.audit_log import ErasureCost, CreationSummary
+
+    console = console or Console(stderr=True)
+
+    if plan.in_place:
+        if not plan.target_path:
+            return RegistryBuildResult(success=False, error="No registry path found for in-place update")
+
+        existing_len = len(plan.existing_content.encode("utf-8"))
+        updated_len = len(plan.updated_content.encode("utf-8"))
+        plan.target_path.write_text(plan.updated_content, encoding="utf-8")
+
+        return RegistryBuildResult(
+            erased=ErasureCost(files=1, bytes_erased=existing_len),
+            created=CreationSummary(files=1, bytes_written=updated_len),
+            success=True,
+            output_path=plan.target_path,
+        )
+
+    # Generate standalone registry content
+    content = _wrap_registry_document(plan.tables_content)
+
+    if out:
+        out_path = Path(out)
+        out_path.write_text(content, encoding="utf-8")
+        return RegistryBuildResult(
+            created=CreationSummary(files=1, bytes_written=len(content.encode("utf-8"))),
+            success=True,
+            output_path=out_path,
+        )
+    else:
+        print(content)
+        return RegistryBuildResult(success=True)
+
+
 def run_build(
     vault_path: Path,
     out: str | None = None,
@@ -31,6 +132,7 @@ def run_build(
     overrides: Path | None = None,
     allow_unknown_layers: bool = False,
     registry_path: Path | None = None,
+    dry_run: bool = False,
 ) -> int:
     """Build registry from vault concepts.
 
@@ -41,50 +143,60 @@ def run_build(
         overrides: Optional YAML overrides file for ordering/roles
         allow_unknown_layers: Allow concepts with unknown/unconfigured layers
         registry_path: Optional explicit registry markdown path for in-place updates
+        dry_run: If True, show what would be done without writing
 
     Returns:
         Exit code
     """
     console = Console(stderr=True)
 
-    # Load vault
-    vault = load_vault(vault_path)
-    graph = DependencyGraph.from_concepts(vault.concepts, vault._aliases)
-
-    overrides_data = _load_overrides(overrides, console)
-
-    # Generate registry tables
+    # Phase 1: Compute (diagnostic) - pure, no side effects
     try:
-        tables = _generate_dependency_tables(
-            vault,
-            graph,
-            overrides_data=overrides_data,
+        plan = compute_registry_plan(
+            vault_path,
+            in_place=in_place,
+            overrides=overrides,
             allow_unknown_layers=allow_unknown_layers,
+            registry_path=registry_path,
         )
     except ValueError as e:
         console.print(str(e), style="yellow")
         return 1
 
-    if in_place:
-        target_path = registry_path or _find_registry_path(vault, console)
-        if not target_path:
-            return 1
-
-        existing = target_path.read_text(encoding="utf-8")
-        updated = _upsert_generated_region(existing, tables)
-        target_path.write_text(updated, encoding="utf-8")
-        console.print(f"Registry updated in-place at {target_path}", style="green")
+    # Dry-run mode: show plan and exit
+    if dry_run:
+        console.print("\n[bold]DRY RUN[/bold] - No changes will be made\n")
+        console.print(plan.summary())
+        if in_place and plan.updated_content:
+            console.print("\n[dim]Preview of generated tables:[/dim]")
+            console.print(plan.tables_content[:500] + "..." if len(plan.tables_content) > 500 else plan.tables_content)
         return 0
 
-    # Generate standalone registry content
-    content = _wrap_registry_document(tables)
+    # Phase 2: Execute (action) - performs writes
+    result = execute_registry_plan(plan, out=out, console=console)
 
-    if out:
-        out_path = Path(out)
-        out_path.write_text(content, encoding="utf-8")
-        console.print(f"Registry written to {out_path}", style="green")
-    else:
-        print(content)
+    if not result.success:
+        console.print(str(result.error), style="red")
+        return 1
+
+    # Audit log for in-place updates
+    if in_place and result.output_path:
+        from irrev.audit_log import log_operation
+
+        log_operation(
+            vault_path,
+            operation="registry-in-place",
+            erased=result.erased,
+            created=result.created,
+            metadata={
+                "target_path": str(result.output_path),
+                "previous_size": result.erased.bytes_erased,
+                "new_size": result.created.bytes_written,
+            },
+        )
+        console.print(f"Registry updated in-place at {result.output_path}", style="green")
+    elif result.output_path:
+        console.print(f"Registry written to {result.output_path}", style="green")
 
     return 0
 

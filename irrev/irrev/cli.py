@@ -245,6 +245,11 @@ def registry() -> None:
     default=None,
     help="Explicit registry markdown path (for in-place updates or diffs)",
 )
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    help="Show what would be done without executing (diagnostic only)",
+)
 @click.pass_context
 def registry_build(
     ctx: click.Context,
@@ -253,6 +258,7 @@ def registry_build(
     overrides: Path | None,
     allow_unknown_layers: bool,
     registry_path: Path | None,
+    dry_run: bool,
 ) -> None:
     """Generate registry from vault concepts.
 
@@ -265,7 +271,14 @@ def registry_build(
 
         irrev registry build --out Registry.generated.md
     """
+    from rich.console import Console
     from .commands.registry import run_build
+
+    console = Console(stderr=True)
+
+    # Governance: in-place modification is a write operation
+    if in_place:
+        console.print("[yellow]⚠ Governance notice:[/] --in-place will modify the Registry note directly.", style="dim")
 
     default_overrides = (ctx.obj["vault"] / "meta" / "registry.overrides.yml").resolve()
     overrides_path = overrides or (default_overrides if default_overrides.exists() else None)
@@ -277,6 +290,7 @@ def registry_build(
         overrides=overrides_path,
         allow_unknown_layers=allow_unknown_layers,
         registry_path=registry_path,
+        dry_run=dry_run,
     )
     sys.exit(exit_code)
 
@@ -422,7 +436,14 @@ def hubs(
     exclude_layers: tuple[str, ...],
 ) -> None:
     """Detect latent hub candidates from cross-layer dependency concentration."""
+    from rich.console import Console
     from .commands.hubs import run_hubs
+
+    console = Console(stderr=True)
+
+    # Governance: notify when exclusion filters are active
+    if exclude_layers:
+        console.print(f"[yellow]⚠ Governance notice:[/] --exclude-layer active; layers {exclude_layers} are excluded from candidates.", style="dim")
 
     exit_code = run_hubs(
         ctx.obj["vault"],
@@ -761,6 +782,16 @@ def neo4j_ping(http_uri: str, user: str, password: str, database: str) -> None:
     help="Create constraints/indexes (Neo4j 5+ syntax)",
 )
 @click.option("--batch-size", type=int, default=500, show_default=True, help="Statements batch size")
+@click.option(
+    "--force",
+    is_flag=True,
+    help="Skip confirmation for destructive operations (required for --mode rebuild in non-interactive contexts)",
+)
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    help="Show what would be done without executing (diagnostic only)",
+)
 @click.pass_context
 def neo4j_load(
     ctx: click.Context,
@@ -771,6 +802,8 @@ def neo4j_load(
     mode: str,
     ensure_schema: bool,
     batch_size: int,
+    force: bool,
+    dry_run: bool,
 ) -> None:
     """Load the vault into Neo4j as a derived graph.
 
@@ -778,9 +811,21 @@ def neo4j_load(
 
         irrev -v content neo4j load --database irrev
 
-        $env:NEO4J_PASSWORD="adminroot"; irrev -v content neo4j load --database irrev --mode rebuild
+        $env:NEO4J_PASSWORD="adminroot"; irrev -v content neo4j load --database irrev --mode rebuild --force
     """
+    from rich.console import Console
     from .commands.neo4j_cmd import run_neo4j_load
+
+    console = Console(stderr=True)
+
+    # Governance: destructive operations require explicit acknowledgment
+    if mode == "rebuild" and not dry_run:
+        console.print("[yellow]⚠ Governance notice:[/] --mode rebuild will wipe the database before loading.", style="dim")
+        console.print(f"  Target: {http_uri} database={database}", style="dim")
+        if not force:
+            if not click.confirm("Proceed with database wipe?"):
+                console.print("Aborted.", style="dim")
+                sys.exit(1)
 
     exit_code = run_neo4j_load(
         ctx.obj["vault"],
@@ -791,6 +836,7 @@ def neo4j_load(
         mode=mode,
         ensure_schema=ensure_schema,
         batch_size=batch_size,
+        dry_run=dry_run,
     )
     sys.exit(exit_code)
 
@@ -835,6 +881,27 @@ def neo4j_load(
     show_default=True,
     help="Concept note_id used for touch/require exports",
 )
+@click.option(
+    "--include-mentions/--no-include-mentions",
+    default=True,
+    show_default=True,
+    help="Detect definition mentions and export semantic-implicit MENTIONS edges",
+)
+@click.option(
+    "--include-ghost-terms/--no-include-ghost-terms",
+    default=True,
+    show_default=True,
+    help="Detect unknown backticked terms in definitions and export ghost nodes",
+)
+@click.option(
+    "--include-definition-tokens/--no-include-definition-tokens",
+    default=False,
+    show_default=True,
+    help="Tokenize definitions into a filtered token graph (ghost vocabulary probe)",
+)
+@click.option("--token-min-df", type=int, default=2, show_default=True, help="Minimum concepts a token must appear in")
+@click.option("--token-max-df", type=int, default=8, show_default=True, help="Maximum concepts a token may appear in (0=unbounded)")
+@click.option("--token-top-per-concept", type=int, default=20, show_default=True, help="How many tokens to keep per concept")
 @click.pass_context
 def neo4j_export(
     ctx: click.Context,
@@ -846,6 +913,12 @@ def neo4j_export(
     stamp: bool,
     top: int,
     concept_note_id: str,
+    include_mentions: bool,
+    include_ghost_terms: bool,
+    include_definition_tokens: bool,
+    token_min_df: int,
+    token_max_df: int,
+    token_top_per_concept: int,
 ) -> None:
     """Export a bundle of inspection artifacts (CSV/JSON) from Neo4j.
 
@@ -864,8 +937,356 @@ def neo4j_export(
         stamp=stamp,
         top=top,
         concept_note_id=concept_note_id,
+        include_mentions=include_mentions,
+        include_ghost_terms=include_ghost_terms,
+        include_definition_tokens=include_definition_tokens,
+        token_min_df=token_min_df,
+        token_max_df=token_max_df,
+        token_top_per_concept=token_top_per_concept,
     )
     sys.exit(exit_code)
+
+
+# -----------------------------------------------------------------------------
+# Change accounting commands
+# -----------------------------------------------------------------------------
+
+
+@cli.group()
+def changes() -> None:
+    """Change accounting - structural event tracking.
+
+    Treats structural changes as typed events that can be audited.
+    Per Failure Mode #10: account for what the lens itself displaces.
+    """
+    pass
+
+
+@changes.command("summary")
+@click.pass_context
+def changes_summary(ctx: click.Context) -> None:
+    """Show summary of structural changes over time."""
+    from .ledger import ChangeAccountingLedger
+
+    ledger = ChangeAccountingLedger(ctx.obj["vault"])
+    print(ledger.format_summary())
+
+
+@changes.command("record")
+@click.argument("note_id", type=str)
+@click.option("--before", type=click.Path(exists=True, path_type=Path), help="Path to before-state file")
+@click.option("--after", type=click.Path(exists=True, path_type=Path), help="Path to after-state file")
+@click.option("--commit", type=str, default=None, help="Git commit SHA for provenance")
+@click.pass_context
+def changes_record(
+    ctx: click.Context,
+    note_id: str,
+    before: Path | None,
+    after: Path | None,
+    commit: str | None,
+) -> None:
+    """Record a structural change event.
+
+    Compare before/after content and append a typed event to the ledger.
+    """
+    from .ledger import classify_change, ChangeAccountingLedger
+
+    before_content = before.read_text(encoding="utf-8") if before else None
+    after_content = after.read_text(encoding="utf-8") if after else None
+
+    event = classify_change(note_id, before_content, after_content, git_commit=commit)
+
+    ledger = ChangeAccountingLedger(ctx.obj["vault"])
+    ledger.append(event)
+
+    from rich.console import Console
+    console = Console(stderr=True)
+    console.print(f"Recorded: {note_id}", style="green")
+    console.print(f"  Types: {[ct.value for ct in event.change_types]}")
+    console.print(f"  Ambiguity delta: {event.ambiguity_delta:+d}")
+
+
+@changes.command("show")
+@click.option("--note", type=str, default=None, help="Filter by note ID")
+@click.option("--type", "change_type", type=str, default=None, help="Filter by change type")
+@click.option("--limit", type=int, default=20, help="Max events to show")
+@click.option("--json", "output_json", is_flag=True, help="Output as JSON")
+@click.pass_context
+def changes_show(
+    ctx: click.Context,
+    note: str | None,
+    change_type: str | None,
+    limit: int,
+    output_json: bool,
+) -> None:
+    """Show recent change events from the ledger."""
+    import json as json_module
+    from .ledger import ChangeAccountingLedger, ChangeType
+
+    ledger = ChangeAccountingLedger(ctx.obj["vault"])
+
+    events = ledger.read_all()
+
+    # Apply filters
+    if note:
+        events = [e for e in events if note.lower() in e.note_id.lower()]
+    if change_type:
+        try:
+            ct = ChangeType(change_type)
+            events = [e for e in events if ct in e.change_types]
+        except ValueError:
+            from rich.console import Console
+            Console(stderr=True).print(f"Unknown change type: {change_type}", style="red")
+            sys.exit(1)
+
+    # Take most recent
+    events = events[-limit:]
+
+    if output_json:
+        print(json_module.dumps([e.to_dict() for e in events], indent=2))
+    else:
+        for e in events:
+            print(f"{e.timestamp.isoformat()} {e.note_id}")
+            print(f"  Types: {[ct.value for ct in e.change_types]}")
+            if e.structural_effects.dependencies_added:
+                print(f"  Deps added: {', '.join(e.structural_effects.dependencies_added)}")
+            if e.structural_effects.dependencies_removed:
+                print(f"  Deps removed: {', '.join(e.structural_effects.dependencies_removed)}")
+            print(f"  Ambiguity: {e.ambiguity_delta:+d}")
+            print()
+
+
+# -----------------------------------------------------------------------------
+# Watch commands - structural event logging
+# -----------------------------------------------------------------------------
+
+
+@cli.group()
+def watch() -> None:
+    """Observe vault drift as structural events.
+
+    Watches for file system changes and logs them to .irrev/events.log.
+    Per the Irreversibility invariant: "Persistence must be tracked."
+    """
+    pass
+
+
+@watch.command("start")
+@click.option(
+    "--hash/--no-hash",
+    "include_hash",
+    default=False,
+    show_default=True,
+    help="Compute and log file content hashes",
+)
+@click.option(
+    "--frontmatter/--no-frontmatter",
+    "include_frontmatter",
+    default=False,
+    show_default=True,
+    help="Extract and log frontmatter role/layer",
+)
+@click.option(
+    "--scope",
+    "scopes",
+    multiple=True,
+    default=None,
+    help="Filter to specific scopes (vault_note, registry, rules, config). Repeatable.",
+)
+@click.pass_context
+def watch_start(
+    ctx: click.Context,
+    include_hash: bool,
+    include_frontmatter: bool,
+    scopes: tuple[str, ...],
+) -> None:
+    """Start watching the vault for file changes.
+
+    Runs until interrupted (Ctrl+C). Events are logged to .irrev/events.log.
+
+    Examples:
+
+        irrev watch start
+
+        irrev watch start --hash --frontmatter
+
+        irrev watch start --scope vault_note --scope registry
+    """
+    from .commands.watch_cmd import run_watch
+
+    run_watch(
+        ctx.obj["vault"],
+        include_hash=include_hash,
+        include_frontmatter=include_frontmatter,
+        scopes=set(scopes) if scopes else None,
+    )
+
+
+@watch.command("events")
+@click.option("--last", "last_n", type=int, default=None, help="Show only the last N events")
+@click.option(
+    "--kind",
+    "event_kinds",
+    multiple=True,
+    default=None,
+    help="Filter by event kind (file_created, file_modified, file_deleted, file_renamed). Repeatable.",
+)
+@click.option(
+    "--scope",
+    "scopes",
+    multiple=True,
+    default=None,
+    help="Filter by artifact scope (vault_note, registry, rules, config). Repeatable.",
+)
+@click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["text", "json"]),
+    default="text",
+    show_default=True,
+    help="Output format",
+)
+@click.pass_context
+def watch_events(
+    ctx: click.Context,
+    last_n: int | None,
+    event_kinds: tuple[str, ...],
+    scopes: tuple[str, ...],
+    output_format: str,
+) -> None:
+    """Read and display events from the events log.
+
+    Examples:
+
+        irrev watch events --last 10
+
+        irrev watch events --kind file_deleted --format json
+    """
+    from .commands.watch_cmd import run_events
+
+    count = run_events(
+        ctx.obj["vault"],
+        last_n=last_n,
+        event_kinds=list(event_kinds) if event_kinds else None,
+        scopes=list(scopes) if scopes else None,
+        format=output_format,
+    )
+    sys.exit(0 if count > 0 else 1)
+
+
+@watch.command("summary")
+@click.pass_context
+def watch_summary(ctx: click.Context) -> None:
+    """Display summary of logged events."""
+    from .commands.watch_cmd import run_events_summary
+
+    count = run_events_summary(ctx.obj["vault"])
+    sys.exit(0 if count > 0 else 1)
+
+
+# -----------------------------------------------------------------------------
+# Self-audit command - meta-lint the linter
+# -----------------------------------------------------------------------------
+
+
+@cli.command("self-audit")
+@click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["text", "json", "md"]),
+    default="text",
+    show_default=True,
+    help="Output format",
+)
+@click.option(
+    "--include-passing",
+    is_flag=True,
+    help="Include passing checks in output",
+)
+@click.option(
+    "--target",
+    type=click.Path(exists=True, file_okay=False, path_type=Path),
+    default=None,
+    help="Directory to scan (defaults to irrev package)",
+)
+def self_audit(
+    output_format: str,
+    include_passing: bool,
+    target: Path | None,
+) -> None:
+    """Meta-lint the linter itself.
+
+    Runs self-audit scanners against the irrev codebase to detect:
+
+    \b
+    - Prescriptive language in strings/docstrings
+    - Self-exemption patterns (bypass mechanisms)
+    - Force gate coverage (destructive ops without --force)
+    - Audit logging coverage (state changes without logging)
+
+    Per Failure Mode #10: "The most serious failure mode is assuming
+    the lens already accounts for its own limitations."
+
+    Examples:
+
+        irrev self-audit
+
+        irrev self-audit --format md
+
+        irrev self-audit --format json > findings.json
+    """
+    from .commands.self_audit_cmd import run_self_audit
+
+    exit_code = run_self_audit(
+        target=target,
+        output_format=output_format,
+        include_passing=include_passing,
+    )
+    sys.exit(exit_code)
+
+
+# -----------------------------------------------------------------------------
+# LSP server command
+# -----------------------------------------------------------------------------
+
+
+@cli.command("lsp")
+@click.option(
+    "--transport",
+    type=click.Choice(["stdio", "tcp"]),
+    default="stdio",
+    show_default=True,
+    help="Transport method (stdio for editors, tcp for debugging)",
+)
+@click.pass_context
+def lsp(ctx: click.Context, transport: str) -> None:
+    """Start the LSP server for live invariant awareness.
+
+    The LSP server provides:
+
+    \b
+    - Real-time lint diagnostics (on save)
+    - Hover info for wikilinks (concept layer, dependencies)
+    - Code actions as suggestions (not auto-apply)
+
+    For VSCode, configure the extension to use:
+
+        irrev lsp --transport stdio
+
+    For debugging with a TCP connection:
+
+        irrev lsp --transport tcp
+
+    Examples:
+
+        irrev -v ../content lsp
+
+        irrev -v ../content lsp --transport tcp
+    """
+    from .lsp import start_server
+
+    vault_path = ctx.obj.get("vault")
+    start_server(vault_path=vault_path, transport=transport)
 
 
 def main() -> None:

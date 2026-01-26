@@ -14,7 +14,7 @@ from rich.console import Console
 
 from ..neo4j.http import Neo4jHttpClient, Neo4jHttpConfig
 from ..vault.loader import Vault, load_vault
-from ..vault.parser import extract_frontmatter_depends_on
+from ..vault.parser import extract_frontmatter_depends_on, extract_section
 from .graph_cmd import LinkGraph, _greedy_modularity_communities  # type: ignore
 
 
@@ -361,18 +361,24 @@ def _concept_topology_rows(
     return out
 
 
-def run_neo4j_load(
+# -----------------------------------------------------------------------------
+# Decomposition-compliant pattern: compute (diagnostic) / execute (action)
+# -----------------------------------------------------------------------------
+
+
+def compute_neo4j_load_plan(
     vault_path: Path,
     *,
     http_uri: str,
-    user: str,
-    password: str,
     database: str,
     mode: str,
-    ensure_schema: bool,
-    batch_size: int,
-) -> int:
-    console = Console(stderr=True)
+) -> "Neo4jLoadPlan":
+    """
+    Compute what would be loaded without executing writes.
+
+    This is the diagnostic phase - pure computation, no side effects.
+    """
+    from irrev.planning import Neo4jLoadPlan
 
     vault = load_vault(vault_path)
     rows = _build_rows(vault, vault_path)
@@ -384,12 +390,61 @@ def run_neo4j_load(
         depends_on=depends_on,
     )
 
-    client = Neo4jHttpClient(
-        Neo4jHttpConfig(http_uri=http_uri, user=user, password=password, database=database, allow_default_db_fallback=False)
+    return Neo4jLoadPlan(
+        vault_path=vault_path,
+        mode=mode,
+        database=database,
+        http_uri=http_uri,
+        notes=rows,
+        links_to=[(e["src"], e["dst"]) for e in links_to],
+        depends_on=[(e["src"], e["dst"]) for e in depends_on],
+        topology_rows=topology_rows,
+        unresolved_links=unresolved,
     )
 
+
+def execute_neo4j_load_plan(
+    plan: "Neo4jLoadPlan",
+    *,
+    user: str,
+    password: str,
+    ensure_schema: bool,
+    batch_size: int,
+    console: Console,
+) -> "Neo4jLoadResult":
+    """
+    Execute a neo4j load plan.
+
+    This is the action phase - executes writes and returns result.
+    """
+    from irrev.planning import Neo4jLoadResult
+    from irrev.audit_log import ErasureCost, CreationSummary
+
+    client = Neo4jHttpClient(
+        Neo4jHttpConfig(
+            http_uri=plan.http_uri,
+            user=user,
+            password=password,
+            database=plan.database,
+            allow_default_db_fallback=False,
+        )
+    )
+
+    erased = ErasureCost()
+    created = CreationSummary()
+
     try:
-        if mode == "rebuild":
+        if plan.mode == "rebuild":
+            # Query current counts before wipe for audit
+            try:
+                count_query = "MATCH (n) RETURN count(n) as nodes UNION ALL MATCH ()-[r]->() RETURN count(r) as nodes"
+                _, count_rows = client.query_rows(count_query)
+                if len(count_rows) >= 2:
+                    erased.notes = count_rows[0][0] if count_rows[0] else 0
+                    erased.edges = count_rows[1][0] if count_rows[1] else 0
+            except Exception:
+                pass  # Best effort
+
             console.print("Neo4j: wiping database (rebuild mode)...", style="yellow")
             client.commit(_wipe_statements())
         else:
@@ -412,30 +467,134 @@ def run_neo4j_load(
                 except Exception as e2:
                     console.print(f"Neo4j: schema creation skipped ({e2})", style="yellow")
 
-        console.print(f"Neo4j: upserting {len(rows)} notes...", style="yellow")
-        for i in range(0, len(rows), batch_size):
-            batch = rows[i : i + batch_size]
+        console.print(f"Neo4j: upserting {len(plan.notes)} notes...", style="yellow")
+        for i in range(0, len(plan.notes), batch_size):
+            batch = plan.notes[i : i + batch_size]
             client.commit([_upsert_notes_statement(batch)])
 
-        console.print(f"Neo4j: writing {len(links_to)} LINKS_TO edges...", style="yellow")
-        for i in range(0, len(links_to), batch_size):
-            batch = links_to[i : i + batch_size]
+        # Convert tuples back to dicts for the statement builders
+        links_to_dicts = [{"src": s, "dst": d} for s, d in plan.links_to]
+        depends_on_dicts = [{"src": s, "dst": d} for s, d in plan.depends_on]
+
+        console.print(f"Neo4j: writing {len(links_to_dicts)} LINKS_TO edges...", style="yellow")
+        for i in range(0, len(links_to_dicts), batch_size):
+            batch = links_to_dicts[i : i + batch_size]
             client.commit([_upsert_links_statement(batch, rel_type="LINKS_TO")])
 
-        console.print(f"Neo4j: writing {len(depends_on)} DEPENDS_ON edges...", style="yellow")
-        for i in range(0, len(depends_on), batch_size):
-            batch = depends_on[i : i + batch_size]
+        console.print(f"Neo4j: writing {len(depends_on_dicts)} DEPENDS_ON edges...", style="yellow")
+        for i in range(0, len(depends_on_dicts), batch_size):
+            batch = depends_on_dicts[i : i + batch_size]
             client.commit([_upsert_links_statement(batch, rel_type="DEPENDS_ON")])
 
         console.print("Neo4j: writing derived concept topology properties (communities/bridges)...", style="yellow")
-        client.commit([_upsert_concept_topology_statement(topology_rows)])
+        client.commit([_upsert_concept_topology_statement(plan.topology_rows)])
+
+        created.notes = len(plan.notes)
+        created.edges = len(plan.links_to) + len(plan.depends_on)
+
+        return Neo4jLoadResult(
+            erased=erased,
+            created=created,
+            success=True,
+            notes_loaded=len(plan.notes),
+            edges_created=created.edges,
+        )
 
     except Exception as e:
-        console.print(str(e), style="red")
+        return Neo4jLoadResult(
+            erased=erased,
+            created=created,
+            success=False,
+            error=str(e),
+        )
+
+
+def run_neo4j_load(
+    vault_path: Path,
+    *,
+    http_uri: str,
+    user: str,
+    password: str,
+    database: str,
+    mode: str,
+    ensure_schema: bool,
+    batch_size: int,
+    dry_run: bool = False,
+) -> int:
+    """
+    Load the vault into Neo4j.
+
+    This function orchestrates the compute/execute phases and handles
+    dry-run mode for previewing operations.
+    """
+    console = Console(stderr=True)
+
+    # Phase 1: Compute (diagnostic) - pure, no side effects
+    console.print("Computing load plan...", style="dim")
+    plan = compute_neo4j_load_plan(
+        vault_path,
+        http_uri=http_uri,
+        database=database,
+        mode=mode,
+    )
+
+    # Query existing counts if in rebuild mode (for plan summary)
+    if mode == "rebuild" and not dry_run:
+        try:
+            client = Neo4jHttpClient(
+                Neo4jHttpConfig(
+                    http_uri=http_uri,
+                    user=user,
+                    password=password,
+                    database=database,
+                    allow_default_db_fallback=False,
+                )
+            )
+            count_query = "MATCH (n) RETURN count(n) as nodes UNION ALL MATCH ()-[r]->() RETURN count(r) as nodes"
+            _, count_rows = client.query_rows(count_query)
+            if len(count_rows) >= 2:
+                plan.existing_node_count = count_rows[0][0] if count_rows[0] else 0
+                plan.existing_edge_count = count_rows[1][0] if count_rows[1] else 0
+        except Exception:
+            pass
+
+    # Dry-run mode: show plan and exit
+    if dry_run:
+        console.print("\n[bold]DRY RUN[/bold] - No changes will be made\n")
+        console.print(plan.summary())
+        return 0
+
+    # Phase 2: Execute (action) - performs writes
+    result = execute_neo4j_load_plan(
+        plan,
+        user=user,
+        password=password,
+        ensure_schema=ensure_schema,
+        batch_size=batch_size,
+        console=console,
+    )
+
+    if not result.success:
+        console.print(str(result.error), style="red")
         return 1
 
-    if unresolved:
-        console.print(f"Note: {unresolved} unresolved link targets skipped.", style="yellow")
+    if plan.unresolved_links:
+        console.print(f"Note: {plan.unresolved_links} unresolved link targets skipped.", style="yellow")
+
+    # Audit log
+    from irrev.audit_log import log_operation
+
+    log_operation(
+        vault_path,
+        operation=f"neo4j-{mode}",
+        erased=result.erased,
+        created=result.created,
+        metadata={
+            "database": database,
+            "http_uri": http_uri,
+            "unresolved_links": plan.unresolved_links,
+        },
+    )
 
     console.print("Neo4j load complete.", style="green")
     return 0
@@ -513,6 +672,12 @@ def run_neo4j_export(
     stamp: bool,
     top: int,
     concept_note_id: str,
+    include_mentions: bool,
+    include_ghost_terms: bool,
+    include_definition_tokens: bool,
+    token_min_df: int,
+    token_max_df: int,
+    token_top_per_concept: int,
 ) -> int:
     """Export a bundle of inspection artifacts (CSV/JSON) from Neo4j.
 
@@ -694,9 +859,379 @@ LIMIT 1
             edge_rows = [[e.get(c) for c in edge_cols] for e in links if isinstance(e, dict)]
             _write_csv(out_base / "11_two_layer_edges.csv", edge_cols, edge_rows)
 
+        if include_mentions or include_ghost_terms or include_definition_tokens:
+            vault = load_vault(vault_path)
+            concepts = list(vault.concepts)
+
+            def concept_note_id_for(c) -> str:
+                return _note_id(vault_path, c.path)
+
+            # Build an alias index: canonical concept name -> list of aliases.
+            aliases_by_canonical: dict[str, list[str]] = {}
+            for alias, canon in (getattr(vault, "_aliases", {}) or {}).items():
+                aliases_by_canonical.setdefault(str(canon).lower(), []).append(str(alias).lower())
+
+            concept_by_name: dict[str, Any] = {c.name.lower(): c for c in concepts}
+
+            # Existing structural edges/links from Neo4j export graph.
+            existing_links: set[tuple[str, str]] = set()
+            existing_depends: set[tuple[str, str]] = set()
+            if isinstance(links, list):
+                for e in links:
+                    if not isinstance(e, dict):
+                        continue
+                    s = e.get("source")
+                    t = e.get("target")
+                    typ = e.get("type")
+                    if isinstance(s, str) and isinstance(t, str):
+                        if typ == "LINKS_TO":
+                            existing_links.add((s, t))
+                        elif typ == "DEPENDS_ON":
+                            existing_depends.add((s, t))
+
+            def _variant_patterns_for_target(target_concept) -> list[re.Pattern[str]]:
+                variants: set[str] = set()
+                name = (target_concept.name or "").lower().strip()
+                if name:
+                    variants.add(name)
+                    variants.add(name.replace("-", " "))
+
+                title = (getattr(target_concept, "title", "") or "").lower().strip()
+                if title:
+                    variants.add(title)
+                    variants.add(title.replace("-", " "))
+
+                for a in aliases_by_canonical.get(name, []):
+                    a = (a or "").lower().strip()
+                    if a:
+                        variants.add(a)
+                        variants.add(a.replace("-", " "))
+
+                pats: list[re.Pattern[str]] = []
+                for v in sorted(variants):
+                    toks = [t for t in re.split(r"[-\s]+", v) if t]
+                    if not toks:
+                        continue
+                    if any(len(t) < 3 for t in toks) and len(toks) == 1:
+                        # Avoid extremely short single-token matches.
+                        continue
+                    if len(toks) == 1:
+                        rx = rf"\b{re.escape(toks[0])}\b"
+                    else:
+                        rx = r"\b" + r"[-\s]+".join(re.escape(t) for t in toks) + r"\b"
+                    pats.append(re.compile(rx, re.IGNORECASE))
+                return pats
+
+            patterns_by_target_id: dict[str, list[re.Pattern[str]]] = {}
+            for t in concepts:
+                patterns_by_target_id[concept_note_id_for(t)] = _variant_patterns_for_target(t)
+
+            def _definition_text(note_content: str) -> str:
+                sec = extract_section(note_content, "Definition") or ""
+                return sec
+
+            BACKTICK_RE = re.compile(r"`([^`]{2,60})`")
+
+            def _normalize_ghost(term: str) -> str:
+                s = term.strip().lower()
+                # Drop obviously non-terms.
+                if any(ch in s for ch in ("(", ")", "{", "}", "[", "]", "/", "\\")):
+                    return ""
+                s = re.sub(r"\s+", " ", s)
+                return s
+
+            def _ghost_id(term: str) -> str:
+                s = term.lower().strip()
+                s = re.sub(r"[^0-9a-zA-Z]+", "-", s).strip("-")
+                return f"ghost/{s[:64] or 'term'}"
+
+            mention_rows: list[list[Any]] = []
+            ghost_rows: list[list[Any]] = []
+            token_rows: list[list[Any]] = []
+            mention_links: list[dict[str, Any]] = []
+            ghost_links: list[dict[str, Any]] = []
+            token_links: list[dict[str, Any]] = []
+            ghost_nodes: dict[str, dict[str, Any]] = {}
+            token_nodes: dict[str, dict[str, Any]] = {}
+
+            # Tokenization config for "ghost vocabulary" probes.
+            STOPWORDS: set[str] = {
+                "a",
+                "an",
+                "and",
+                "are",
+                "as",
+                "at",
+                "be",
+                "but",
+                "by",
+                "can",
+                "could",
+                "does",
+                "for",
+                "from",
+                "has",
+                "have",
+                "how",
+                "if",
+                "in",
+                "into",
+                "is",
+                "it",
+                "its",
+                "may",
+                "more",
+                "most",
+                "not",
+                "of",
+                "on",
+                "or",
+                "other",
+                "our",
+                "so",
+                "such",
+                "than",
+                "that",
+                "the",
+                "their",
+                "then",
+                "there",
+                "these",
+                "this",
+                "to",
+                "under",
+                "we",
+                "what",
+                "when",
+                "which",
+                "with",
+                "without",
+                "you",
+                "your",
+            }
+
+            # Exclude tokens that are already part of the *named* concept vocabulary (names + aliases),
+            # so the token graph surfaces "unknown" lexicon rather than duplicating the concept graph.
+            known_vocab: set[str] = set()
+            for c in concepts:
+                for raw in [c.name, getattr(c, "title", "")] + list(getattr(c, "aliases", []) or []):
+                    s = (raw or "").lower().strip()
+                    if not s:
+                        continue
+                    for tok in re.split(r"[-\s]+", s):
+                        tok = tok.strip()
+                        if tok:
+                            known_vocab.add(tok)
+
+            FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
+            WORD_RE = re.compile(r"[a-zA-Z][a-zA-Z-]{2,}")
+
+            def tokenize_definition(text: str) -> list[str]:
+                # Strip code blocks, normalize separators, then extract word-like tokens.
+                t = FENCE_RE.sub(" ", text)
+                for sep in (
+                    "—",
+                    "–",
+                    "→",
+                    "↔",
+                    "\u00e2\u20ac\u2014",
+                    "\u00e2\u20ac\u2013",
+                    "\u00e2\u2020\u2019",
+                    "\u00e2\u2020\u201d",
+                ):
+                    t = t.replace(sep, " ")
+                tokens = []
+                for m in WORD_RE.findall(t):
+                    tok = m.lower().strip("-")
+                    if not tok or tok in STOPWORDS:
+                        continue
+                    if tok in known_vocab:
+                        continue
+                    tokens.append(tok)
+                return tokens
+
+            # First pass: token counts per concept + document frequency.
+            token_tf: dict[str, dict[str, int]] = {}
+            token_df: dict[str, int] = {}
+            if include_definition_tokens:
+                for src in concepts:
+                    src_id = concept_note_id_for(src)
+                    src_def = _definition_text(src.content)
+                    if not src_def.strip():
+                        continue
+                    toks = tokenize_definition(src_def)
+                    if not toks:
+                        continue
+                    counts: dict[str, int] = {}
+                    for t in toks:
+                        counts[t] = counts.get(t, 0) + 1
+                    token_tf[src_id] = counts
+                    for t in counts.keys():
+                        token_df[t] = token_df.get(t, 0) + 1
+
+            for src in concepts:
+                src_id = concept_note_id_for(src)
+                src_def = _definition_text(src.content)
+                if not src_def.strip():
+                    continue
+
+                # Concept mentions in Definition.
+                if include_mentions:
+                    for dst in concepts:
+                        dst_id = concept_note_id_for(dst)
+                        if dst_id == src_id:
+                            continue
+                        pats = patterns_by_target_id.get(dst_id) or []
+                        if not pats:
+                            continue
+                        # Take the max match count across variants to avoid double-counting.
+                        count = 0
+                        for pat in pats:
+                            n = len(pat.findall(src_def))
+                            if n > count:
+                                count = n
+                        if count <= 0:
+                            continue
+
+                        has_link = (src_id, dst_id) in existing_links
+                        has_depends = (src_id, dst_id) in existing_depends
+                        if has_link:
+                            # This is already visible in LINKS_TO; the interesting set is unlinked mentions.
+                            continue
+
+                        mention_rows.append([src_id, src.title, dst_id, dst.title, count, has_depends])
+                        if not has_depends:
+                            mention_links.append(
+                                {"source": src_id, "target": dst_id, "type": "MENTIONS", "weight": count}
+                            )
+
+                # Ghost terms: backticked spans in Definition that don't resolve to any concept.
+                if include_ghost_terms:
+                    counts: dict[str, int] = {}
+                    for raw in BACKTICK_RE.findall(src_def):
+                        term = _normalize_ghost(raw)
+                        if not term:
+                            continue
+                        # If it resolves to a known concept (name/alias), skip.
+                        cand = term
+                        cand2 = term.replace(" ", "-")
+                        resolved = vault.get(cand) or vault.get(cand2)
+                        if resolved and getattr(resolved, "role", None) == "concept":
+                            continue
+                        counts[term] = counts.get(term, 0) + 1
+
+                    for term, n in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[:50]:
+                        gid = _ghost_id(term)
+                        ghost_nodes.setdefault(
+                            gid,
+                            {"id": gid, "label": term, "role": "ghost", "layer": "ghost", "community": "ghost"},
+                        )
+                        ghost_rows.append([src_id, src.title, gid, term, n])
+                        ghost_links.append({"source": src_id, "target": gid, "type": "GHOST_MENTIONS", "weight": n})
+
+                if include_definition_tokens and src_id in token_tf:
+                    # Filter tokens by document frequency range, then keep top per concept by tf-idf.
+                    counts = token_tf[src_id]
+                    scored: list[tuple[float, str, int, int]] = []
+                    for tok, tf in counts.items():
+                        df = token_df.get(tok, 0)
+                        if df < max(1, int(token_min_df)):
+                            continue
+                        if int(token_max_df) > 0 and df > int(token_max_df):
+                            continue
+                        # Simple tf-idf-ish score (no heavy math): tf * log((N+1)/(df+1)).
+                        # Keep it monotone and interpretable; this is exploratory.
+                        n_docs = max(1, len(token_tf))
+                        score = tf * (1.0 + (n_docs / (df + 1.0)) ** 0.5)
+                        scored.append((score, tok, tf, df))
+                    scored.sort(key=lambda x: (-x[0], x[1]))
+                    for score, tok, tf, df in scored[: max(1, int(token_top_per_concept))]:
+                        tid = f"token/{tok}"
+                        token_nodes.setdefault(
+                            tid,
+                            {
+                                "id": tid,
+                                "label": tok,
+                                "role": "token",
+                                "layer": "token",
+                                "community": "token",
+                            },
+                        )
+                        token_rows.append([src_id, src.title, tid, tok, tf, df, round(score, 3)])
+                        token_links.append({"source": src_id, "target": tid, "type": "TOKEN", "weight": tf, "df": df})
+
+            if include_mentions:
+                _write_csv(
+                    out_base / "12_mentions_unlinked_definition.csv",
+                    ["source", "source_title", "target", "target_title", "count_in_definition", "has_depends_on"],
+                    mention_rows,
+                )
+
+            if include_ghost_terms:
+                _write_csv(
+                    out_base / "12_ghost_terms_definition.csv",
+                    ["source", "source_title", "ghost_id", "term", "count_in_definition"],
+                    ghost_rows,
+                )
+
+            if include_definition_tokens:
+                _write_csv(
+                    out_base / "13_definition_tokens.csv",
+                    ["source", "source_title", "token_id", "token", "tf_in_definition", "df_across_concepts", "score"],
+                    token_rows,
+                )
+
+            # Optional graph JSON for the d3 viewer (adds ghost nodes + mention edges + token nodes).
+            if isinstance(graph_obj, dict):
+                base_nodes = list(nodes) if isinstance(nodes, list) else []
+                base_links = list(links) if isinstance(links, list) else []
+
+                g_mentions = {"nodes": list(base_nodes), "links": list(base_links)}
+                if include_ghost_terms:
+                    # Only include ghost nodes that actually appear.
+                    g_mentions["nodes"] = list(g_mentions["nodes"]) + list(ghost_nodes.values())
+                    g_mentions["links"] = list(g_mentions["links"]) + ghost_links
+                if include_mentions:
+                    # Only include semantic-implicit mentions (unlinked + undeclared) as edges.
+                    g_mentions["links"] = list(g_mentions["links"]) + mention_links
+
+                if include_mentions or include_ghost_terms:
+                    (out_base / "12_mentions_graph.json").write_text(
+                        json.dumps(g_mentions, ensure_ascii=False, indent=2),
+                        encoding="utf-8",
+                    )
+
+                if include_definition_tokens:
+                    g_tokens = {"nodes": list(g_mentions["nodes"]), "links": list(g_mentions["links"])}
+                    g_tokens["nodes"] = list(g_tokens["nodes"]) + list(token_nodes.values())
+                    g_tokens["links"] = list(g_tokens["links"]) + token_links
+                    (out_base / "13_definition_tokens_graph.json").write_text(
+                        json.dumps(g_tokens, ensure_ascii=False, indent=2),
+                        encoding="utf-8",
+                    )
+
     except Exception as e:
         console.print(str(e), style="red")
         return 1
+
+    # Audit log: count files written
+    from irrev.audit_log import log_operation, CreationSummary
+
+    files_written = len(list(out_base.glob("*.csv"))) + len(list(out_base.glob("*.json")))
+    bytes_written = sum(f.stat().st_size for f in out_base.iterdir() if f.is_file())
+
+    log_operation(
+        vault_path,
+        operation="neo4j-export",
+        created=CreationSummary(files=files_written, bytes_written=bytes_written),
+        metadata={
+            "out_dir": str(out_base),
+            "database": database,
+            "include_mentions": include_mentions,
+            "include_ghost_terms": include_ghost_terms,
+            "include_definition_tokens": include_definition_tokens,
+        },
+    )
 
     console.print(f"Wrote Neo4j export bundle to {out_base}", style="green")
     return 0

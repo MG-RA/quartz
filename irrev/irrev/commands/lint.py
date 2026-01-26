@@ -56,6 +56,7 @@ def run_lint(
             return 1
 
         allowed_rules = set(inv.rules)
+        console.print(f"[yellow]⚠ Governance notice:[/] --invariant filter active; other invariants are not being checked.", style="dim")
         console.print(f"Running lint checks for: {inv.name} Invariant", style="dim")
 
     # Run lint rules

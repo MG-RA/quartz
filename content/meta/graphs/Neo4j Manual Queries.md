@@ -40,6 +40,9 @@ This writes a dated snapshot under `content/exports/export/YYYY-MM-DD/` includin
 - `*_depends_without_mentions.csv` (empty is good)
 - `*_projection_community_counts.csv`
 - `*_two_layer_graph.json` + `*_two_layer_nodes.csv` + `*_two_layer_edges.csv` (for `irrev/d3_graph_viewer.html`)
+- `*_mentions_unlinked_definition.csv` (MENTIONS edges: definition text, unlinked + undeclared)
+- `*_ghost_terms_definition.csv` + `*_mentions_graph.json` (ghost nodes from backticked terms; optional)
+- `*_definition_tokens.csv` + `*_definition_tokens_graph.json` (TOKEN nodes/edges; optional; definition vocabulary probe)
 
 ## Sanity checks
 

@@ -56,8 +56,15 @@ Generate and compare registry tables.
 uv run irrev -v ../content registry build
 uv run irrev -v ../content registry build --out Registry.generated.md
 uv run irrev -v ../content registry build --in-place
+uv run irrev -v ../content registry build --in-place --dry-run
 uv run irrev -v ../content registry diff
 ```
+
+Options:
+
+- `--in-place`: Update Registry.md tables directly
+- `--dry-run`: Preview changes without writing
+- `--out PATH`: Write to specified output file
 
 ### `irrev hubs`
 
@@ -117,7 +124,15 @@ Load the vault into Neo4j as **derived state**, then query it directly or via th
 ```bash
 uv run irrev -v ../content neo4j ping --database irrev
 uv run irrev -v ../content neo4j load --database irrev --mode sync
+uv run irrev -v ../content neo4j load --database irrev --mode rebuild --force
+uv run irrev -v ../content neo4j load --database irrev --mode rebuild --dry-run
 ```
+
+Options:
+
+- `--mode sync|rebuild`: sync upserts incrementally; rebuild wipes and recreates
+- `--dry-run`: Preview what would be loaded/erased without executing
+- `--force`: Required for destructive `--mode rebuild` operations
 
 Docs: `irrev/MCP_NEO4J_READONLY.md`.
 
@@ -216,6 +231,100 @@ Before enforcing layers as schema, you can compare **emergent communities** in t
 uv run irrev -v ../content communities --mode links
 uv run irrev -v ../content communities --mode depends_on
 uv run irrev -v ../content communities --mode both --format json
+```
+
+### `irrev self-audit`
+
+Meta-lint the linter itself. Runs self-audit scanners against the irrev codebase to detect governance violations.
+
+```bash
+uv run irrev self-audit
+uv run irrev self-audit --format md
+uv run irrev self-audit --format json > findings.json
+uv run irrev self-audit --include-passing
+```
+
+Detects:
+
+- **Prescriptive language** in strings/docstrings ("Fix:", "must", "should")
+- **Self-exemption patterns** (bypass mechanisms like --invariant filter)
+- **Force gate coverage** (destructive operations without --force parameter)
+- **Audit logging coverage** (state changes without log_operation calls)
+
+Per Failure Mode #10: "The most serious failure mode is assuming the lens already accounts for its own limitations."
+
+### `irrev lsp`
+
+Start the LSP server for live invariant awareness in editors.
+
+```bash
+uv run irrev -v ../content lsp
+uv run irrev -v ../content lsp --transport tcp
+```
+
+Provides:
+
+- **Real-time diagnostics** on save (broken links, missing sections, layer violations)
+- **Hover info** for wikilinks (concept layer, dependencies, invariant participation)
+- **Code actions** as suggestions (not auto-apply)
+
+For VSCode, configure a language client extension to spawn:
+
+```json
+{
+  "command": "irrev",
+  "args": ["-v", "${workspaceFolder}/content", "lsp"]
+}
+```
+
+### `irrev watch`
+
+Observe vault drift as structural events. File changes are logged to `.irrev/events.log`.
+
+```bash
+uv run irrev -v ../content watch start
+uv run irrev -v ../content watch start --hash --frontmatter
+uv run irrev -v ../content watch start --scope vault_note --scope registry
+uv run irrev -v ../content watch events --last 10
+uv run irrev -v ../content watch events --kind file_deleted --format json
+uv run irrev -v ../content watch summary
+```
+
+Options for `watch start`:
+
+- `--hash`: Compute and log file content hashes
+- `--frontmatter`: Extract and log frontmatter role/layer
+- `--scope`: Filter to specific artifact scopes (vault_note, registry, rules, config)
+
+Event kinds tracked: `file_created`, `file_modified`, `file_deleted`, `file_renamed`
+
+## Audit Trail
+
+All state-modifying operations log to `.irrev/audit.log` for erasure cost accounting. This append-only log tracks:
+
+- What was erased (notes, edges, files, bytes)
+- What was created (notes, edges, files, bytes)
+- Operation metadata (database, paths, mode)
+
+Logged operations:
+
+| Operation | Logged Events |
+|-----------|---------------|
+| `neo4j load --mode rebuild` | nodes/edges erased and created |
+| `neo4j load --mode sync` | nodes/edges upserted |
+| `neo4j export` | files/bytes written |
+| `registry build --in-place` | file size changes |
+
+Example log entry (JSON Lines format):
+
+```json
+{"timestamp": "2026-01-26T12:00:00+00:00", "operation": "neo4j-rebuild", "erased": {"notes": 150, "edges": 420}, "created": {"notes": 155, "edges": 435}, "metadata": {"database": "irrev"}}
+```
+
+View recent audit entries:
+
+```bash
+tail -5 .irrev/audit.log | jq .
 ```
 
 ## Integration with vault workflow
