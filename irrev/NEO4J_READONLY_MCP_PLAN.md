@@ -14,6 +14,16 @@ Primary outcomes:
 - A repeatable **vault loader** that produces a Neo4j database representing the vault’s structure.
 - An MCP server exposing **read-only** query capabilities (Cypher + a few safe, typed “helper tools”).
 
+## Progress (2026-01-26)
+
+- [x] Loader MVP: `irrev -v content neo4j load`
+- [x] Read-only MCP server with bounded Cypher validator
+- [x] Junctions + communities analysis commands (`irrev junctions …`, `irrev communities …`)
+- [x] Typed dependency edges in Neo4j (`STRUCTURAL_DEPENDS_ON`, `FRONTMATTER_DEPENDS_ON`)
+- [x] Persist greedy communities + bridge scores on concept nodes during load
+- [ ] Add a publishable visualization artifact (community color + layer annotation)
+- [ ] Add text-level implicit-dependency lint (definition mentions without declared edges)
+
 ## Non-goals
 
 - No write/mutate tools via MCP (no `CREATE`, `MERGE`, `SET`, `DELETE`, `CALL … write`, etc.).
@@ -82,7 +92,10 @@ Core edges:
   - `contexts` (optional): coarse usage contexts like `["definition", "not", "example", "failure-mode"]`
 
 Frontmatter-derived edges (optional but useful):
-- `(:Note)-[:DEPENDS_ON]->(:Note)` from `depends_on` lists
+- `(:Note)-[:FRONTMATTER_DEPENDS_ON]->(:Note)` from frontmatter `depends_on` lists
+
+Content-derived edges (useful for dependency accounting):
+- `(:Note)-[:STRUCTURAL_DEPENDS_ON]->(:Note)` from a concept’s `## Structural dependencies` section
 
 Tag edges (optional):
 - `(:Note)-[:TAGGED_WITH]->(:Tag {name})`
@@ -179,6 +192,9 @@ Recommended tools (read-only):
    - `note_by_id(note_id)`
    - `outlinks(note_id, limit)`
    - `inlinks(note_id, limit)`
+   - `community_summary(mode, limit)`
+   - `community_members(mode, community, limit)`
+   - `bridge_nodes(mode, limit)`
    - `hub_notes(min_outlinks, role?, layer?)`
    - `missing_failure_modes()` (based on frontmatter list or link presence)
    - `path_between(a_note_id, b_note_id, max_hops)`

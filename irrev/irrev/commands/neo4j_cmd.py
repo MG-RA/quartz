@@ -13,6 +13,7 @@ from rich.console import Console
 from ..neo4j.http import Neo4jHttpClient, Neo4jHttpConfig
 from ..vault.loader import Vault, load_vault
 from ..vault.parser import extract_frontmatter_depends_on
+from .graph_cmd import LinkGraph, _greedy_modularity_communities  # type: ignore
 
 
 _WIKILINK_OCCURRENCE_PATTERN = re.compile(r"\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?\]\]")
@@ -83,6 +84,12 @@ def _schema_statements() -> list[dict[str, Any]]:
         {
             "statement": "CREATE INDEX note_canonical IF NOT EXISTS FOR (n:Note) ON (n.canonical)",
         },
+        {
+            "statement": "CREATE INDEX note_community_links IF NOT EXISTS FOR (n:Note) ON (n.community_links_greedy)",
+        },
+        {
+            "statement": "CREATE INDEX note_community_depends IF NOT EXISTS FOR (n:Note) ON (n.community_depends_greedy)",
+        },
     ]
 
 
@@ -94,6 +101,8 @@ def _schema_statements_legacy() -> list[dict[str, Any]]:
         {"statement": "CREATE INDEX ON :Note(role)"},
         {"statement": "CREATE INDEX ON :Note(layer)"},
         {"statement": "CREATE INDEX ON :Note(canonical)"},
+        {"statement": "CREATE INDEX ON :Note(community_links_greedy)"},
+        {"statement": "CREATE INDEX ON :Note(community_depends_greedy)"},
     ]
 
 
@@ -102,7 +111,7 @@ def _wipe_statements() -> list[dict[str, Any]]:
 
 
 def _clear_edge_statements() -> list[dict[str, Any]]:
-    return [{"statement": "MATCH ()-[r:LINKS_TO|DEPENDS_ON]->() DELETE r"}]
+    return [{"statement": "MATCH ()-[r:LINKS_TO|DEPENDS_ON|STRUCTURAL_DEPENDS_ON|FRONTMATTER_DEPENDS_ON]->() DELETE r"}]
 
 
 def _upsert_notes_statement(rows: list[dict[str, Any]]) -> dict[str, Any]:
@@ -139,7 +148,7 @@ FOREACH (_ IN CASE WHEN row.label = 'Support' THEN [1] ELSE [] END | SET n:Suppo
 
 
 def _upsert_links_statement(edges: list[dict[str, Any]], *, rel_type: str) -> dict[str, Any]:
-    if rel_type not in ("LINKS_TO", "DEPENDS_ON"):
+    if rel_type not in ("LINKS_TO", "DEPENDS_ON", "STRUCTURAL_DEPENDS_ON", "FRONTMATTER_DEPENDS_ON"):
         raise ValueError(f"Unsupported relationship type: {rel_type}")
 
     if rel_type == "LINKS_TO":
@@ -150,6 +159,20 @@ MATCH (t:Note {note_id: e.dst})
 MERGE (s)-[r:LINKS_TO]->(t)
 SET r.count = e.count, r.kinds = e.kinds
 """
+    elif rel_type == "STRUCTURAL_DEPENDS_ON":
+        statement = """
+UNWIND $edges AS e
+MATCH (s:Note {note_id: e.src})
+MATCH (t:Note {note_id: e.dst})
+MERGE (s)-[:STRUCTURAL_DEPENDS_ON]->(t)
+"""
+    elif rel_type == "FRONTMATTER_DEPENDS_ON":
+        statement = """
+UNWIND $edges AS e
+MATCH (s:Note {note_id: e.src})
+MATCH (t:Note {note_id: e.dst})
+MERGE (s)-[:FRONTMATTER_DEPENDS_ON]->(t)
+"""
     else:
         statement = """
 UNWIND $edges AS e
@@ -159,6 +182,26 @@ MERGE (s)-[r:DEPENDS_ON]->(t)
 """
 
     return {"statement": statement, "parameters": {"edges": edges}}
+
+
+def _upsert_concept_topology_statement(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    return {
+        "statement": """
+UNWIND $rows AS row
+MATCH (n:Note {note_id: row.note_id})
+SET
+  n.community_links_greedy = row.community_links_greedy,
+  n.community_depends_greedy = row.community_depends_greedy,
+  n.community_both_greedy = row.community_both_greedy,
+  n.bridge_links_greedy = row.bridge_links_greedy,
+  n.bridge_depends_greedy = row.bridge_depends_greedy,
+  n.bridge_both_greedy = row.bridge_both_greedy,
+  n.boundary_edges_links_greedy = row.boundary_edges_links_greedy,
+  n.boundary_edges_depends_greedy = row.boundary_edges_depends_greedy,
+  n.boundary_edges_both_greedy = row.boundary_edges_both_greedy
+""",
+        "parameters": {"rows": rows},
+    }
 
 
 def _build_rows(vault: Vault, vault_path: Path) -> list[dict[str, Any]]:
@@ -194,10 +237,15 @@ def _build_rows(vault: Vault, vault_path: Path) -> list[dict[str, Any]]:
     return rows
 
 
-def _build_edges(vault: Vault, vault_path: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]], int]:
+def _build_edges(
+    vault: Vault, vault_path: Path
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], int]:
     links_to: list[dict[str, Any]] = []
-    depends_on: list[dict[str, Any]] = []
+    structural_depends_on: list[dict[str, Any]] = []
+    frontmatter_depends_on: list[dict[str, Any]] = []
     unresolved = 0
+
+    concept_ids = {_note_id(vault_path, c.path) for c in vault.concepts}
 
     for note in vault.all_notes:
         src_id = _note_id(vault_path, note.path)
@@ -212,16 +260,111 @@ def _build_edges(vault: Vault, vault_path: Path) -> tuple[list[dict[str, Any]], 
             dst_id = _note_id(vault_path, dst_note.path)
             links_to.append({"src": src_id, "dst": dst_id, "count": count, "kinds": ["wikilink"]})
 
-        # Frontmatter depends_on (dedup)
+        # Structural depends_on (concepts only; dedup)
+        if src_id in concept_ids and hasattr(note, "depends_on"):
+            for dep in getattr(note, "depends_on") or []:
+                dst_note = vault.get(dep)
+                if not dst_note:
+                    unresolved += 1
+                    continue
+                dst_id = _note_id(vault_path, dst_note.path)
+                if dst_id in concept_ids:
+                    structural_depends_on.append({"src": src_id, "dst": dst_id})
+
+        # Frontmatter depends_on (all roles; dedup)
         for dep in extract_frontmatter_depends_on(note.frontmatter or {}):
             dst_note = vault.get(dep)
             if not dst_note:
                 unresolved += 1
                 continue
             dst_id = _note_id(vault_path, dst_note.path)
-            depends_on.append({"src": src_id, "dst": dst_id})
+            frontmatter_depends_on.append({"src": src_id, "dst": dst_id})
 
-    return links_to, depends_on, unresolved
+    # Deduplicate depends edges (LINKS_TO keeps multiplicity via count)
+    def dedup(edges: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        seen: set[tuple[str, str]] = set()
+        out: list[dict[str, Any]] = []
+        for e in edges:
+            key = (e["src"], e["dst"])
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append(e)
+        return out
+
+    return links_to, dedup(structural_depends_on), dedup(frontmatter_depends_on), unresolved
+
+
+def _concept_topology_rows(
+    concept_ids: set[str],
+    *,
+    links_to: list[dict[str, Any]],
+    structural_depends_on: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Compute community and bridge properties for concept nodes (derived; rebuildable)."""
+    g_links = LinkGraph()
+    g_depends = LinkGraph()
+    g_both = LinkGraph()
+
+    for cid in concept_ids:
+        g_links.add_node(cid)
+        g_depends.add_node(cid)
+        g_both.add_node(cid)
+
+    for e in links_to:
+        s = e["src"]
+        t = e["dst"]
+        if s in concept_ids and t in concept_ids:
+            g_links.add_edge(s, t)
+            g_both.add_edge(s, t)
+
+    for e in structural_depends_on:
+        s = e["src"]
+        t = e["dst"]
+        if s in concept_ids and t in concept_ids:
+            g_depends.add_edge(s, t)
+            g_both.add_edge(s, t)
+
+    c_links = _greedy_modularity_communities(g_links)
+    c_depends = _greedy_modularity_communities(g_depends)
+    c_both = _greedy_modularity_communities(g_both)
+
+    def bridge_metrics(g: LinkGraph, comm: dict[str, str], node: str) -> tuple[int, int]:
+        nbrs = g.neighbors_undirected(node)
+        self_c = comm.get(node)
+        if not self_c or not nbrs:
+            return 0, 0
+        boundary_edges = 0
+        neighbor_communities: set[str] = set()
+        for nb in nbrs:
+            c = comm.get(nb)
+            if not c:
+                continue
+            if c != self_c:
+                boundary_edges += 1
+                neighbor_communities.add(c)
+        return len(neighbor_communities), boundary_edges
+
+    out: list[dict[str, Any]] = []
+    for cid in sorted(concept_ids):
+        bridge_l, boundary_l = bridge_metrics(g_links, c_links, cid)
+        bridge_d, boundary_d = bridge_metrics(g_depends, c_depends, cid)
+        bridge_b, boundary_b = bridge_metrics(g_both, c_both, cid)
+        out.append(
+            {
+                "note_id": cid,
+                "community_links_greedy": c_links.get(cid),
+                "community_depends_greedy": c_depends.get(cid),
+                "community_both_greedy": c_both.get(cid),
+                "bridge_links_greedy": bridge_l,
+                "bridge_depends_greedy": bridge_d,
+                "bridge_both_greedy": bridge_b,
+                "boundary_edges_links_greedy": boundary_l,
+                "boundary_edges_depends_greedy": boundary_d,
+                "boundary_edges_both_greedy": boundary_b,
+            }
+        )
+    return out
 
 
 def run_neo4j_load(
@@ -239,7 +382,13 @@ def run_neo4j_load(
 
     vault = load_vault(vault_path)
     rows = _build_rows(vault, vault_path)
-    links_to, depends_on, unresolved = _build_edges(vault, vault_path)
+    links_to, structural_depends_on, frontmatter_depends_on, unresolved = _build_edges(vault, vault_path)
+    concept_ids = {_note_id(vault_path, c.path) for c in vault.concepts}
+    topology_rows = _concept_topology_rows(
+        concept_ids,
+        links_to=links_to,
+        structural_depends_on=structural_depends_on,
+    )
 
     client = Neo4jHttpClient(
         Neo4jHttpConfig(http_uri=http_uri, user=user, password=password, database=database, allow_default_db_fallback=False)
@@ -279,10 +428,18 @@ def run_neo4j_load(
             batch = links_to[i : i + batch_size]
             client.commit([_upsert_links_statement(batch, rel_type="LINKS_TO")])
 
-        console.print(f"Neo4j: writing {len(depends_on)} DEPENDS_ON edges...", style="yellow")
-        for i in range(0, len(depends_on), batch_size):
-            batch = depends_on[i : i + batch_size]
-            client.commit([_upsert_links_statement(batch, rel_type="DEPENDS_ON")])
+        console.print(f"Neo4j: writing {len(structural_depends_on)} STRUCTURAL_DEPENDS_ON edges...", style="yellow")
+        for i in range(0, len(structural_depends_on), batch_size):
+            batch = structural_depends_on[i : i + batch_size]
+            client.commit([_upsert_links_statement(batch, rel_type="STRUCTURAL_DEPENDS_ON")])
+
+        console.print(f"Neo4j: writing {len(frontmatter_depends_on)} FRONTMATTER_DEPENDS_ON edges...", style="yellow")
+        for i in range(0, len(frontmatter_depends_on), batch_size):
+            batch = frontmatter_depends_on[i : i + batch_size]
+            client.commit([_upsert_links_statement(batch, rel_type="FRONTMATTER_DEPENDS_ON")])
+
+        console.print("Neo4j: writing derived concept topology properties (communities/bridges)...", style="yellow")
+        client.commit([_upsert_concept_topology_statement(topology_rows)])
 
     except Exception as e:
         console.print(str(e), style="red")

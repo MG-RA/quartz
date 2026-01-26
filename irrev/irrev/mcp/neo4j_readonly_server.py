@@ -23,6 +23,7 @@ from ..neo4j.http import Neo4jHttpClient, Neo4jHttpConfig
 _INTENTS = ("analysis", "audit", "inspection", "exploration")
 _MAX_ROWS = 500
 _MAX_HOPS = 6
+_TOPOLOGY_MODES = ("links", "depends_on", "both")
 
 
 _FORBIDDEN_TOKENS = (
@@ -265,6 +266,46 @@ def _tool_defs() -> list[dict[str, Any]]:
                 },
             },
         ),
+        cypher_tool(
+            "community_summary",
+            "Summarize greedy communities for Concept nodes (requires neo4j load with topology properties).",
+            {
+                "type": "object",
+                "required": ["intent", "mode"],
+                "properties": {
+                    "intent": {"type": "string", "enum": list(_INTENTS)},
+                    "mode": {"type": "string", "enum": list(_TOPOLOGY_MODES)},
+                    "limit": {"type": "integer", "minimum": 1, "maximum": _MAX_ROWS, "default": 50},
+                },
+            },
+        ),
+        cypher_tool(
+            "community_members",
+            "List members of a greedy community for Concept nodes.",
+            {
+                "type": "object",
+                "required": ["intent", "mode", "community"],
+                "properties": {
+                    "intent": {"type": "string", "enum": list(_INTENTS)},
+                    "mode": {"type": "string", "enum": list(_TOPOLOGY_MODES)},
+                    "community": {"type": "integer", "minimum": 0},
+                    "limit": {"type": "integer", "minimum": 1, "maximum": _MAX_ROWS, "default": 100},
+                },
+            },
+        ),
+        cypher_tool(
+            "bridge_nodes",
+            "List top bridge nodes (Concepts connecting multiple communities).",
+            {
+                "type": "object",
+                "required": ["intent", "mode"],
+                "properties": {
+                    "intent": {"type": "string", "enum": list(_INTENTS)},
+                    "mode": {"type": "string", "enum": list(_TOPOLOGY_MODES)},
+                    "limit": {"type": "integer", "minimum": 1, "maximum": _MAX_ROWS, "default": 50},
+                },
+            },
+        ),
     ]
 
 
@@ -297,7 +338,10 @@ def _handle_tool_call(client: Neo4jHttpClient, name: str, arguments: dict[str, A
             raise ValueError("note_id must be a non-empty string")
         q = (
             "MATCH (n:Note {note_id: $note_id}) "
-            "RETURN n.note_id, n.title, n.role, n.layer, n.canonical, n.tags, n.path, n.folder "
+            "RETURN n.note_id, n.title, n.role, n.layer, n.canonical, n.tags, n.path, n.folder, "
+            "n.community_links_greedy, n.community_depends_greedy, n.community_both_greedy, "
+            "n.bridge_links_greedy, n.bridge_depends_greedy, n.bridge_both_greedy, "
+            "n.boundary_edges_links_greedy, n.boundary_edges_depends_greedy, n.boundary_edges_both_greedy "
             "LIMIT 1"
         )
         return _as_tool_text(_run_canned_query(client, q, {"note_id": note_id}))
@@ -341,6 +385,70 @@ def _handle_tool_call(client: Neo4jHttpClient, name: str, arguments: dict[str, A
             "LIMIT $limit"
         )
         return _as_tool_text(_run_canned_query(client, q, {"limit": limit}))
+
+    if name in {"community_summary", "community_members", "bridge_nodes"}:
+        mode = arguments.get("mode")
+        if mode not in _TOPOLOGY_MODES:
+            raise ValueError(f"mode must be one of: {', '.join(_TOPOLOGY_MODES)}")
+        prop_community = {
+            "links": "community_links_greedy",
+            "depends_on": "community_depends_greedy",
+            "both": "community_both_greedy",
+        }[mode]
+        prop_bridge = {
+            "links": "bridge_links_greedy",
+            "depends_on": "bridge_depends_greedy",
+            "both": "bridge_both_greedy",
+        }[mode]
+        prop_boundary = {
+            "links": "boundary_edges_links_greedy",
+            "depends_on": "boundary_edges_depends_greedy",
+            "both": "boundary_edges_both_greedy",
+        }[mode]
+
+        if name == "community_summary":
+            limit = int(arguments.get("limit") or 50)
+            limit = max(1, min(_MAX_ROWS, limit))
+            q = (
+                "MATCH (n:Note:Concept) "
+                f"WHERE n.{prop_community} IS NOT NULL "
+                f"WITH n.{prop_community} AS community, "
+                f"count(*) AS node_count, "
+                f"avg(coalesce(n.{prop_bridge}, 0.0)) AS avg_bridge, "
+                f"sum(coalesce(n.{prop_boundary}, 0)) AS boundary_edges "
+                "RETURN community, node_count, avg_bridge, boundary_edges "
+                "ORDER BY node_count DESC, community ASC "
+                "LIMIT $limit"
+            )
+            return _as_tool_text(_run_canned_query(client, q, {"limit": limit}))
+
+        if name == "community_members":
+            community = arguments.get("community")
+            if not isinstance(community, int) or community < 0:
+                raise ValueError("community must be an integer >= 0")
+            limit = int(arguments.get("limit") or 100)
+            limit = max(1, min(_MAX_ROWS, limit))
+            q = (
+                "MATCH (n:Note:Concept) "
+                f"WHERE n.{prop_community} = $community "
+                f"RETURN n.note_id, n.title, n.layer, n.{prop_bridge} AS bridge, n.{prop_boundary} AS boundary_edges "
+                "ORDER BY boundary_edges DESC, bridge DESC, n.note_id ASC "
+                "LIMIT $limit"
+            )
+            return _as_tool_text(_run_canned_query(client, q, {"community": community, "limit": limit}))
+
+        if name == "bridge_nodes":
+            limit = int(arguments.get("limit") or 50)
+            limit = max(1, min(_MAX_ROWS, limit))
+            q = (
+                "MATCH (n:Note:Concept) "
+                f"WHERE n.{prop_community} IS NOT NULL AND coalesce(n.{prop_boundary}, 0) > 0 "
+                f"RETURN n.note_id, n.title, n.layer, n.{prop_community} AS community, "
+                f"n.{prop_bridge} AS bridge, n.{prop_boundary} AS boundary_edges "
+                "ORDER BY boundary_edges DESC, bridge DESC, n.note_id ASC "
+                "LIMIT $limit"
+            )
+            return _as_tool_text(_run_canned_query(client, q, {"limit": limit}))
 
     raise ValueError(f"Unknown tool: {name}")
 
@@ -386,6 +494,19 @@ def _schema_summary() -> dict[str, Any]:
         ],
         "relationships": [
             {"type": "LINKS_TO", "from": "Note", "to": "Note", "properties": ["count"]},
+            {"type": "STRUCTURAL_DEPENDS_ON", "from": "Note", "to": "Note", "properties": []},
+            {"type": "FRONTMATTER_DEPENDS_ON", "from": "Note", "to": "Note", "properties": []},
+        ],
+        "derivedProperties": [
+            "community_links_greedy",
+            "community_depends_greedy",
+            "community_both_greedy",
+            "bridge_links_greedy",
+            "bridge_depends_greedy",
+            "bridge_both_greedy",
+            "boundary_edges_links_greedy",
+            "boundary_edges_depends_greedy",
+            "boundary_edges_both_greedy",
         ],
         "noteIdentity": {"property": "note_id", "example": "concepts/constraint-load"},
     }

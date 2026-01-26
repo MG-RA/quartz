@@ -90,6 +90,37 @@ uv run irrev -v ../content graph --all-notes --format html --out all-notes.htm
 uv run irrev -v ../content graph --all-notes --format svg --plain --out all-notes.plain.svg
 ```
 
+### `irrev communities`
+
+Detect emergent communities in the concept graph and compare to declared layers (layers are treated as an annotation, not enforced topology).
+
+```bash
+uv run irrev -v ../content communities --mode links --algorithm greedy
+uv run irrev -v ../content communities --mode depends_on --algorithm greedy
+uv run irrev -v ../content communities --mode both --algorithm greedy --format json
+```
+
+### `irrev junctions`
+
+Find implied-but-undeclared routing concepts (accounting failures) in domains and concepts.
+
+```bash
+uv run irrev -v ../content junctions domain-audit
+uv run irrev -v ../content junctions implicit --role domain
+uv run irrev -v ../content junctions definition-analysis --top 10
+```
+
+### `irrev neo4j`
+
+Load the vault into Neo4j as **derived state**, then query it directly or via the read-only MCP server.
+
+```bash
+uv run irrev -v ../content neo4j ping --database irrev
+uv run irrev -v ../content neo4j load --database irrev --mode sync
+```
+
+Docs: `irrev/MCP_NEO4J_READONLY.md`.
+
 ### `irrev audit`
 
 Generate a structural vault report from Obsidian Bases CSV exports.

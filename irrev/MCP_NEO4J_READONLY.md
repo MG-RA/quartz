@@ -17,10 +17,28 @@ MCP tools:
 - `outlinks(intent, note_id, limit?)`
 - `inlinks(intent, note_id, limit?)`
 - `missing_failure_modes(intent, limit?)`
+- `community_summary(intent, mode, limit?)` (`mode`: `links` | `depends_on` | `both`)
+- `community_members(intent, mode, community, limit?)`
+- `bridge_nodes(intent, mode, limit?)`
 - `cypher_read(intent, query, params?)` (validated, bounded read-only Cypher)
 
 Intents (required on every call):
 - `analysis` | `audit` | `inspection` | `exploration`
+
+## Prerequisite: build the derived graph
+
+The MCP server is **read-only**. To populate/update the Neo4j database, run the loader:
+
+```powershell
+$env:NEO4J_PASSWORD="adminroot"
+.\irrev\.venv\Scripts\irrev.exe -v .\content neo4j load --database irrev --mode sync
+```
+
+For a clean rebuild:
+
+```powershell
+.\irrev\.venv\Scripts\irrev.exe -v .\content neo4j load --database irrev --mode rebuild
+```
 
 ## Running it locally (manual)
 
@@ -44,8 +62,11 @@ Example `~/.codex/config.toml` entry (Windows):
 ```toml
 [mcp_servers.irrev-neo4j]
 command = 'C:\Users\user\code\obsidian\quartz\irrev\.venv\Scripts\python.exe'
-args = ["-m", "irrev.mcp.neo4j_readonly_server", "--database", "irrev", "--password", "…"]
+args = ["-m", "irrev.mcp.neo4j_readonly_server", "--database", "irrev"]
 enabled = true
+
+[mcp_servers.irrev-neo4j.env]
+NEO4J_PASSWORD = "…"
 ```
 
 After updating config, restart Codex so it reloads MCP server config.
@@ -77,6 +98,28 @@ After updating config, restart Codex so it reloads MCP server config.
 - `missing_failure_modes`
   - `intent`: `audit`
   - `limit`: `200`
+
+### Community summary (concept topology)
+
+- `community_summary`
+  - `intent`: `inspection`
+  - `mode`: `links`
+  - `limit`: `50`
+
+### Inspect a community (top members by “boundary edges”)
+
+- `community_members`
+  - `intent`: `inspection`
+  - `mode`: `links`
+  - `community`: `0`
+  - `limit`: `50`
+
+### Bridge nodes (top concepts that connect communities)
+
+- `bridge_nodes`
+  - `intent`: `inspection`
+  - `mode`: `links`
+  - `limit`: `50`
 
 ## Sample Cypher queries (`cypher_read`)
 
@@ -120,6 +163,29 @@ Params:
 { "note_id": "concepts/erasure-cost" }
 ```
 
+### Structural dependencies of a concept
+
+```cypher
+MATCH (c:Note {note_id: $note_id})-[:STRUCTURAL_DEPENDS_ON]->(d:Note:Concept)
+RETURN d.note_id, d.title, d.layer
+ORDER BY d.note_id ASC
+LIMIT 200
+```
+
+Params:
+```json
+{ "note_id": "concepts/erasure-cost" }
+```
+
+### Frontmatter-declared dependencies of a concept
+
+```cypher
+MATCH (c:Note {note_id: $note_id})-[:FRONTMATTER_DEPENDS_ON]->(d:Note:Concept)
+RETURN d.note_id, d.title, d.layer
+ORDER BY d.note_id ASC
+LIMIT 200
+```
+
 ### Bounded path search (≤ 4 hops)
 
 ```cypher
@@ -140,8 +206,11 @@ The vault includes Obsidian Bases definitions under `content/meta/bases/` and an
 `content/exports bases/Vault Structural Audit Report.md`. The queries below mirror those views using the
 Neo4j-derived graph.
 
-Note: the current Neo4j graph exposes `LINKS_TO` (wiki-link) edges. Frontmatter-only relationships like
-`depends_on` are not currently ingested, so “has_dependencies” is approximated via links to concept notes.
+Note: the Neo4j graph exposes:
+- `LINKS_TO` (resolved wiki-links, occurrence-counted via `r.count`)
+- `STRUCTURAL_DEPENDS_ON` (from a concept’s `## Structural dependencies` section)
+- `FRONTMATTER_DEPENDS_ON` (from frontmatter `depends_on`)
+
 Link counts may differ from Obsidian Bases exports because the Neo4j graph counts resolved note-to-note links
 (and can track per-edge occurrences via `r.count`), while Bases uses Obsidian’s `file.links`.
 
