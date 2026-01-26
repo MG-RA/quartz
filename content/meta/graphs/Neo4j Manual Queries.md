@@ -10,7 +10,7 @@ tags:
 
 # Neo4j manual query pack (irrev vault graph)
 
-This is a copy/paste query pack for Neo4j Browser (or the MCP `cypher_read` tool). It’s organized around the “two-layer glasses” idea:
+This is a copy/paste query pack for Neo4j Browser (or the MCP `cypher_read` tool). It's organized around the "two-layer glasses" idea:
 
 - `LINKS_TO` = what the text touches (mentions / references)
 - `DEPENDS_ON` = what the structure requires (declared dependencies)
@@ -45,11 +45,11 @@ ORDER BY inlink_occurrences DESC, t.note_id ASC
 LIMIT 50
 ```
 
-### Top “requirements hubs” (most incoming `DEPENDS_ON`)
+### Top "requirements hubs" (most incoming `DEPENDS_ON`)
 
 ```cypher
 MATCH (:Note)-[:DEPENDS_ON]->(t:Note:Concept)
-RETURN t.note_id, t.title, count(*) AS in_depends
+RETURN t.note_id, t.title, count(1) AS in_depends
 ORDER BY in_depends DESC, t.note_id ASC
 LIMIT 50
 ```
@@ -106,7 +106,7 @@ LIMIT 200
 ```cypher
 MATCH (n:Note:Concept)
 WHERE n.community_links_greedy IS NOT NULL
-WITH n.community_links_greedy AS community, count(*) AS nodes, sum(coalesce(n.boundary_edges_links_greedy, 0)) AS boundary_edges
+WITH n.community_links_greedy AS community, count(1) AS nodes, sum(coalesce(n.boundary_edges_links_greedy, 0)) AS boundary_edges
 RETURN community, nodes, boundary_edges
 ORDER BY nodes DESC, community ASC
 LIMIT 50
@@ -126,7 +126,7 @@ LIMIT 50
 
 Open `irrev/d3_graph_viewer.html` in your browser, then load a JSON file produced from one of these queries.
 
-### Export concept-only “two-layer glasses” graph
+### Export concept-only "two-layer glasses" graph
 
 ```cypher
 MATCH (n:Note:Concept)
@@ -145,17 +145,17 @@ WITH nodes, collect({
   weight: r.count
 }) AS links
 MATCH (s:Note:Concept)-[d:DEPENDS_ON]->(t:Note:Concept)
-WITH nodes, links + collect({
+WITH nodes, links, collect({
   source: s.note_id,
   target: t.note_id,
   type: "DEPENDS_ON",
   weight: 1,
   from_frontmatter: d.from_frontmatter,
   from_structural: d.from_structural
-}) AS links
+}) AS dep_links
+WITH nodes, links + dep_links AS links
 RETURN {nodes: nodes, links: links} AS graph
 LIMIT 1
 ```
 
 In Neo4j Browser, download the single `graph` value as JSON and load it in the viewer.
-

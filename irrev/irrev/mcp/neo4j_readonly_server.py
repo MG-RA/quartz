@@ -178,11 +178,17 @@ def _validate_read_cypher(query: str) -> None:
         raise ValueError(f"LIMIT must be between 1 and {_MAX_ROWS} (got {limit})")
 
     # Variable-length traversal closure lock.
-    if "*" in q:
-        for i, ch in enumerate(q):
+    #
+    # Only apply this check to relationship pattern segments inside `[...]` so we don't
+    # accidentally block legitimate uses like `count(*)`.
+    for bracket in re.finditer(r"\[[^\]]*\]", q_scan):
+        seg = bracket.group(0)
+        if "*" not in seg:
+            continue
+        for i, ch in enumerate(seg):
             if ch != "*":
                 continue
-            segment = q[i : i + 20]
+            segment = seg[i : i + 20]
             sm = _STAR_SEGMENT_RE.match(segment)
             if not sm:
                 raise ValueError("Unbounded variable-length traversal is not allowed; use *1..N with N bounded")
