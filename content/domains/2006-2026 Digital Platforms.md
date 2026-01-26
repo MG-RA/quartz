@@ -27,6 +27,16 @@ This is one possible slice for "the last 20 years" relative to 2026-01-21: **200
 - (Inference) [[constraint]] operates through technical architectures (APIs, data schemas), network effects, and regulatory requirements that limit which transformations are feasible.
 - (Inference) [[residual]] appears as data trails, accumulated moderation debt, compliance machinery, and lock-in effects that persist after interventions.
 
+## Declared junctions (routing anchors)
+
+- [[accumulation]]
+- [[asymmetry]]
+- [[irreversibility]]
+- [[persistent-difference]]
+- [[rollback]]
+- [[feasible-set]]
+- [[lens]]
+
 ---
 
 ## 1) Transformation space

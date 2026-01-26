@@ -27,6 +27,16 @@ This is one possible slice for "software supply chains" relative to 2026-01-21: 
 - (Inference) [[constraint]] operates through version compatibility requirements, trust hierarchies, signing policies, and provenance requirements that limit which transformations are feasible.
 - (Inference) [[residual]] appears as cached artifacts, mirrored copies, embedded dependencies, and maintenance obligations that persist after upgrades or deprecations.
 
+## Declared junctions (routing anchors)
+
+- [[accumulation]]
+- [[asymmetry]]
+- [[irreversibility]]
+- [[persistent-difference]]
+- [[rollback]]
+- [[feasible-set]]
+- [[lens]]
+
 ---
 
 ## 1) Transformation space

@@ -22,6 +22,17 @@ When applying this lens to any historical slice, these primitives must be explic
 - [[constraint]] operates through material limits (geography, resources), institutional rules (law, custom), and coordination requirements (trade, defense) that limit which historical transformations were feasible.
 - [[residual]] appears as path dependencies, sunk costs, institutional debt, and inherited obligations that persist after reforms, revolutions, or regime changes.
 
+## Declared junctions (routing anchors)
+
+- [[accumulation]]
+- [[asymmetry]]
+- [[irreversibility]]
+- [[persistent-difference]]
+- [[propagation]]
+- [[rollback]]
+- [[feasible-set]]
+- [[lens]]
+
 ---
 
 ## What you can learn (lens outcomes)

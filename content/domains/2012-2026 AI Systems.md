@@ -27,6 +27,16 @@ This is one possible slice for "modern AI" relative to 2026-01-21: **2012-01-21 
 - (Inference) [[constraint]] operates through compute availability, data licensing, benchmark optimization pressure, and governance requirements that limit which transformations are feasible.
 - (Inference) [[residual]] appears as cached outputs, fine-tuned derivatives, embedded workflows, and accumulated guardrails that persist after model updates or policy changes.
 
+## Declared junctions (routing anchors)
+
+- [[accumulation]]
+- [[asymmetry]]
+- [[irreversibility]]
+- [[persistent-difference]]
+- [[rollback]]
+- [[feasible-set]]
+- [[lens]]
+
 ---
 
 ## 1) Transformation space

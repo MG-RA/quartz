@@ -484,6 +484,39 @@ def graph(
     sys.exit(exit_code)
 
 
+@cli.command("communities")
+@click.option(
+    "--mode",
+    type=click.Choice(["links", "depends_on", "both"]),
+    default="links",
+    show_default=True,
+    help="How to build the concept graph before community detection",
+)
+@click.option(
+    "--algorithm",
+    type=click.Choice(["greedy", "lpa"]),
+    default="greedy",
+    show_default=True,
+    help="Community detection algorithm",
+)
+@click.option(
+    "--format",
+    "fmt",
+    type=click.Choice(["md", "json"]),
+    default="md",
+    show_default=True,
+    help="Output format",
+)
+@click.option("--out", type=click.Path(dir_okay=False, path_type=Path), default=None, help="Write output to a file")
+@click.option("--max-iter", type=int, default=50, show_default=True, help="Label propagation iterations")
+@click.pass_context
+def communities(ctx: click.Context, mode: str, algorithm: str, fmt: str, out: Path | None, max_iter: int) -> None:
+    """Run community detection on concepts and compare to declared layers."""
+    from .commands.graph_cmd import run_communities
+
+    sys.exit(run_communities(ctx.obj["vault"], mode=mode, algorithm=algorithm, out=out, fmt=fmt, max_iter=max_iter))
+
+
 @cli.group()
 def junctions() -> None:
     """Detect routing pressure and candidate missing concepts."""
@@ -558,6 +591,207 @@ def junctions_definition_analysis(
     from .commands.junctions import run_definition_analysis
 
     exit_code = run_definition_analysis(ctx.obj["vault"], out=out, top=top, fmt=output_format, include_all=include_all)
+    sys.exit(exit_code)
+
+
+@junctions.command("domain-audit")
+@click.option(
+    "--domain",
+    "domain_filter",
+    type=str,
+    default=None,
+    metavar="DOMAIN",
+    help='Limit to a single domain (matches name/title; e.g., --domain "Digital Platforms")',
+)
+@click.option(
+    "--via",
+    "via_mode",
+    type=click.Choice(["links", "depends_on", "both"]),
+    default="links",
+    show_default=True,
+    help="How to compute the concept -> concept hop (links mirrors Neo4j LINKS_TO)",
+)
+@click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["md", "json"]),
+    default="md",
+    show_default=True,
+    help="Output format",
+)
+@click.option("--out", type=click.Path(dir_okay=False, path_type=Path), default=None, help="Write output to a file")
+@click.pass_context
+def junctions_domain_audit(
+    ctx: click.Context,
+    domain_filter: str | None,
+    via_mode: str,
+    output_format: str,
+    out: Path | None,
+) -> None:
+    """Audit domains for implied concept dependencies (2-hop via concept depends_on)."""
+    from .commands.junctions import run_domain_audit
+
+    exit_code = run_domain_audit(ctx.obj["vault"], domain=domain_filter, via=via_mode, out=out, fmt=output_format)
+    sys.exit(exit_code)
+
+
+@junctions.command("implicit")
+@click.option(
+    "--role",
+    "role_name",
+    type=click.Choice(["domain", "projection", "paper", "diagnostic", "concept", "meta", "support", "invariant"]),
+    default="domain",
+    show_default=True,
+    help="Which note role to audit",
+)
+@click.option(
+    "--note",
+    "note_filter",
+    type=str,
+    default=None,
+    metavar="NOTE",
+    help='Limit to a single note (matches name/title; e.g., --note "OpenAI")',
+)
+@click.option(
+    "--via",
+    "via_mode",
+    type=click.Choice(["links", "depends_on", "both"]),
+    default="links",
+    show_default=True,
+    help="How to compute the concept -> concept hop (links mirrors Neo4j LINKS_TO)",
+)
+@click.option("--top", type=int, default=25, show_default=True, help="How many notes to include (by implied count)")
+@click.option("--all", "include_all", is_flag=True, default=False, help="Audit all notes (ignores --top)")
+@click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["md", "json"]),
+    default="md",
+    show_default=True,
+    help="Output format",
+)
+@click.option("--out", type=click.Path(dir_okay=False, path_type=Path), default=None, help="Write output to a file")
+@click.pass_context
+def junctions_implicit(
+    ctx: click.Context,
+    role_name: str,
+    note_filter: str | None,
+    via_mode: str,
+    top: int,
+    include_all: bool,
+    output_format: str,
+    out: Path | None,
+) -> None:
+    """Audit any note role for implied concept dependencies (2-hop) not declared by direct links."""
+    from .commands.junctions import run_implicit_audit
+
+    exit_code = run_implicit_audit(
+        ctx.obj["vault"],
+        role=role_name,
+        note=note_filter,
+        via=via_mode,
+        top=top,
+        include_all=include_all,
+        out=out,
+        fmt=output_format,
+    )
+    sys.exit(exit_code)
+
+
+@cli.group()
+def neo4j() -> None:
+    """Neo4j export/load utilities (derived graph state)."""
+    pass
+
+
+@neo4j.command("ping")
+@click.option(
+    "--http-uri",
+    type=str,
+    default="http://localhost:7474",
+    show_default=True,
+    help="Neo4j HTTP base URL (transactional endpoint uses /db/<db>/tx/commit)",
+)
+@click.option("--user", type=str, default="neo4j", show_default=True, help="Neo4j username")
+@click.option(
+    "--password",
+    type=str,
+    envvar="NEO4J_PASSWORD",
+    prompt=True,
+    hide_input=True,
+    help="Neo4j password (or set NEO4J_PASSWORD)",
+)
+@click.option("--database", type=str, default="irrev", show_default=True, help="Neo4j database name")
+def neo4j_ping(http_uri: str, user: str, password: str, database: str) -> None:
+    """Check Neo4j connectivity (non-destructive)."""
+    from .commands.neo4j_cmd import run_neo4j_ping
+
+    sys.exit(run_neo4j_ping(http_uri=http_uri, user=user, password=password, database=database))
+
+
+@neo4j.command("load")
+@click.option(
+    "--http-uri",
+    type=str,
+    default="http://localhost:7474",
+    show_default=True,
+    help="Neo4j HTTP base URL (transactional endpoint uses /db/<db>/tx/commit)",
+)
+@click.option("--user", type=str, default="neo4j", show_default=True, help="Neo4j username")
+@click.option(
+    "--password",
+    type=str,
+    envvar="NEO4J_PASSWORD",
+    prompt=True,
+    hide_input=True,
+    help="Neo4j password (or set NEO4J_PASSWORD)",
+)
+@click.option("--database", type=str, default="irrev", show_default=True, help="Neo4j database name")
+@click.option(
+    "--mode",
+    type=click.Choice(["sync", "rebuild"]),
+    default="sync",
+    show_default=True,
+    help="sync clears derived edges; rebuild wipes the database first",
+)
+@click.option(
+    "--ensure-schema/--no-ensure-schema",
+    default=True,
+    show_default=True,
+    help="Create constraints/indexes (Neo4j 5+ syntax)",
+)
+@click.option("--batch-size", type=int, default=500, show_default=True, help="Statements batch size")
+@click.pass_context
+def neo4j_load(
+    ctx: click.Context,
+    http_uri: str,
+    user: str,
+    password: str,
+    database: str,
+    mode: str,
+    ensure_schema: bool,
+    batch_size: int,
+) -> None:
+    """Load the vault into Neo4j as a derived graph.
+
+    Examples:
+
+        irrev -v content neo4j load --database irrev
+
+        $env:NEO4J_PASSWORD="adminroot"; irrev -v content neo4j load --database irrev --mode rebuild
+    """
+    from .commands.neo4j_cmd import run_neo4j_load
+
+    exit_code = run_neo4j_load(
+        ctx.obj["vault"],
+        http_uri=http_uri,
+        user=user,
+        password=password,
+        database=database,
+        mode=mode,
+        ensure_schema=ensure_schema,
+        batch_size=batch_size,
+    )
     sys.exit(exit_code)
 
 

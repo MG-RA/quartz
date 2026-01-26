@@ -125,6 +125,12 @@ This command parses CSV files exported from Obsidian Bases and generates a Markd
 
 The report uses framework vocabulary: constraint-load, routing pressure, accounting-failure, residual, displacement, etc.
 
+## Neo4j read-only MCP server
+
+This repo also includes a small **read-only** MCP server for querying a Neo4j-backed vault graph over stdio (intended for Codex/agents).
+
+Docs + sample queries: `irrev/MCP_NEO4J_READONLY.md`.
+
 ### `irrev junctions concept-audit`
 
 Generate a concept audit report (Phase 1 of junctions detection).
@@ -141,6 +147,45 @@ Audits load-bearing concepts for:
 - Role purity (no operator/prescription bleed)
 - Dependency fidelity (deps actually used in body)
 - Structural completeness (Definition, Structural dependencies, What this is NOT sections)
+
+### `irrev junctions definition-analysis`
+
+Analyze concept definition semantics (Phase 1b): operational framing, negation density, and implicit dependencies.
+
+```bash
+uv run irrev -v ../content junctions definition-analysis
+uv run irrev -v ../content junctions definition-analysis --all --format json
+```
+
+### `irrev junctions domain-audit`
+
+Audit domains for implied concept dependencies (2-hop: domain → concept → concept) that aren’t declared as direct links.
+
+```bash
+uv run irrev -v ../content junctions domain-audit
+uv run irrev -v ../content junctions domain-audit --domain "Digital Platforms"
+uv run irrev -v ../content junctions domain-audit --via links   # mirrors Neo4j LINKS_TO
+uv run irrev -v ../content junctions domain-audit --via depends_on
+```
+
+### `irrev junctions implicit`
+
+Generalize the 2-hop implied-dependency audit beyond domains.
+
+```bash
+uv run irrev -v ../content junctions implicit --role projection --top 10
+uv run irrev -v ../content junctions implicit --role paper --all --format json
+```
+
+## Community detection (layers vs emergent structure)
+
+Before enforcing layers as schema, you can compare **emergent communities** in the concept graph to the declared `layer` labels:
+
+```bash
+uv run irrev -v ../content communities --mode links
+uv run irrev -v ../content communities --mode depends_on
+uv run irrev -v ../content communities --mode both --format json
+```
 
 ## Integration with vault workflow
 

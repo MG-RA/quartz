@@ -27,6 +27,16 @@ This is one possible slice for "financial infrastructure post-2008" relative to 
 - (Inference) [[constraint]] operates through regulatory requirements, clearing rules, collateral eligibility criteria, and operational interdependencies that limit which transformations are feasible.
 - (Inference) [[residual]] appears as compliance machinery, reporting obligations, margin calls, and operational debt that persist after interventions or rule changes.
 
+## Declared junctions (routing anchors)
+
+- [[accumulation]]
+- [[asymmetry]]
+- [[irreversibility]]
+- [[persistent-difference]]
+- [[rollback]]
+- [[feasible-set]]
+- [[lens]]
+
 ---
 
 ## 1) Transformation space

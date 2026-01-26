@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections import Counter, defaultdict
 import html
 import json
 import math
@@ -35,6 +36,11 @@ class LinkGraph:
 
     def in_degree(self, name: str) -> int:
         return len(self.reverse_edges.get(name, set()))
+
+    def neighbors_undirected(self, name: str) -> set[str]:
+        out_n = self.edges.get(name, set())
+        in_n = self.reverse_edges.get(name, set())
+        return set(out_n) | set(in_n)
 
 
 def run_graph(
@@ -95,6 +101,466 @@ def run_graph(
         print(text, end="" if text.endswith("\n") else "\n")
 
     return 0
+
+
+def run_communities(
+    vault_path: Path,
+    *,
+    mode: str = "links",
+    algorithm: str = "greedy",
+    out: Path | None = None,
+    fmt: str = "md",
+    max_iter: int = 50,
+) -> int:
+    """Detect undirected communities in the concept graph and compare to declared layers.
+
+    This is an *inspection* tool: it helps decide whether the layer system is grounded in the
+    graph's emergent structure (communities align with layers) or is an analytical overlay.
+
+    Args:
+        vault_path: Path to vault content directory
+        mode: depends_on|links|both (how to build the concept graph edges)
+        algorithm: greedy|lpa
+        out: Optional output path; prints to stdout if None
+        fmt: md|json
+        max_iter: Label propagation iterations
+    """
+    console = Console(stderr=True)
+
+    vault = load_vault(vault_path)
+    dep_graph = DependencyGraph.from_concepts(vault.concepts, vault._aliases)
+
+    if mode not in ("depends_on", "links", "both"):
+        raise ValueError("mode must be one of: depends_on, links, both")
+
+    g = _concept_graph_for_mode(vault, dep_graph, mode=mode)
+    layers = {name: (dep_graph.nodes[name].layer or "unknown").strip().lower() for name in dep_graph.nodes}
+
+    undirected_edges, degree, m = _undirected_edge_view(g)
+
+    if algorithm not in ("greedy", "lpa"):
+        raise ValueError("algorithm must be one of: greedy, lpa")
+
+    communities = (
+        _greedy_modularity_communities(g)
+        if algorithm == "greedy"
+        else _label_propagation_communities(g, max_iter=max_iter)
+    )
+    metrics = _compare_partition_to_layers(communities, layers)
+    q_comm = _modularity(communities, undirected_edges, degree, m=m)
+    q_layers = _modularity(layers, undirected_edges, degree, m=m)
+    within_layer = _within_attribute_edge_fraction(layers, undirected_edges)
+
+    payload = {
+        "title": "Concept communities vs layers",
+        "vault": str(vault_path),
+        "mode": mode,
+        "algorithm": algorithm,
+        "node_count": len(g.nodes),
+        "edge_count": sum(len(v) for v in g.edges.values()),
+        "communities": metrics["communities"],
+        "summary": {
+            **metrics["summary"],
+            "modularity_communities": round(q_comm, 3),
+            "modularity_layers": round(q_layers, 3),
+            "within_layer_edge_fraction": round(within_layer, 3),
+        },
+    }
+
+    text: str
+    if fmt == "json":
+        text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+    else:
+        text = _communities_to_markdown(payload)
+
+    if out:
+        out.write_text(text, encoding="utf-8")
+        console.print(f"Wrote communities report to {out}", style="green")
+    else:
+        print(text, end="" if text.endswith("\n") else "\n")
+
+    return 0
+
+
+def _concept_graph_for_mode(vault, dep_graph: DependencyGraph, *, mode: str) -> LinkGraph:
+    """Build a concept-only graph based on depends_on links, wikilinks, or both."""
+    g = LinkGraph()
+    for n in dep_graph.nodes:
+        g.add_node(n)
+
+    if mode in ("depends_on", "both"):
+        for src, deps in dep_graph.edges.items():
+            for dep in deps:
+                if dep in dep_graph.nodes:
+                    g.add_edge(src, dep)
+
+    if mode in ("links", "both"):
+        for src, concept in dep_graph.nodes.items():
+            for link in concept.links:
+                dst = vault.normalize_name(link).lower().strip()
+                if dst in dep_graph.nodes:
+                    g.add_edge(src, dst)
+
+    return g
+
+
+def _undirected_edge_view(g: LinkGraph) -> tuple[list[tuple[str, str]], Counter[str], int]:
+    """Return (undirected_edges, degree_by_node, m) where m=len(edges)."""
+    nodes = sorted(g.nodes)
+    edges: set[tuple[str, str]] = set()
+    for src in nodes:
+        for dst in g.edges.get(src, set()):
+            if dst not in g.nodes or dst == src:
+                continue
+            a, b = (src, dst) if src < dst else (dst, src)
+            edges.add((a, b))
+
+    undirected_edges = sorted(edges)
+    degree: Counter[str] = Counter()
+    for a, b in undirected_edges:
+        degree[a] += 1
+        degree[b] += 1
+    return undirected_edges, degree, len(undirected_edges)
+
+
+def _label_propagation_communities(g: LinkGraph, *, max_iter: int) -> dict[str, str]:
+    """Deterministic label propagation on an undirected view of the graph.
+
+    Returns node -> community label (string).
+    """
+    nodes = sorted(g.nodes)
+    labels: dict[str, str] = {n: n for n in nodes}
+
+    for _ in range(max(1, max_iter)):
+        changed = 0
+
+        for n in nodes:
+            nbrs = g.neighbors_undirected(n)
+            if not nbrs:
+                continue
+
+            counts: Counter[str] = Counter(labels[x] for x in nbrs if x in labels)
+            if not counts:
+                continue
+
+            best_count = max(counts.values())
+            best = sorted([lab for lab, c in counts.items() if c == best_count])[0]
+            if best != labels[n]:
+                labels[n] = best
+                changed += 1
+
+        if changed == 0:
+            break
+
+    # Canonicalize labels to contiguous community ids for readability.
+    groups: dict[str, list[str]] = defaultdict(list)
+    for node, lab in labels.items():
+        groups[lab].append(node)
+
+    ordered_groups = sorted(groups.values(), key=lambda ns: (-len(ns), ns[0]))
+    canon: dict[str, str] = {}
+    for idx, members in enumerate(ordered_groups, start=1):
+        for node in members:
+            canon[node] = f"c{idx}"
+    return canon
+
+
+def _greedy_modularity_communities(g: LinkGraph) -> dict[str, str]:
+    """Greedy agglomerative modularity maximization on an undirected view of the graph.
+
+    Deterministic tie-breaking; suitable for small graphs and quick "does this cluster at all?"
+    checks.
+    """
+    nodes = sorted(g.nodes)
+    undirected_edges, degree, m = _undirected_edge_view(g)
+    if m == 0:
+        return {n: "c1" for n in nodes}
+
+    # Community state.
+    comm_of: dict[str, int] = {n: i for i, n in enumerate(nodes)}
+    members: dict[int, set[str]] = {i: {n} for i, n in enumerate(nodes)}
+    d: dict[int, int] = {i: degree[n] for i, n in enumerate(nodes)}  # sum degrees
+    l: dict[int, int] = {i: 0 for i in range(len(nodes))}  # internal edges
+
+    # Edges between communities: keyed by (min_id, max_id).
+    e_between: Counter[tuple[int, int]] = Counter()
+    for a, b in undirected_edges:
+        ca, cb = comm_of[a], comm_of[b]
+        if ca == cb:
+            l[ca] += 1
+        else:
+            key = (ca, cb) if ca < cb else (cb, ca)
+            e_between[key] += 1
+
+    def delta_q(ca: int, cb: int, eab: int) -> float:
+        # ΔQ = e_ab/m - (d_a d_b)/(2 m^2)
+        return (eab / m) - ((d[ca] * d[cb]) / (2 * (m**2)))
+
+    # Greedy merge loop.
+    while True:
+        best_pair: tuple[int, int] | None = None
+        best_gain = 0.0
+
+        for (ca, cb), eab in e_between.items():
+            if ca not in members or cb not in members:
+                continue
+            gain = delta_q(ca, cb, eab)
+            if gain <= best_gain + 1e-12:
+                if gain <= best_gain + 1e-12 and gain >= best_gain - 1e-12:
+                    # tie-break deterministically on ids
+                    if best_pair is None or (ca, cb) < best_pair:
+                        best_pair = (ca, cb)
+                continue
+            best_gain = gain
+            best_pair = (ca, cb)
+
+        if best_pair is None or best_gain <= 1e-12:
+            break
+
+        ca, cb = best_pair
+        if ca not in members or cb not in members:
+            break
+
+        # Merge cb into ca (choose smaller id as stable anchor).
+        if cb < ca:
+            ca, cb = cb, ca
+
+        eab = e_between.get((ca, cb), 0)
+
+        # Update members and node->community mapping.
+        for n in members[cb]:
+            comm_of[n] = ca
+        members[ca].update(members[cb])
+        del members[cb]
+
+        # Update internal edges and degrees.
+        l[ca] = l.get(ca, 0) + l.get(cb, 0) + eab
+        d[ca] = d.get(ca, 0) + d.get(cb, 0)
+        l.pop(cb, None)
+        d.pop(cb, None)
+
+        # Rebuild e_between entries touching ca/cb.
+        new_between: Counter[tuple[int, int]] = Counter()
+        for (x, y), v in e_between.items():
+            if x == cb or y == cb:
+                continue
+            if x == ca or y == ca:
+                # We'll recompute ca's links below.
+                continue
+            new_between[(x, y)] = v
+
+        # Aggregate edges from ca and cb to other communities.
+        neighbors: set[int] = set()
+        for (x, y) in e_between.keys():
+            if x in (ca, cb):
+                neighbors.add(y)
+            if y in (ca, cb):
+                neighbors.add(x)
+        neighbors.discard(ca)
+        neighbors.discard(cb)
+
+        for k in sorted(neighbors):
+            if k not in members:
+                continue
+            e_ak = e_between.get((min(ca, k), max(ca, k)), 0)
+            e_bk = e_between.get((min(cb, k), max(cb, k)), 0)
+            val = e_ak + e_bk
+            if val > 0:
+                new_between[(min(ca, k), max(ca, k))] = val
+
+        e_between = new_between
+
+    # Canonicalize community ids to c1.. by size then name.
+    groups: list[list[str]] = [sorted(ms) for ms in members.values()]
+    groups.sort(key=lambda ns: (-len(ns), ns[0]))
+    canon: dict[str, str] = {}
+    for idx, ns in enumerate(groups, start=1):
+        for n in ns:
+            canon[n] = f"c{idx}"
+    return canon
+
+
+def _modularity(
+    partition: dict[str, str],
+    undirected_edges: list[tuple[str, str]],
+    degree: Counter[str],
+    *,
+    m: int,
+) -> float:
+    """Compute modularity for a given node->group partition on an undirected graph."""
+    if m <= 0:
+        return 0.0
+
+    l_c: Counter[str] = Counter()
+    d_c: Counter[str] = Counter()
+
+    for node, grp in partition.items():
+        d_c[grp] += degree.get(node, 0)
+
+    for a, b in undirected_edges:
+        ga = partition.get(a)
+        gb = partition.get(b)
+        if ga is None or gb is None:
+            continue
+        if ga == gb:
+            l_c[ga] += 1
+
+    q = 0.0
+    for grp, dc in d_c.items():
+        lc = l_c.get(grp, 0)
+        q += (lc / m) - ((dc / (2 * m)) ** 2)
+    return q
+
+
+def _within_attribute_edge_fraction(attr: dict[str, str], undirected_edges: list[tuple[str, str]]) -> float:
+    """Fraction of edges whose endpoints share the same attribute value."""
+    if not undirected_edges:
+        return 0.0
+    same = 0
+    total = 0
+    for a, b in undirected_edges:
+        va = attr.get(a)
+        vb = attr.get(b)
+        if va is None or vb is None:
+            continue
+        total += 1
+        if va == vb:
+            same += 1
+    return same / total if total else 0.0
+
+
+def _compare_partition_to_layers(communities: dict[str, str], layers: dict[str, str]) -> dict:
+    """Compute alignment metrics between community partition and declared layers."""
+    nodes = [n for n in sorted(layers) if n in communities]
+    if not nodes:
+        return {"summary": {}, "communities": []}
+
+    # Contingency table: community -> layer -> count
+    table: dict[str, Counter[str]] = defaultdict(Counter)
+    layer_counts: Counter[str] = Counter()
+    comm_counts: Counter[str] = Counter()
+
+    for n in nodes:
+        c = communities[n]
+        l = layers[n]
+        table[c][l] += 1
+        layer_counts[l] += 1
+        comm_counts[c] += 1
+
+    total = len(nodes)
+
+    purity = sum(max(cnt.values()) for cnt in table.values()) / total
+    nmi = _normalized_mutual_information(table, total=total)
+
+    comm_rows: list[dict] = []
+    for c, cnt in table.items():
+        size = sum(cnt.values())
+        majority_layer, majority_count = sorted(cnt.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)[0]
+        comm_rows.append(
+            {
+                "community": c,
+                "size": size,
+                "majority_layer": majority_layer,
+                "majority_fraction": round(majority_count / size, 3) if size else 0.0,
+                "layer_counts": dict(cnt),
+            }
+        )
+    comm_rows.sort(key=lambda r: (-r["size"], r["community"]))
+
+    summary = {
+        "total_nodes": total,
+        "community_count": len(comm_counts),
+        "layer_count": len(layer_counts),
+        "purity": round(purity, 3),
+        "nmi": round(nmi, 3),
+    }
+
+    return {"summary": summary, "communities": comm_rows}
+
+
+def _normalized_mutual_information(table: dict[str, Counter[str]], *, total: int) -> float:
+    """NMI = I(C;L) / sqrt(H(C) H(L))."""
+    if total <= 0:
+        return 0.0
+
+    comm_totals = {c: sum(cnt.values()) for c, cnt in table.items()}
+    layer_totals: Counter[str] = Counter()
+    for cnt in table.values():
+        for layer, n in cnt.items():
+            layer_totals[layer] += n
+
+    def h(dist: dict[str, int] | Counter[str]) -> float:
+        ent = 0.0
+        for n in dist.values():
+            if n <= 0:
+                continue
+            p = n / total
+            ent -= p * math.log(p)
+        return ent
+
+    hc = h(comm_totals)
+    hl = h(layer_totals)
+    if hc == 0.0 or hl == 0.0:
+        return 0.0
+
+    mi = 0.0
+    for c, cnt in table.items():
+        pc = comm_totals[c] / total
+        for layer, n in cnt.items():
+            if n <= 0:
+                continue
+            pl = layer_totals[layer] / total
+            pcl = n / total
+            mi += pcl * math.log(pcl / (pc * pl))
+
+    return mi / math.sqrt(hc * hl)
+
+
+def _communities_to_markdown(payload: dict) -> str:
+    s = payload["summary"]
+    lines: list[str] = []
+    lines.append(f"# {payload['title']}")
+    lines.append("")
+    lines.append(f"- Vault: `{payload['vault']}`")
+    lines.append(f"- Mode: `{payload['mode']}`")
+    lines.append(f"- Algorithm: `{payload.get('algorithm', 'greedy')}`")
+    lines.append(f"- Nodes: {payload['node_count']}")
+    lines.append(f"- Edges: {payload['edge_count']}")
+    lines.append("")
+
+    lines.append("## Alignment summary")
+    lines.append("")
+    lines.append("| Metric | Value |")
+    lines.append("|---|---:|")
+    lines.append(f"| Communities | {s.get('community_count', 0)} |")
+    lines.append(f"| Layers | {s.get('layer_count', 0)} |")
+    lines.append(f"| Purity | {s.get('purity', 0.0)} |")
+    lines.append(f"| NMI | {s.get('nmi', 0.0)} |")
+    lines.append(f"| Modularity (communities) | {s.get('modularity_communities', 0.0)} |")
+    lines.append(f"| Modularity (layers) | {s.get('modularity_layers', 0.0)} |")
+    lines.append(f"| Within-layer edge fraction | {s.get('within_layer_edge_fraction', 0.0)} |")
+    lines.append("")
+
+    lines.append("## Communities")
+    lines.append("")
+    lines.append("| Community | Size | Majority layer | Majority fraction | Top layers |")
+    lines.append("|---|---:|---|---:|---|")
+    for row in payload["communities"]:
+        lc = row.get("layer_counts") or {}
+        top_layers = sorted(lc.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)[:3]
+        top_layers_s = ", ".join(f"{k}:{v}" for k, v in top_layers)
+        lines.append(
+            f"| `{row['community']}` | {row['size']} | `{row['majority_layer']}` | {row['majority_fraction']} | {top_layers_s} |"
+        )
+    lines.append("")
+
+    lines.append("## How to read this")
+    lines.append("")
+    lines.append("- If communities have high majority fractions and NMI is meaningfully above 0, layers reflect emergent structure.")
+    lines.append("- If purity is low and NMI is near 0, layers are likely an analytical overlay (keep as properties, don’t enforce).")
+    lines.append("")
+
+    return "\n".join(lines)
 
 
 def _print_rich(payload: dict, *, console: Console) -> None:

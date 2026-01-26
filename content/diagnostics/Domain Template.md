@@ -24,6 +24,27 @@ Apply the lens to a specific domain **without introducing new concepts**. Defini
 - **Time window:** (start/end)
 - **Resolution:** (events, institutions, regions, organizations, individuals?)
 
+## Primitive grounding (declare the grounds)
+
+Before stating consequences (constraint-load, displacement, residual), explicitly ground the primitives:
+
+- [[persistence]]
+- [[difference]]
+- [[constraint]]
+- [[residual]]
+
+## Junction grounding (declare assumed intermediaries)
+
+If you route through higher-order consequences, declare the intermediaries you’re using so dependencies stay explicit:
+
+- [[accumulation]]
+- [[asymmetry]]
+- [[irreversibility]]
+- [[persistent-difference]]
+- [[rollback]]
+- [[feasible-set]]
+- [[lens]]
+
 ## 1) Transformation space
 
 State the relevant [[transformation-space]]: what counts as "the same thing" after change, and what transformations are allowed when testing persistence?

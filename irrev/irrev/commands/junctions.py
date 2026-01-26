@@ -13,6 +13,7 @@ import json
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
+from collections import Counter, defaultdict
 
 from rich.console import Console
 
@@ -117,6 +118,22 @@ class DefinitionAnalysisItem:
     definition_sentences: int = 0
     what_not_items: int = 0
     scope_ratio: float = 0.5
+
+
+@dataclass(frozen=True)
+class ImpliedConcept:
+    name: str
+    layer: str
+    via: tuple[str, ...] = field(default_factory=tuple)
+
+
+@dataclass(frozen=True)
+class DomainAuditItem:
+    name: str
+    title: str
+    declared_concepts: tuple[str, ...] = field(default_factory=tuple)
+    implied_concepts: tuple[ImpliedConcept, ...] = field(default_factory=tuple)
+    implied_by_layer: dict[str, int] = field(default_factory=dict)
 
 
 def _extract_section(content: str, heading: str) -> str:
@@ -273,6 +290,503 @@ def _find_implicit_dependencies(
     return implicit
 
 
+def _layer_order_key(layer: str) -> int:
+    order = (
+        "primitive",
+        "foundational",
+        "first-order",
+        "mechanism",
+        "accounting",
+        "selector",
+        "failure-state",
+        "meta-analytical",
+    )
+    try:
+        return order.index(layer)
+    except ValueError:
+        return len(order)
+
+
+def _select_domains(vault, domain: str | None) -> list:
+    domains = list(vault.domains)
+    if domain is None:
+        return sorted(domains, key=lambda d: d.name.lower())
+
+    needle = domain.strip().lower()
+    if not needle:
+        return sorted(domains, key=lambda d: d.name.lower())
+
+    exact = [d for d in domains if d.name.lower() == needle or d.title.lower() == needle]
+    if len(exact) == 1:
+        return exact
+    if len(exact) > 1:
+        # Should be rare; fall through to ambiguity handler below.
+        domains = exact
+
+    matches = [d for d in domains if needle in d.name.lower() or needle in d.title.lower()]
+    if len(matches) == 1:
+        return matches
+    if not matches:
+        raise ValueError(f"No domain matches: {domain}")
+
+    options = ", ".join(sorted(d.name for d in matches)[:10])
+    raise ValueError(f"Ambiguous domain '{domain}' (matches: {options})")
+
+
+def _domain_declared_concepts(vault, graph: DependencyGraph, domain_note) -> set[str]:
+    declared: set[str] = set()
+    for link in domain_note.links:
+        canonical = vault.normalize_name(link).lower().strip()
+        if canonical in graph.nodes:
+            declared.add(canonical)
+    return declared
+
+
+def _domain_implied_concepts(graph: DependencyGraph, declared: set[str]) -> dict[str, set[str]]:
+    """Return implied concept -> set(via_concepts).
+
+    Uses concept `depends_on` edges (the strict dependency graph).
+    """
+    implied_by_via: dict[str, set[str]] = defaultdict(set)
+    for via in sorted(declared):
+        for dep in graph.get_dependencies(via):
+            if dep not in graph.nodes:
+                continue
+            if dep in declared:
+                continue
+            implied_by_via[dep].add(via)
+    return implied_by_via
+
+
+def run_domain_audit(
+    vault_path: Path,
+    *,
+    domain: str | None = None,
+    via: str = "links",
+    out: Path | None = None,
+    fmt: str = "md",
+) -> int:
+    """Audit domains for implied concept dependencies (2-hop via concept depends_on).
+
+    For each domain:
+    - Declared concepts: direct wikilinks to concept notes
+    - Implied concepts: concepts reachable in 2 hops (domain -> concept -> concept) that the domain does not link directly.
+
+    The second hop can be computed via:
+    - `links`: any concept-to-concept wikilinks inside the concept note (mirrors Neo4j LINKS_TO)
+    - `depends_on`: strict dependencies from the "## Structural dependencies" section
+    - `both`: union of the two
+    """
+    console = Console(stderr=True)
+
+    vault = load_vault(vault_path)
+    graph = DependencyGraph.from_concepts(vault.concepts, vault._aliases)
+
+    domains = _select_domains(vault, domain)
+
+    items: list[DomainAuditItem] = []
+    aggregate_domains_by_implied: dict[str, set[str]] = defaultdict(set)
+    aggregate_via_by_implied: dict[str, Counter[str]] = defaultdict(Counter)
+
+    for d in domains:
+        declared = _domain_declared_concepts(vault, graph, d)
+
+        if via not in ("links", "depends_on", "both"):
+            raise ValueError("via must be one of: links, depends_on, both")
+
+        implied_by_via: dict[str, set[str]] = defaultdict(set)
+
+        for v in sorted(declared):
+            # 2nd hop from concept -> concept (by links and/or depends_on).
+            hop_targets: set[str] = set()
+
+            if via in ("depends_on", "both"):
+                hop_targets |= {dep for dep in graph.get_dependencies(v) if dep in graph.nodes}
+
+            if via in ("links", "both"):
+                concept = graph.nodes.get(v)
+                if concept is not None:
+                    for link in concept.links:
+                        target = graph.normalize(link).lower().strip()
+                        if target in graph.nodes:
+                            hop_targets.add(target)
+
+            for dep in hop_targets:
+                if dep in declared:
+                    continue
+                implied_by_via[dep].add(v)
+
+        implied_items: list[ImpliedConcept] = []
+        implied_by_layer: Counter[str] = Counter()
+
+        for dep, vias in implied_by_via.items():
+            layer = (graph.nodes[dep].layer or "unknown").strip().lower()
+            implied_items.append(
+                ImpliedConcept(
+                    name=dep,
+                    layer=layer,
+                    via=tuple(sorted(vias)),
+                )
+            )
+            implied_by_layer[layer] += 1
+            aggregate_domains_by_implied[dep].add(d.name)
+            for v in vias:
+                aggregate_via_by_implied[dep][v] += 1
+
+        implied_items.sort(key=lambda it: (_layer_order_key(it.layer), it.name))
+
+        items.append(
+            DomainAuditItem(
+                name=d.name,
+                title=d.title,
+                declared_concepts=tuple(sorted(declared)),
+                implied_concepts=tuple(implied_items),
+                implied_by_layer=dict(implied_by_layer),
+            )
+        )
+
+    summary = {
+        "domain_count": len(items),
+        "implied_by_all_domains": [],
+    }
+
+    # Concepts implied by all domains are strong junction candidates.
+    n_domains = len(items)
+    implied_all: list[dict] = []
+    for dep, domain_names in aggregate_domains_by_implied.items():
+        if n_domains == 0 or len(domain_names) != n_domains:
+            continue
+        layer = (graph.nodes[dep].layer or "unknown").strip().lower() if dep in graph.nodes else "unknown"
+        via_counter = aggregate_via_by_implied.get(dep) or Counter()
+        via_top = [name for name, _count in via_counter.most_common(3)]
+        implied_all.append(
+            {
+                "name": dep,
+                "layer": layer,
+                "via_top": via_top,
+            }
+        )
+
+    implied_all.sort(key=lambda d: (_layer_order_key(d["layer"]), d["name"]))
+    summary["implied_by_all_domains"] = implied_all
+
+    payload = {
+        "title": "Domain Implied Dependency Audit",
+        "vault": str(vault_path),
+        "domain_filter": domain,
+        "summary": summary,
+        "items": [
+            {
+                "name": it.name,
+                "title": it.title,
+                "declared_concepts": list(it.declared_concepts),
+                "implied_concepts": [
+                    {"name": x.name, "layer": x.layer, "via": list(x.via)} for x in it.implied_concepts
+                ],
+                "implied_by_layer": it.implied_by_layer,
+            }
+            for it in items
+        ],
+    }
+
+    if fmt == "json":
+        text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+    else:
+        text = _domain_audit_to_markdown(payload)
+
+    if out:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(text, encoding="utf-8")
+        console.print(f"Wrote domain audit to {out}", style="green")
+    else:
+        print(text, end="" if text.endswith("\n") else "\n")
+
+    return 0
+
+
+def _domain_audit_to_markdown(payload: dict) -> str:
+    items = payload["items"]
+    summary = payload["summary"]
+
+    lines: list[str] = []
+    lines.append(f"# {payload['title']}")
+    lines.append("")
+    lines.append(f"- Vault: `{payload['vault']}`")
+    if payload.get("domain_filter"):
+        lines.append(f"- Domain filter: `{payload['domain_filter']}`")
+    lines.append(f"- Domains audited: {summary['domain_count']}")
+    lines.append("")
+
+    implied_all = summary.get("implied_by_all_domains") or []
+    if implied_all:
+        lines.append("## Implied by all domains (junction candidates)")
+        lines.append("")
+        lines.append("| Concept | Layer | Implied via (top) |")
+        lines.append("|---|---|---|")
+        for row in implied_all:
+            via = ", ".join(row.get("via_top") or [])
+            lines.append(f"| [[{row['name']}]] | `{row['layer']}` | {via} |")
+        lines.append("")
+
+    for it in items:
+        lines.append(f"## Domain: {it['title']}")
+        lines.append("")
+        lines.append("### Declared concepts (direct links)")
+        lines.append("")
+        if it["declared_concepts"]:
+            for c in it["declared_concepts"]:
+                lines.append(f"- [[{c}]]")
+        else:
+            lines.append("- (none)")
+        lines.append("")
+
+        lines.append("### Implied concepts (2-hop, not declared)")
+        lines.append("")
+        implied = it["implied_concepts"]
+        if implied:
+            for dep in implied:
+                via = ", ".join(dep.get("via") or [])
+                layer = dep.get("layer") or "unknown"
+                lines.append(f"- [[{dep['name']}]] (`{layer}`) via {via}")
+        else:
+            lines.append("- (none)")
+        lines.append("")
+
+        by_layer = it.get("implied_by_layer") or {}
+        if by_layer:
+            lines.append("### Coverage gap")
+            lines.append("")
+            total = sum(by_layer.values())
+            primitives = sum(by_layer.get(x, 0) for x in ("primitive", "foundational"))
+            mechanisms = by_layer.get("mechanism", 0)
+            lines.append(f"- Implied concepts (total): {total}")
+            lines.append(f"- Primitives/foundational implied: {primitives}")
+            lines.append(f"- Mechanisms implied: {mechanisms}")
+            lines.append("")
+
+    return "\n".join(lines) + "\n"
+
+
+def _select_notes_by_role(vault, role: str, note: str | None) -> list:
+    role_norm = role.strip().lower()
+    if not role_norm:
+        raise ValueError("role is required")
+
+    notes = [n for n in vault.all_notes if (n.role or "").strip().lower() == role_norm]
+    if note is None:
+        return sorted(notes, key=lambda n: n.name.lower())
+
+    needle = note.strip().lower()
+    if not needle:
+        return sorted(notes, key=lambda n: n.name.lower())
+
+    exact = [n for n in notes if n.name.lower() == needle or n.title.lower() == needle]
+    if len(exact) == 1:
+        return exact
+    if len(exact) > 1:
+        notes = exact
+
+    matches = [n for n in notes if needle in n.name.lower() or needle in n.title.lower()]
+    if len(matches) == 1:
+        return matches
+    if not matches:
+        raise ValueError(f"No {role_norm} note matches: {note}")
+
+    options = ", ".join(sorted(n.name for n in matches)[:10])
+    raise ValueError(f"Ambiguous {role_norm} note '{note}' (matches: {options})")
+
+
+def run_implicit_audit(
+    vault_path: Path,
+    *,
+    role: str,
+    note: str | None = None,
+    via: str = "links",
+    top: int = 25,
+    include_all: bool = False,
+    out: Path | None = None,
+    fmt: str = "md",
+) -> int:
+    """Audit a note role for implied concept dependencies (2-hop) not declared by direct links.
+
+    For each note of the selected role:
+    - Declared concepts: direct wikilinks to concept notes
+    - Implied concepts: concepts reachable in 2 hops (note -> concept -> concept) that the note does not link directly
+    """
+    console = Console(stderr=True)
+
+    vault = load_vault(vault_path)
+    graph = DependencyGraph.from_concepts(vault.concepts, vault._aliases)
+
+    notes = _select_notes_by_role(vault, role, note)
+
+    if via not in ("links", "depends_on", "both"):
+        raise ValueError("via must be one of: links, depends_on, both")
+
+    items: list[DomainAuditItem] = []
+
+    for n in notes:
+        declared = _domain_declared_concepts(vault, graph, n)
+        implied_by_via: dict[str, set[str]] = defaultdict(set)
+
+        for v in sorted(declared):
+            hop_targets: set[str] = set()
+
+            if via in ("depends_on", "both"):
+                hop_targets |= {dep for dep in graph.get_dependencies(v) if dep in graph.nodes}
+
+            if via in ("links", "both"):
+                concept = graph.nodes.get(v)
+                if concept is not None:
+                    for link in concept.links:
+                        target = graph.normalize(link).lower().strip()
+                        if target in graph.nodes:
+                            hop_targets.add(target)
+
+            for dep in hop_targets:
+                if dep in declared:
+                    continue
+                implied_by_via[dep].add(v)
+
+        implied_items: list[ImpliedConcept] = []
+        implied_by_layer: Counter[str] = Counter()
+
+        for dep, vias in implied_by_via.items():
+            layer = (graph.nodes[dep].layer or "unknown").strip().lower()
+            implied_items.append(ImpliedConcept(name=dep, layer=layer, via=tuple(sorted(vias))))
+            implied_by_layer[layer] += 1
+
+        implied_items.sort(key=lambda it: (_layer_order_key(it.layer), it.name))
+
+        items.append(
+            DomainAuditItem(
+                name=n.name,
+                title=n.title,
+                declared_concepts=tuple(sorted(declared)),
+                implied_concepts=tuple(implied_items),
+                implied_by_layer=dict(implied_by_layer),
+            )
+        )
+
+    # Optionally keep only "top" notes by number of implied concepts.
+    if not include_all:
+        items.sort(key=lambda it: (len(it.implied_concepts), it.name), reverse=True)
+        items = items[: max(0, top)]
+
+    # Aggregate implied concepts across the *selected* items.
+    aggregate_notes_by_implied: dict[str, set[str]] = defaultdict(set)
+    aggregate_via_by_implied: dict[str, Counter[str]] = defaultdict(Counter)
+    for it in items:
+        for dep in it.implied_concepts:
+            aggregate_notes_by_implied[dep.name].add(it.name)
+            for v in dep.via:
+                aggregate_via_by_implied[dep.name][v] += 1
+
+    n_notes = len(items)
+    junction_rows: list[dict] = []
+    for dep, note_names in aggregate_notes_by_implied.items():
+        layer = (graph.nodes[dep].layer or "unknown").strip().lower() if dep in graph.nodes else "unknown"
+        via_counter = aggregate_via_by_implied.get(dep) or Counter()
+        via_top = [name for name, _count in via_counter.most_common(3)]
+        junction_rows.append(
+            {
+                "name": dep,
+                "layer": layer,
+                "notes_implying": len(note_names),
+                "via_top": via_top,
+            }
+        )
+
+    junction_rows.sort(key=lambda r: (-r["notes_implying"], _layer_order_key(r["layer"]), r["name"]))
+
+    payload = {
+        "title": "Implicit Dependency Audit (2-hop)",
+        "vault": str(vault_path),
+        "role": role.strip().lower(),
+        "note_filter": note,
+        "via": via,
+        "selection": {"include_all": include_all, "top": top, "audited_count": n_notes},
+        "junctions": junction_rows[:200],
+        "items": [
+            {
+                "name": it.name,
+                "title": it.title,
+                "declared_concepts": list(it.declared_concepts),
+                "implied_concepts": [
+                    {"name": x.name, "layer": x.layer, "via": list(x.via)} for x in it.implied_concepts
+                ],
+                "implied_by_layer": it.implied_by_layer,
+            }
+            for it in items
+        ],
+    }
+
+    if fmt == "json":
+        text = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+    else:
+        text = _implicit_audit_to_markdown(payload)
+
+    if out:
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(text, encoding="utf-8")
+        console.print(f"Wrote implicit audit to {out}", style="green")
+    else:
+        print(text, end="" if text.endswith("\n") else "\n")
+
+    return 0
+
+
+def _implicit_audit_to_markdown(payload: dict) -> str:
+    lines: list[str] = []
+    lines.append(f"# {payload['title']}")
+    lines.append("")
+    lines.append(f"- Vault: `{payload['vault']}`")
+    lines.append(f"- Role: `{payload['role']}`")
+    if payload.get("note_filter"):
+        lines.append(f"- Note filter: `{payload['note_filter']}`")
+    lines.append(f"- Via: `{payload['via']}`")
+    sel = payload.get("selection") or {}
+    lines.append(f"- Audited: {sel.get('audited_count', 0)}")
+    lines.append("")
+
+    junctions = payload.get("junctions") or []
+    if junctions:
+        lines.append("## Top implied junctions")
+        lines.append("")
+        lines.append("| Concept | Layer | Notes implying | Implied via (top) |")
+        lines.append("|---|---|---:|---|")
+        for row in junctions[:50]:
+            via = ", ".join(row.get("via_top") or [])
+            lines.append(f"| [[{row['name']}]] | `{row['layer']}` | {row['notes_implying']} | {via} |")
+        lines.append("")
+
+    for it in payload["items"]:
+        lines.append(f"## {it['title']} (`{it['name']}`)")
+        lines.append("")
+        lines.append("### Declared concepts (direct links)")
+        lines.append("")
+        if it["declared_concepts"]:
+            for c in it["declared_concepts"]:
+                lines.append(f"- [[{c}]]")
+        else:
+            lines.append("- (none)")
+        lines.append("")
+
+        lines.append("### Implied concepts (2-hop, not declared)")
+        lines.append("")
+        implied = it["implied_concepts"]
+        if implied:
+            for dep in implied:
+                via = ", ".join(dep.get("via") or [])
+                layer = dep.get("layer") or "unknown"
+                lines.append(f"- [[{dep['name']}]] (`{layer}`) via {via}")
+        else:
+            lines.append("- (none)")
+        lines.append("")
+
+    return "\n".join(lines) + "\n"
+
+
 def _analyze_definition(
     graph: DependencyGraph,
     name: str,
@@ -364,6 +878,17 @@ def run_definition_analysis(
     high_scope_ratio = sum(1 for it in items if it.scope_ratio > 0.7)
     low_scope_ratio = sum(1 for it in items if it.scope_ratio < 0.3)
 
+    implicit_clusters: dict[str, list[str]] = defaultdict(list)
+    for it in items:
+        for dep in it.implicit_deps:
+            implicit_clusters[dep].append(it.name)
+
+    implicit_cluster_rows = [
+        {"dependency": dep, "concepts": sorted(concepts)}
+        for dep, concepts in implicit_clusters.items()
+    ]
+    implicit_cluster_rows.sort(key=lambda r: (-len(r["concepts"]), r["dependency"]))
+
     payload = {
         "title": "Definition Semantic Analysis (Phase 1b)",
         "vault": str(vault_path),
@@ -377,6 +902,7 @@ def run_definition_analysis(
             "definition_heavy": high_scope_ratio,
             "boundary_primitives": low_scope_ratio,
         },
+        "implicit_dependency_clusters": implicit_cluster_rows,
         "items": [_item_to_dict(it) for it in items],
     }
 
@@ -446,6 +972,16 @@ def _definition_analysis_to_markdown(payload: dict) -> str:
     lines.append(f"| Definition-heavy (ratio >0.7) | {summary['definition_heavy']} | {pct(summary['definition_heavy'])} |")
     lines.append(f"| Boundary primitives (ratio <0.3) | {summary['boundary_primitives']} | {pct(summary['boundary_primitives'])} |")
     lines.append("")
+
+    clusters = payload.get("implicit_dependency_clusters") or []
+    if clusters:
+        lines.append("## Implicit dependency clusters")
+        lines.append("")
+        lines.append("| Dependency | Concepts missing link |")
+        lines.append("|---|---:|")
+        for row in clusters[:25]:
+            lines.append(f"| [[{row['dependency']}]] | {len(row['concepts'])} |")
+        lines.append("")
 
     lines.append("## Per-Concept Analysis")
     lines.append("")
