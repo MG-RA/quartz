@@ -22,6 +22,25 @@ $env:NEO4J_PASSWORD="adminroot"
 .\irrev\.venv\Scripts\irrev.exe -v .\content neo4j load --database irrev --mode sync
 ```
 
+## Automatic export bundle (recommended)
+
+If you don’t want to copy/paste queries, run the exporter:
+
+```powershell
+$env:NEO4J_PASSWORD="adminroot"
+.\irrev\.venv\Scripts\irrev.exe -v .\content neo4j export --database irrev
+```
+
+This writes a dated snapshot under `content/exports/export/YYYY-MM-DD/` including:
+
+- `*_counts.csv`
+- `*_top_inlinks.csv`
+- `*_top_in_depends.csv`
+- `*_mentions_without_depends.csv` (empty is good)
+- `*_depends_without_mentions.csv` (empty is good)
+- `*_projection_community_counts.csv`
+- `*_two_layer_graph.json` + `*_two_layer_nodes.csv` + `*_two_layer_edges.csv` (for `irrev/d3_graph_viewer.html`)
+
 ## Sanity checks
 
 ### Counts (nodes, edges by type)

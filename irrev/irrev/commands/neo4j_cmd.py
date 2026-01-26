@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import csv
 import json
 import re
 import time
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -483,4 +485,218 @@ def run_neo4j_ping(
         if url.endswith("/db/data/transaction/commit"):
             console.print("Neo4j: legacy single-db endpoint detected; database selection is not supported.", style="yellow")
 
+    return 0
+
+
+def _resolve_out_dir(vault_path: Path, out_dir: Path) -> Path:
+    # If the user passes a relative path, interpret it relative to the vault root.
+    return out_dir if out_dir.is_absolute() else (vault_path / out_dir)
+
+
+def _write_csv(path: Path, columns: list[str], rows: list[list[Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(columns)
+        for r in rows:
+            w.writerow(r)
+
+
+def run_neo4j_export(
+    vault_path: Path,
+    *,
+    http_uri: str,
+    user: str,
+    password: str,
+    database: str,
+    out_dir: Path,
+    stamp: bool,
+    top: int,
+    concept_note_id: str,
+) -> int:
+    """Export a bundle of inspection artifacts (CSV/JSON) from Neo4j.
+
+    Convenience wrapper around the manual query pack in `content/meta/graphs/Neo4j Manual Queries.md`.
+    """
+    console = Console(stderr=True)
+
+    out_base = _resolve_out_dir(vault_path, out_dir)
+    if stamp:
+        out_base = out_base / date.today().isoformat()
+    out_base.mkdir(parents=True, exist_ok=True)
+
+    client = Neo4jHttpClient(
+        Neo4jHttpConfig(http_uri=http_uri, user=user, password=password, database=database, allow_default_db_fallback=False)
+    )
+
+    # Clamp to match MCP row limits.
+    top = max(1, min(500, int(top)))
+
+    try:
+        # 1) Counts
+        q_counts = (
+            "MATCH (n:Note) "
+            "WITH count(n) AS notes "
+            "MATCH ()-[r:LINKS_TO]->() "
+            "WITH notes, sum(r.count) AS link_occurrences, count(r) AS link_edges "
+            "MATCH ()-[d:DEPENDS_ON]->() "
+            "RETURN notes, link_edges, link_occurrences, count(1) AS depends_edges "
+            "LIMIT 1"
+        )
+        cols, rows = client.query_rows(q_counts)
+        _write_csv(out_base / "1_counts.csv", cols, rows)
+
+        # 2) Top inbound hubs (LINKS_TO occurrences)
+        q_inlinks = (
+            "MATCH (s:Note)-[r:LINKS_TO]->(t:Note) "
+            "RETURN t.note_id, t.title, sum(r.count) AS inlink_occurrences "
+            "ORDER BY inlink_occurrences DESC, t.note_id ASC "
+            f"LIMIT {top}"
+        )
+        cols, rows = client.query_rows(q_inlinks)
+        _write_csv(out_base / "2_top_inlinks.csv", cols, rows)
+
+        # 3) Top “requirements hubs” (incoming DEPENDS_ON)
+        q_in_dep = (
+            "MATCH (:Note)-[:DEPENDS_ON]->(t:Note:Concept) "
+            "RETURN t.note_id, t.title, count(1) AS in_depends "
+            "ORDER BY in_depends DESC, t.note_id ASC "
+            f"LIMIT {top}"
+        )
+        cols, rows = client.query_rows(q_in_dep)
+        _write_csv(out_base / "3_top_in_depends.csv", cols, rows)
+
+        # 4) Mentions without requirements (concept→concept links without DEPENDS_ON)
+        q_mentions_without = (
+            "MATCH (c:Note:Concept)-[:LINKS_TO]->(t:Note:Concept) "
+            "WHERE NOT (c)-[:DEPENDS_ON]->(t) "
+            "RETURN c.note_id AS src, t.note_id AS dst "
+            "ORDER BY src ASC, dst ASC "
+            "LIMIT 500"
+        )
+        cols, rows = client.query_rows(q_mentions_without)
+        _write_csv(out_base / "4_mentions_without_depends.csv", cols, rows)
+
+        # 5) Requirements without mentions
+        q_dep_without_mentions = (
+            "MATCH (c:Note:Concept)-[:DEPENDS_ON]->(t:Note:Concept) "
+            "WHERE NOT (c)-[:LINKS_TO]->(t) "
+            "RETURN c.note_id AS src, t.note_id AS dst "
+            "ORDER BY src ASC, dst ASC "
+            "LIMIT 500"
+        )
+        cols, rows = client.query_rows(q_dep_without_mentions)
+        _write_csv(out_base / "5_depends_without_mentions.csv", cols, rows)
+
+        # 6) Touch vs require for a specific concept (two CSVs)
+        q_touch = (
+            "MATCH (c:Note:Concept {note_id: $note_id})-[r:LINKS_TO]->(t:Note:Concept) "
+            "RETURN t.note_id, t.title, r.count "
+            "ORDER BY r.count DESC, t.note_id ASC "
+            "LIMIT 500"
+        )
+        cols, rows = client.query_rows(q_touch, parameters={"note_id": concept_note_id})
+        _write_csv(out_base / "6_touch_links_to_concepts.csv", cols, rows)
+
+        q_req = (
+            "MATCH (c:Note:Concept {note_id: $note_id})-[r:DEPENDS_ON]->(t:Note:Concept) "
+            "RETURN t.note_id, t.title, t.layer, r.from_frontmatter, r.from_structural "
+            "ORDER BY t.note_id ASC "
+            "LIMIT 500"
+        )
+        cols, rows = client.query_rows(q_req, parameters={"note_id": concept_note_id})
+        _write_csv(out_base / "7_requires_depends_on.csv", cols, rows)
+
+        # 7) Community summary + bridge nodes (links topology)
+        q_comm = (
+            "MATCH (n:Note:Concept) "
+            "WHERE n.community_links_greedy IS NOT NULL "
+            "WITH n.community_links_greedy AS community, count(1) AS nodes, "
+            "sum(coalesce(n.boundary_edges_links_greedy, 0)) AS boundary_edges "
+            "RETURN community, nodes, boundary_edges "
+            "ORDER BY nodes DESC, community ASC "
+            "LIMIT 50"
+        )
+        cols, rows = client.query_rows(q_comm)
+        _write_csv(out_base / "8_communities_links.csv", cols, rows)
+
+        q_bridge = (
+            "MATCH (n:Note:Concept) "
+            "WHERE n.community_links_greedy IS NOT NULL AND coalesce(n.boundary_edges_links_greedy, 0) > 0 "
+            "RETURN n.note_id, n.title, n.layer, n.community_links_greedy AS community, "
+            "n.bridge_links_greedy AS bridge, n.boundary_edges_links_greedy AS boundary_edges "
+            "ORDER BY boundary_edges DESC, bridge DESC, n.note_id ASC "
+            f"LIMIT {top}"
+        )
+        cols, rows = client.query_rows(q_bridge)
+        _write_csv(out_base / "9_bridge_nodes_links.csv", cols, rows)
+
+        # 8) Projection subgraphs: projection → community counts (links)
+        q_proj_comm = (
+            "MATCH (p:Note:Projection)-[:LINKS_TO]->(c:Note:Concept) "
+            "WHERE c.community_links_greedy IS NOT NULL "
+            "WITH p, c.community_links_greedy AS community, count(1) AS n "
+            "RETURN p.note_id, p.title, community, n "
+            "ORDER BY p.note_id ASC, n DESC, community ASC "
+            "LIMIT 500"
+        )
+        cols, rows = client.query_rows(q_proj_comm)
+        _write_csv(out_base / "10_projection_community_counts.csv", cols, rows)
+
+        # 9) Export concept-only two-layer graph (nodes/edges CSV + JSON)
+        q_graph = """
+MATCH (n:Note:Concept)
+WITH collect({
+  id: n.note_id,
+  label: n.title,
+  role: n.role,
+  layer: n.layer,
+  community: n.community_links_greedy
+}) AS nodes
+MATCH (s:Note:Concept)-[r:LINKS_TO]->(t:Note:Concept)
+WITH nodes, collect({
+  source: s.note_id,
+  target: t.note_id,
+  type: "LINKS_TO",
+  weight: r.count
+}) AS links
+MATCH (s:Note:Concept)-[d:DEPENDS_ON]->(t:Note:Concept)
+WITH nodes, links, collect({
+  source: s.note_id,
+  target: t.note_id,
+  type: "DEPENDS_ON",
+  weight: 1,
+  from_frontmatter: d.from_frontmatter,
+  from_structural: d.from_structural
+}) AS dep_links
+WITH nodes, links + dep_links AS links
+RETURN {nodes: nodes, links: links} AS graph
+LIMIT 1
+"""
+        _, graph_rows = client.query_rows(q_graph)
+        graph_obj: dict[str, Any] = {}
+        if graph_rows and graph_rows[0] and isinstance(graph_rows[0][0], dict):
+            graph_obj = graph_rows[0][0]
+
+        (out_base / "11_two_layer_graph.json").write_text(
+            json.dumps(graph_obj, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+
+        nodes = graph_obj.get("nodes") if isinstance(graph_obj, dict) else None
+        links = graph_obj.get("links") if isinstance(graph_obj, dict) else None
+        if isinstance(nodes, list):
+            node_cols = ["id", "label", "role", "layer", "community"]
+            node_rows = [[n.get(c) for c in node_cols] for n in nodes if isinstance(n, dict)]
+            _write_csv(out_base / "11_two_layer_nodes.csv", node_cols, node_rows)
+        if isinstance(links, list):
+            edge_cols = ["source", "target", "type", "weight", "from_frontmatter", "from_structural"]
+            edge_rows = [[e.get(c) for c in edge_cols] for e in links if isinstance(e, dict)]
+            _write_csv(out_base / "11_two_layer_edges.csv", edge_cols, edge_rows)
+
+    except Exception as e:
+        console.print(str(e), style="red")
+        return 1
+
+    console.print(f"Wrote Neo4j export bundle to {out_base}", style="green")
     return 0

@@ -795,6 +795,79 @@ def neo4j_load(
     sys.exit(exit_code)
 
 
+@neo4j.command("export")
+@click.option(
+    "--http-uri",
+    type=str,
+    default="http://localhost:7474",
+    show_default=True,
+    help="Neo4j HTTP base URL (transactional endpoint uses /db/<db>/tx/commit)",
+)
+@click.option("--user", type=str, default="neo4j", show_default=True, help="Neo4j username")
+@click.option(
+    "--password",
+    type=str,
+    envvar="NEO4J_PASSWORD",
+    prompt=True,
+    hide_input=True,
+    help="Neo4j password (or set NEO4J_PASSWORD)",
+)
+@click.option("--database", type=str, default="irrev", show_default=True, help="Neo4j database name")
+@click.option(
+    "--out-dir",
+    type=click.Path(file_okay=False, dir_okay=True, path_type=Path),
+    default=Path("exports/export"),
+    show_default=True,
+    help="Output directory (relative to the vault root unless absolute)",
+)
+@click.option(
+    "--stamp/--no-stamp",
+    default=True,
+    show_default=True,
+    help="Write into a dated subfolder (YYYY-MM-DD) for repeatable snapshots",
+)
+@click.option("--top", type=int, default=50, show_default=True, help="Row count for top-N exports")
+@click.option(
+    "--concept",
+    "concept_note_id",
+    type=str,
+    default="concepts/erasure-cost",
+    show_default=True,
+    help="Concept note_id used for touch/require exports",
+)
+@click.pass_context
+def neo4j_export(
+    ctx: click.Context,
+    http_uri: str,
+    user: str,
+    password: str,
+    database: str,
+    out_dir: Path,
+    stamp: bool,
+    top: int,
+    concept_note_id: str,
+) -> None:
+    """Export a bundle of inspection artifacts (CSV/JSON) from Neo4j.
+
+    This is the “automatic way” to run the manual query pack and write files into
+    `content/exports/export/…` for your own inspection.
+    """
+    from .commands.neo4j_cmd import run_neo4j_export
+
+    exit_code = run_neo4j_export(
+        ctx.obj["vault"],
+        http_uri=http_uri,
+        user=user,
+        password=password,
+        database=database,
+        out_dir=out_dir,
+        stamp=stamp,
+        top=top,
+        concept_note_id=concept_note_id,
+    )
+    sys.exit(exit_code)
+
+
 def main() -> None:
     """Main entrypoint."""
     cli()
