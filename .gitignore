@@ -28,3 +28,6 @@ content/concepts/Untitled.canvas
 
 # Generated audit reports
 content/exports bases/*Generated*.md
+
+# Generated inspection artifacts (irrev CLI outputs)
+content/exports/

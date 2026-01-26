@@ -163,6 +163,17 @@ Params:
 { "note_id": "concepts/erasure-cost" }
 ```
 
+## Visualization (d3 “two-layer glasses”)
+
+If you want an interactive local view with two edge types:
+
+- `LINKS_TO` = what the text touches
+- `DEPENDS_ON` = what the structure requires
+
+1) Run an export query in Neo4j Browser (see `content/meta/graphs/Neo4j Manual Queries.md`).
+2) Save the returned `{nodes, links}` map as `graph.json`.
+3) Open `irrev/d3_graph_viewer.html` and load `graph.json`.
+
 ### Structural dependencies of a concept
 
 ```cypher
