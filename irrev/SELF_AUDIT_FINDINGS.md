@@ -18,6 +18,8 @@ The following conditions have been addressed:
 | 2 | Governance (bypass warnings) | ✓ Remediated | Added `⚠ Governance notice:` warnings for `--invariant`, `--exclude-layer`, `--in-place`, `--mode rebuild` |
 | 3 | Irreversibility (audit logging) | ✓ Remediated | Created `audit_log.py` with `ErasureCost`/`CreationSummary` dataclasses; all destructive operations now log to `.irrev/audit.log` |
 | 4 | Decomposition (compute/execute separation) | ✓ Remediated | Created `planning.py` with `Plan`/`Result` base classes; `neo4j load` and `registry build` refactored to separate diagnostic/action phases |
+| 5 | Governance + irreversibility (artifact approvals) | ✓ Remediated | Added event-sourced artifact ledger (`.irrev/artifact.jsonl`) with content-addressed payloads and approval artifacts gating execution |
+| 6 | Interface invariance (ruleset + execution trail) | ✓ Remediated | Made `lint` ruleset-driven (vault-owned TOML); added interface invariance checks over the artifact trail (execution summary + surface attribution); removed prescriptive language leaks in tool messages |
 
 ### New Capabilities
 
@@ -25,7 +27,10 @@ The following conditions have been addressed:
 |---------|-----------|---------|
 | `neo4j load` | `--dry-run` | Preview what would be loaded/erased |
 | `neo4j load` | `--force` | Required for destructive rebuild mode |
+| `neo4j load` | `--propose-only`, `--plan-id` | Propose/approve/execute via the artifact ledger |
 | `registry build` | `--dry-run` | Preview registry changes |
+| `artifact` | (new command group) | Inspect artifacts; create approval artifacts |
+| `lint` | (ruleset-driven) | Loads `content/meta/rulesets/core.toml` when present; includes ruleset provenance in `--json` output |
 
 ### Audit Trail
 

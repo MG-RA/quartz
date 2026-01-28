@@ -720,6 +720,165 @@ def junctions_implicit(
 
 
 @cli.group()
+def artifact() -> None:
+    """Artifact ledger utilities (event-sourced)."""
+    pass
+
+
+@artifact.command("list")
+@click.option("--type", "artifact_type", type=str, default=None, help="Filter by artifact type (plan, approval, report)")
+@click.option("--status", type=str, default=None, help="Filter by status (created, validated, approved, executed, rejected)")
+@click.pass_context
+def artifact_list(ctx: click.Context, artifact_type: str | None, status: str | None) -> None:
+    """List artifacts from the append-only artifact ledger."""
+    from .commands.artifact_cmd import run_artifact_list
+
+    sys.exit(run_artifact_list(ctx.obj["vault"], artifact_type=artifact_type, status=status))
+
+
+@artifact.command("show")
+@click.argument("artifact_id", type=str)
+@click.option("--json", "output_json", is_flag=True, help="Include stored content in JSON output")
+@click.pass_context
+def artifact_show(ctx: click.Context, artifact_id: str, output_json: bool) -> None:
+    """Show an artifact snapshot (and optionally its stored content)."""
+    from .commands.artifact_cmd import run_artifact_show
+
+    sys.exit(run_artifact_show(ctx.obj["vault"], artifact_id, output_json=output_json))
+
+
+@artifact.command("status")
+@click.argument("artifact_id", type=str)
+@click.pass_context
+def artifact_status(ctx: click.Context, artifact_id: str) -> None:
+    """Show lifecycle status and next required gate."""
+    from .commands.artifact_cmd import run_artifact_status
+
+    sys.exit(run_artifact_status(ctx.obj["vault"], artifact_id))
+
+
+@artifact.command("explain")
+@click.argument("artifact_id", type=str)
+@click.pass_context
+def artifact_explain(ctx: click.Context, artifact_id: str) -> None:
+    """Explain computed risk and approval requirements."""
+    from .commands.artifact_cmd import run_artifact_explain
+
+    sys.exit(run_artifact_explain(ctx.obj["vault"], artifact_id))
+
+
+@artifact.command("approve")
+@click.argument("artifact_id", type=str)
+@click.option("--approver", type=str, default="human:local", show_default=True, help="Approver identity")
+@click.option("--scope", type=str, default=None, help="Approval scope string")
+@click.option("--force", is_flag=True, help="Acknowledge destructive approval (force_ack)")
+@click.pass_context
+def artifact_approve(ctx: click.Context, artifact_id: str, approver: str, scope: str | None, force: bool) -> None:
+    """Approve a validated artifact by creating an approval artifact."""
+    from .commands.artifact_cmd import run_artifact_approve
+
+    sys.exit(run_artifact_approve(ctx.obj["vault"], artifact_id, approver=approver, force=force, scope=scope))
+
+
+@artifact.command("audit")
+@click.argument("artifact_id", type=str)
+@click.option("--json", "output_json", is_flag=True, help="Output as JSON")
+@click.option("--limit", type=int, default=None, help="Limit number of events")
+@click.pass_context
+def artifact_audit(ctx: click.Context, artifact_id: str, output_json: bool, limit: int | None) -> None:
+    """Show full chronological audit trail for an artifact."""
+    from .commands.artifact_cmd import run_artifact_audit
+
+    sys.exit(run_artifact_audit(ctx.obj["vault"], artifact_id, output_json=output_json, limit=limit))
+
+
+@artifact.command("execution")
+@click.argument("artifact_id", type=str, required=False)
+@click.option("--execution-id", type=str, default=None, help="Filter by execution ID")
+@click.option("--phase", type=str, default=None, help="Filter by phase (prepare|execute|commit)")
+@click.option("--status", type=str, default=None, help="Filter by status (started|completed|failed|skipped)")
+@click.option("--json", "output_json", is_flag=True, help="Output as JSON")
+@click.pass_context
+def artifact_execution(ctx: click.Context, artifact_id: str | None, execution_id: str | None, phase: str | None, status: str | None, output_json: bool) -> None:
+    """Show execution logs for an artifact or execution_id."""
+    from .commands.artifact_cmd import run_artifact_execution
+
+    sys.exit(run_artifact_execution(ctx.obj["vault"], artifact_id, execution_id=execution_id, phase=phase, status=status, output_json=output_json))
+
+
+@artifact.command("constraints")
+@click.argument("artifact_id", type=str)
+@click.option("--ruleset", type=str, default=None, help="Filter by ruleset ID")
+@click.option("--result", type=str, default=None, help="Filter by result (pass|fail|warning)")
+@click.option("--status", type=str, default=None, help="Filter invariant checks by status (pass|fail)")
+@click.option("--json", "output_json", is_flag=True, help="Output as JSON")
+@click.pass_context
+def artifact_constraints(ctx: click.Context, artifact_id: str, ruleset: str | None, result: str | None, status: str | None, output_json: bool) -> None:
+    """Show constraint evaluations and invariant checks for an artifact."""
+    from .commands.artifact_cmd import run_artifact_constraints
+
+    sys.exit(run_artifact_constraints(ctx.obj["vault"], artifact_id, ruleset=ruleset, result=result, status=status, output_json=output_json))
+
+
+@artifact.command("timeline")
+@click.argument("artifact_id", type=str)
+@click.option("--full", is_flag=True, help="Show full timestamps (not condensed)")
+@click.option("--limit", type=int, default=None, help="Limit number of events")
+@click.option("--json", "output_json", is_flag=True, help="Output as JSON")
+@click.pass_context
+def artifact_timeline(ctx: click.Context, artifact_id: str, full: bool, limit: int | None, output_json: bool) -> None:
+    """Show condensed chronological timeline for an artifact."""
+    from .commands.artifact_cmd import run_artifact_timeline
+
+    sys.exit(run_artifact_timeline(ctx.obj["vault"], artifact_id, full=full, limit=limit, output_json=output_json))
+
+
+@artifact.command("summary")
+@click.argument("artifact_id", type=str)
+@click.option("--execution-id", type=str, default=None, help="Specific execution ID (defaults to latest)")
+@click.option("--json", "output_json", is_flag=True, help="Output as JSON")
+@click.pass_context
+def artifact_summary(ctx: click.Context, artifact_id: str, execution_id: str | None, output_json: bool) -> None:
+    """Show combined execution + constraint summary for an artifact."""
+    from .commands.artifact_cmd import run_artifact_summary
+
+    sys.exit(run_artifact_summary(ctx.obj["vault"], artifact_id, execution_id=execution_id, output_json=output_json))
+
+
+@artifact.command("types")
+@click.option("--json", "output_json", is_flag=True, help="Output as JSON")
+@click.pass_context
+def artifact_types(ctx: click.Context, output_json: bool) -> None:
+    """List all registered artifact types (vault + artifact system)."""
+    from .commands.artifact_types_cmd import run_artifact_types_list
+
+    sys.exit(run_artifact_types_list(ctx.obj["vault"], json_output=output_json))
+
+
+@artifact.command("type-check")
+@click.argument("path", type=str)
+@click.option("--severity", type=click.Choice(["warn", "fail", "enforce", "all"]), default="all", help="Filter by severity level")
+@click.option("--json", "output_json", is_flag=True, help="Output as JSON")
+@click.pass_context
+def artifact_type_check(ctx: click.Context, path: str, severity: str, output_json: bool) -> None:
+    """Dry-run validation on file or directory against type registry."""
+    from .commands.artifact_types_cmd import run_artifact_type_check
+
+    sys.exit(run_artifact_type_check(ctx.obj["vault"], path, severity_filter=severity, json_output=output_json))
+
+
+@artifact.command("type-info")
+@click.argument("type_id", type=str)
+@click.option("--json", "output_json", is_flag=True, help="Output as JSON")
+@click.pass_context
+def artifact_type_info(ctx: click.Context, type_id: str, output_json: bool) -> None:
+    """Show detailed information for one artifact type."""
+    from .commands.artifact_types_cmd import run_artifact_type_info
+
+    sys.exit(run_artifact_type_info(ctx.obj["vault"], type_id, json_output=output_json))
+
+
+@cli.group()
 def neo4j() -> None:
     """Neo4j export/load utilities (derived graph state)."""
     pass
@@ -792,6 +951,18 @@ def neo4j_ping(http_uri: str, user: str, password: str, database: str) -> None:
     is_flag=True,
     help="Show what would be done without executing (diagnostic only)",
 )
+@click.option(
+    "--propose-only",
+    is_flag=True,
+    help="Create + validate an artifact plan, but do not execute",
+)
+@click.option(
+    "--plan-id",
+    type=str,
+    default=None,
+    metavar="ARTIFACT_ID",
+    help="Execute an approved artifact plan",
+)
 @click.pass_context
 def neo4j_load(
     ctx: click.Context,
@@ -804,6 +975,8 @@ def neo4j_load(
     batch_size: int,
     force: bool,
     dry_run: bool,
+    propose_only: bool,
+    plan_id: str | None,
 ) -> None:
     """Load the vault into Neo4j as a derived graph.
 
@@ -814,9 +987,42 @@ def neo4j_load(
         $env:NEO4J_PASSWORD="adminroot"; irrev -v content neo4j load --database irrev --mode rebuild --force
     """
     from rich.console import Console
-    from .commands.neo4j_cmd import run_neo4j_load
+    from .commands.neo4j_cmd import run_neo4j_load, run_neo4j_load_from_plan_id, run_neo4j_load_propose
 
     console = Console(stderr=True)
+
+    if propose_only and plan_id:
+        raise click.BadParameter("--propose-only and --plan-id are mutually exclusive")
+    if propose_only and dry_run:
+        raise click.BadParameter("--propose-only and --dry-run are mutually exclusive")
+
+    if plan_id:
+        sys.exit(
+            run_neo4j_load_from_plan_id(
+                ctx.obj["vault"],
+                plan_id=plan_id,
+                http_uri=http_uri,
+                database=database,
+                mode=mode,
+                ensure_schema=ensure_schema,
+                batch_size=batch_size,
+                user=user,
+                password=password,
+            )
+        )
+
+    if propose_only:
+        sys.exit(
+            run_neo4j_load_propose(
+                ctx.obj["vault"],
+                http_uri=http_uri,
+                database=database,
+                mode=mode,
+                ensure_schema=ensure_schema,
+                batch_size=batch_size,
+                actor="agent:planner",
+            )
+        )
 
     # Governance: destructive operations require explicit acknowledgment
     if mode == "rebuild" and not dry_run:
@@ -1287,6 +1493,221 @@ def lsp(ctx: click.Context, transport: str) -> None:
 
     vault_path = ctx.obj.get("vault")
     start_server(vault_path=vault_path, transport=transport)
+
+
+# -----------------------------------------------------------------------------
+# Harness commands (unified execution chokepoint)
+# -----------------------------------------------------------------------------
+
+
+@cli.group()
+def harness() -> None:
+    """Execution harness - single chokepoint for all effectful operations.
+
+    The harness enforces governance invariants architecturally:
+
+    \b
+    - propose: Compute plan, derive risk, create artifact (pure)
+    - execute: Verify approval, execute handler, emit bundle (impure)
+    - run: Convenience wrapper (propose + execute if no approval required)
+
+    Key principle: operations cannot bypass gates without leaving audit scars.
+    """
+    pass
+
+
+@harness.command("propose")
+@click.argument("operation", type=str)
+@click.option("--params", type=str, default="{}", help="JSON params for operation")
+@click.option("--actor", type=str, default="agent:cli", help="Actor identity")
+@click.pass_context
+def harness_propose(ctx: click.Context, operation: str, params: str, actor: str) -> None:
+    """Compute plan and create artifact (pure, no execution).
+
+    Examples:
+
+        irrev harness propose neo4j.load --params '{"http_uri":"http://localhost:7474","database":"irrev","mode":"sync"}'
+
+        irrev harness propose neo4j.load --params '{"http_uri":"http://localhost:7474","database":"irrev","mode":"rebuild"}'
+
+    Returns the plan_id, risk_class, and whether approval is required.
+    """
+    import json
+
+    from rich.console import Console
+
+    from .harness import Harness
+    from .harness.registry import get_handler
+    from .harness.handlers import register_all
+
+    console = Console(stderr=True)
+
+    # Register all handlers
+    register_all()
+
+    # Get handler
+    handler = get_handler(operation)
+    if handler is None:
+        console.print(f"Unknown operation: {operation}", style="bold red")
+        console.print("Available operations: neo4j.load", style="dim")
+        sys.exit(1)
+
+    # Parse params
+    try:
+        params_dict = json.loads(params)
+    except json.JSONDecodeError as e:
+        console.print(f"Invalid JSON params: {e}", style="bold red")
+        sys.exit(1)
+
+    # Run propose
+    harness_instance = Harness(ctx.obj["vault"], console=console)
+    result = harness_instance.propose(handler, params_dict, actor=actor, surface="cli")
+
+    if not result.success:
+        console.print(f"Validation failed: {'; '.join(result.validation_errors)}", style="bold red")
+        sys.exit(1)
+
+    sys.exit(0)
+
+
+@harness.command("execute")
+@click.argument("plan_id", type=str)
+@click.option("--secrets-ref", type=str, default=None, help="Secrets reference (e.g., 'env:NEO4J_PASSWORD')")
+@click.option("--dry-run", is_flag=True, help="Show plan but don't execute")
+@click.pass_context
+def harness_execute(ctx: click.Context, plan_id: str, secrets_ref: str | None, dry_run: bool) -> None:
+    """Execute an approved plan artifact.
+
+    Requires the plan to be approved first:
+
+        irrev artifact approve <plan_id> --approver human:alice --force
+
+    Examples:
+
+        irrev harness execute 01HYK... --secrets-ref env:NEO4J_PASSWORD
+
+        irrev harness execute 01HYK... --dry-run
+    """
+    from rich.console import Console
+
+    from .harness import Harness
+    from .harness.registry import get_handler
+    from .harness.handlers import register_all
+
+    console = Console(stderr=True)
+
+    # Register all handlers
+    register_all()
+
+    # Create harness
+    harness_instance = Harness(ctx.obj["vault"], console=console)
+
+    # Get plan snapshot to determine handler
+    snap = harness_instance.plan_manager.ledger.snapshot(plan_id)
+    if snap is None:
+        console.print(f"Plan not found: {plan_id}", style="bold red")
+        sys.exit(1)
+
+    # Get operation from plan
+    content = harness_instance.content_store.get(snap.content_id)
+    if not isinstance(content, dict):
+        console.print(f"Invalid plan content: {snap.content_id}", style="bold red")
+        sys.exit(1)
+
+    operation = str(content.get("operation", "")).strip()
+    handler = get_handler(operation)
+    if handler is None:
+        console.print(f"Unknown operation: {operation}", style="bold red")
+        sys.exit(1)
+
+    # Execute
+    result = harness_instance.execute(
+        plan_id,
+        handler,
+        executor=handler.metadata.delegate_to,
+        secrets_ref=secrets_ref,
+        dry_run=dry_run,
+    )
+
+    if not result.success:
+        console.print(f"Execution failed: {result.error}", style="bold red")
+        sys.exit(1)
+
+    sys.exit(0)
+
+
+@harness.command("run")
+@click.argument("operation", type=str)
+@click.option("--params", type=str, default="{}", help="JSON params for operation")
+@click.option("--actor", type=str, default="agent:cli", help="Actor identity")
+@click.option("--secrets-ref", type=str, default=None, help="Secrets reference (e.g., 'env:NEO4J_PASSWORD')")
+@click.option("--dry-run", is_flag=True, help="Show plan but don't execute")
+@click.pass_context
+def harness_run(
+    ctx: click.Context,
+    operation: str,
+    params: str,
+    actor: str,
+    secrets_ref: str | None,
+    dry_run: bool,
+) -> None:
+    """Propose + execute in one call (only if no approval required).
+
+    For operations that require approval (destructive/external), this
+    will fail with an error - use propose + approve + execute instead.
+
+    Examples:
+
+        irrev harness run neo4j.load --params '{"http_uri":"...","database":"irrev","mode":"sync"}' --dry-run
+
+        # This will fail for mode=rebuild (requires approval):
+        irrev harness run neo4j.load --params '{"mode":"rebuild",...}'
+        # Error: Approval required (risk=mutation_destructive)
+    """
+    import json
+
+    from rich.console import Console
+
+    from .harness import Harness
+    from .harness.registry import get_handler
+    from .harness.handlers import register_all
+
+    console = Console(stderr=True)
+
+    # Register all handlers
+    register_all()
+
+    # Get handler
+    handler = get_handler(operation)
+    if handler is None:
+        console.print(f"Unknown operation: {operation}", style="bold red")
+        console.print("Available operations: neo4j.load", style="dim")
+        sys.exit(1)
+
+    # Parse params
+    try:
+        params_dict = json.loads(params)
+    except json.JSONDecodeError as e:
+        console.print(f"Invalid JSON params: {e}", style="bold red")
+        sys.exit(1)
+
+    # Run
+    harness_instance = Harness(ctx.obj["vault"], console=console)
+    result = harness_instance.run(
+        handler,
+        params_dict,
+        actor=actor,
+        surface="cli",
+        executor=handler.metadata.delegate_to,
+        secrets_ref=secrets_ref,
+        dry_run=dry_run,
+    )
+
+    if not result.success:
+        console.print(f"Failed: {result.error}", style="bold red")
+        sys.exit(1)
+
+    sys.exit(0)
 
 
 def main() -> None:

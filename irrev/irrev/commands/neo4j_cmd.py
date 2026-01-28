@@ -6,6 +6,7 @@ import csv
 import json
 import re
 import time
+from dataclasses import asdict
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -597,6 +598,169 @@ def run_neo4j_load(
     )
 
     console.print("Neo4j load complete.", style="green")
+    return 0
+
+
+def run_neo4j_load_propose(
+    vault_path: Path,
+    *,
+    http_uri: str,
+    database: str,
+    mode: str,
+    ensure_schema: bool,
+    batch_size: int,
+    actor: str = "agent:planner",
+) -> int:
+    """Create + validate a Neo4j load plan artifact without executing."""
+    from ..artifact.plan_manager import PlanManager
+
+    console = Console(stderr=True)
+    mgr = PlanManager(vault_path)
+
+    payload = {
+        "http_uri": http_uri,
+        "database": database,
+        "mode": mode,
+        "ensure_schema": bool(ensure_schema),
+        "batch_size": int(batch_size),
+    }
+
+    artifact_id = mgr.propose(
+        "neo4j.load",
+        payload,
+        actor,
+        delegate_to="handler:neo4j",
+        surface="cli",
+        artifact_type="plan",
+    )
+    ok = mgr.validate(artifact_id, validator="system")
+    snap = mgr.ledger.snapshot(artifact_id)
+
+    console.print(f"plan_id: {artifact_id}", style="bold cyan")
+    if snap is not None:
+        risk = snap.computed_risk_class or snap.risk_class
+        console.print(f"status: {snap.status}", style="dim")
+        console.print(f"risk_class: {(risk.value if risk else '')}", style="dim")
+        if snap.requires_approval():
+            console.print("approval required: yes", style="yellow")
+            if (risk and risk.value == "mutation_destructive"):
+                console.print("force_ack required: yes", style="yellow")
+        else:
+            console.print("approval required: no", style="dim")
+
+    if not ok:
+        console.print("validation failed", style="bold red")
+        return 1
+    return 0
+
+
+def run_neo4j_load_from_plan_id(
+    vault_path: Path,
+    *,
+    plan_id: str,
+    http_uri: str,
+    database: str,
+    mode: str,
+    ensure_schema: bool,
+    batch_size: int,
+    user: str,
+    password: str,
+) -> int:
+    """Execute an approved Neo4j load plan artifact."""
+    from ..artifact.plan_manager import PlanManager
+    from ..audit_log import log_operation
+
+    console = Console(stderr=True)
+    mgr = PlanManager(vault_path)
+
+    snap = mgr.ledger.snapshot(plan_id)
+    if snap is None:
+        console.print(f"Plan not found: {plan_id}", style="bold red")
+        return 1
+    if snap.artifact_type != "plan":
+        console.print(f"Artifact is not a plan (type={snap.artifact_type}): {plan_id}", style="bold red")
+        return 1
+
+    content = mgr.content_store.get_json(snap.content_id) if snap.content_id else None
+    if not isinstance(content, dict):
+        console.print(f"Missing or invalid plan content: {snap.content_id}", style="bold red")
+        return 1
+
+    op = str(content.get("operation", "")).strip().lower()
+    if op not in {"neo4j.load", "neo4j-load"}:
+        console.print(f"Unsupported plan operation: {op}", style="bold red")
+        return 1
+
+    payload = content.get("payload")
+    if not isinstance(payload, dict):
+        console.print("Plan payload must be an object", style="bold red")
+        return 1
+
+    # Warn if CLI flags disagree with the approved plan (plan wins).
+    plan_http_uri = str(payload.get("http_uri", "")).strip() or http_uri
+    plan_database = str(payload.get("database", "")).strip() or database
+    plan_mode = str(payload.get("mode", "")).strip() or mode
+    plan_ensure_schema = bool(payload.get("ensure_schema", ensure_schema))
+    plan_batch_size = int(payload.get("batch_size", batch_size))
+
+    if http_uri != plan_http_uri or database != plan_database or mode != plan_mode:
+        console.print("Note: CLI flags differ from plan payload; executing the approved plan payload.", style="dim")
+
+    def _handler(plan_content: dict[str, Any]) -> dict[str, Any]:
+        plan_payload = plan_content.get("payload", {})
+        plan_payload = plan_payload if isinstance(plan_payload, dict) else {}
+
+        load_plan = compute_neo4j_load_plan(
+            vault_path,
+            http_uri=plan_http_uri,
+            database=plan_database,
+            mode=plan_mode,
+        )
+
+        result = execute_neo4j_load_plan(
+            load_plan,
+            user=user,
+            password=password,
+            ensure_schema=plan_ensure_schema,
+            batch_size=plan_batch_size,
+            console=console,
+        )
+
+        if not result.success:
+            raise RuntimeError(result.error or "Neo4j load failed")
+
+        log_operation(
+            vault_path,
+            operation=f"neo4j-{plan_mode}",
+            erased=result.erased,
+            created=result.created,
+            metadata={
+                "database": plan_database,
+                "http_uri": plan_http_uri,
+                "batch_size": plan_batch_size,
+            },
+        )
+
+        return {
+            "success": True,
+            "operation": "neo4j.load",
+            "mode": plan_mode,
+            "database": plan_database,
+            "http_uri": plan_http_uri,
+            "notes_loaded": getattr(result, "notes_loaded", 0),
+            "edges_created": getattr(result, "edges_created", 0),
+            "erasure_cost": asdict(result.erased),
+            "creation_summary": asdict(result.created),
+        }
+
+    try:
+        result_artifact_id = mgr.execute(plan_id, "handler:neo4j", handler=_handler)
+    except Exception as e:
+        console.print(str(e), style="bold red")
+        return 1
+
+    console.print(f"executed: {plan_id}", style="green")
+    console.print(f"result_artifact_id: {result_artifact_id}", style="dim")
     return 0
 
 

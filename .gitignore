@@ -10,6 +10,7 @@ private/
 .replit
 replit.nix
 *.csv
+.irrev/*
 
 # Python (irrev CLI)
 irrev/.venv/

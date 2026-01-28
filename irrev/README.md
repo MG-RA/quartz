@@ -30,6 +30,14 @@ uv run irrev -v ../content lint --trace admissibility
 Notes:
 - Default output is grouped by invariant (decomposition/governance/attribution/irreversibility) to keep failures interpretable.
 - Use `--explain RULE_ID` for authoritative rule docs instead of relying on a hardcoded list here.
+- If `content/meta/rulesets/core.toml` exists, `irrev lint` loads it and uses it as the vault-owned source of which checks are active.
+- `irrev lint --json` includes `ruleset.{ruleset_id,version,content_id}` when a vault-owned ruleset is active (provenance).
+
+Rulesets (vault-owned):
+- Location: `content/meta/rulesets/core.toml`
+- Rules support optional non-binding fields to separate policy text from messages: `rationale`, `boundary`, `repair_class`.
+- Selectors support scope boundary hints: `canonical_only`, `exclude_tags`, `exclude_roles` (currently applied for concepts via frontmatter `tags` and `role`).
+- Diagnostic language policy: messages/rationale/boundary avoid agentive “must/should”; “required” is permitted vocabulary.
 
 ### `irrev pack`
 
@@ -128,13 +136,53 @@ uv run irrev -v ../content neo4j load --database irrev --mode rebuild --force
 uv run irrev -v ../content neo4j load --database irrev --mode rebuild --dry-run
 ```
 
+Artifact workflow (event-sourced plan + approval):
+
+```bash
+# Propose + validate a plan artifact (no execution)
+uv run irrev -v ../content neo4j load --database irrev --mode rebuild --propose-only
+
+# Inspect risk + required approvals
+uv run irrev -v ../content artifact explain <PLAN_ID>
+
+# Create an approval artifact (force_ack required for destructive plans)
+uv run irrev -v ../content artifact approve <PLAN_ID> --approver human:alice --scope neo4j-rebuild --force
+
+# Execute the approved plan (uses the approved plan payload; credentials come from flags/env)
+uv run irrev -v ../content neo4j load --database irrev --plan-id <PLAN_ID>
+```
+
 Options:
 
 - `--mode sync|rebuild`: sync upserts incrementally; rebuild wipes and recreates
 - `--dry-run`: Preview what would be loaded/erased without executing
 - `--force`: Required for destructive `--mode rebuild` operations
+- `--propose-only`: Create + validate a plan artifact, but do not execute
+- `--plan-id ARTIFACT_ID`: Execute an approved plan artifact
 
 Docs: `irrev/MCP_NEO4J_READONLY.md`.
+
+### `irrev artifact`
+
+Inspect and gate event-sourced artifacts (plans, approvals, results).
+
+Artifacts are stored under the vault root in `.irrev/`:
+
+- `.irrev/artifact.jsonl`: append-only event ledger (source of truth)
+- `.irrev/content/`: content-addressed store (payloads by sha256 content_id)
+
+Execution artifacts:
+- Plan execution creates a result artifact with `artifact_type=execution_summary`.
+- Plan creation can record `producer.surface` (e.g. `cli`, `mcp`, `lsp`, `ci`) to support interface invariance checks.
+
+```bash
+uv run irrev -v ../content artifact list
+uv run irrev -v ../content artifact list --type plan --status validated
+uv run irrev -v ../content artifact show <ARTIFACT_ID>
+uv run irrev -v ../content artifact status <ARTIFACT_ID>
+uv run irrev -v ../content artifact explain <ARTIFACT_ID>
+uv run irrev -v ../content artifact approve <ARTIFACT_ID> --approver human:alice --scope neo4j-load
+```
 
 ### `irrev audit`
 
@@ -305,6 +353,11 @@ All state-modifying operations log to `.irrev/audit.log` for erasure cost accoun
 - What was erased (notes, edges, files, bytes)
 - What was created (notes, edges, files, bytes)
 - Operation metadata (database, paths, mode)
+
+In addition, the unified artifact system writes:
+
+- `.irrev/artifact.jsonl`: append-only artifact lifecycle events
+- `.irrev/content/`: content-addressed payload store (content_id → payload)
 
 Logged operations:
 

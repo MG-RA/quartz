@@ -1,0 +1,128 @@
+# Vault-owned core ruleset (TOML).
+#
+# This file is intended to be the source of truth for which checks are active.
+# The tool loads and applies it; the tool does not own the policy.
+
+ruleset_id = "ruleset/core"
+version = 1
+description = "Core invariant and structural checks."
+
+[defaults]
+severity = "error"
+scope = "vault"
+
+# ---------------------------------------------------------------------------
+# Legacy bridge: keep existing lint behavior while moving rule definitions to data.
+# ---------------------------------------------------------------------------
+
+[[rules]]
+id = "forbidden-edge"
+invariant = "governance"
+predicate = { name = "legacy_lint_rule", params = { rule_id = "forbidden-edge" } }
+
+[[rules]]
+id = "missing-dependencies"
+invariant = "irreversibility"
+predicate = { name = "legacy_lint_rule", params = { rule_id = "missing-dependencies" } }
+
+[[rules]]
+id = "mechanism-missing-residuals"
+invariant = "irreversibility"
+predicate = { name = "legacy_lint_rule", params = { rule_id = "mechanism-missing-residuals" } }
+
+[[rules]]
+id = "hub-required-headings"
+invariant = "irreversibility"
+predicate = { name = "legacy_lint_rule", params = { rule_id = "hub-required-headings" } }
+
+[[rules]]
+id = "layer-violation"
+invariant = "decomposition"
+predicate = { name = "legacy_lint_rule", params = { rule_id = "layer-violation" } }
+
+[[rules]]
+id = "kind-violation"
+invariant = "decomposition"
+predicate = { name = "legacy_lint_rule", params = { rule_id = "kind-violation" } }
+
+[[rules]]
+id = "missing-role"
+invariant = "governance"
+predicate = { name = "legacy_lint_rule", params = { rule_id = "missing-role" } }
+
+[[rules]]
+id = "responsibility-scope"
+invariant = "attribution"
+predicate = { name = "legacy_lint_rule", params = { rule_id = "responsibility-scope" } }
+
+# Structural rules (no invariant tag).
+
+[[rules]]
+id = "dependency-cycle"
+predicate = { name = "legacy_lint_rule", params = { rule_id = "dependency-cycle" } }
+
+[[rules]]
+id = "broken-link"
+predicate = { name = "legacy_lint_rule", params = { rule_id = "broken-link" } }
+
+[[rules]]
+id = "alias-drift"
+predicate = { name = "legacy_lint_rule", params = { rule_id = "alias-drift" } }
+
+[[rules]]
+id = "registry-drift"
+predicate = { name = "legacy_lint_rule", params = { rule_id = "registry-drift" } }
+
+# ---------------------------------------------------------------------------
+# Self-governance: ruleset hygiene (meta-rule).
+# ---------------------------------------------------------------------------
+
+[[rules]]
+id = "ruleset.non_prescriptive_messages"
+scope = "ruleset"
+severity = "warning"
+selector = { kind = "this_ruleset" }
+predicate = { name = "ruleset_messages_non_prescriptive", params = {} }
+message = "Condition observed: prescriptive language detected in ruleset messages."
+rationale = "Rulesets are a coordination surface; embedding prescriptions in messages blurs policy and evidence."
+repair_class = "edit-message"
+
+# ---------------------------------------------------------------------------
+# Governance / interface invariance checks over the artifact trail.
+# ---------------------------------------------------------------------------
+
+[[rules]]
+id = "artifact.executed_destructive_requires_force_ack"
+invariant = "governance"
+scope = "artifact"
+severity = "error"
+selector = { kind = "artifacts_where", status = "executed" }
+predicate = { name = "approval_requires_force_ack", params = { risk = "mutation_destructive" } }
+message = "Executed destructive plan lacks force acknowledgement in approval chain."
+evidence = { kind = "approval_fields" }
+rationale = "Destructive effects require explicit acknowledgement; execution rejects approval chains without force acknowledgement."
+repair_class = "approval"
+
+[[rules]]
+id = "artifact.executed_has_execution_summary"
+invariant = "governance"
+scope = "artifact"
+severity = "error"
+selector = { kind = "artifacts_where", status = "executed" }
+predicate = { name = "executed_has_result_artifact", params = { result_type = "execution_summary" } }
+message = "Executed plan lacks an execution summary artifact."
+evidence = { kind = "result_chain" }
+rationale = "Interface invariance: execution emits a minimal, replayable summary artifact regardless of surface."
+repair_class = "emit-result"
+
+[[rules]]
+id = "artifact.executed_records_surface"
+invariant = "governance"
+scope = "artifact"
+severity = "error"
+selector = { kind = "artifacts_where", status = "executed" }
+predicate = { name = "producer_metadata_has_keys", params = { keys = ["surface"] } }
+message = "Executed plan lacks surface attribution (cli/mcp/lsp/ci)."
+evidence = { kind = "producer_metadata" }
+rationale = "Interface invariance requires that different transports leave the same minimum attribution trail."
+repair_class = "add-metadata"

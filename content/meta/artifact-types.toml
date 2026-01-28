@@ -1,0 +1,300 @@
+# Vault-owned artifact type registry
+# This file defines content artifact types for the vault.
+# The irrev tool loads and validates against this registry.
+#
+# Design principle: Vault owns policy, tool enforces it.
+
+registry_version = 1
+description = "Vault-owned artifact type definitions for content/"
+
+[defaults]
+linkable = false  # Vault notes don't get artifact_id by default
+requires_frontmatter = true
+governance_scope = "vault"
+
+# ============================================================================
+# CONCEPT NOTES
+# ============================================================================
+
+[[types]]
+type_id = "vault:concept"
+description = "Canonical concept definition in the irreversibility accounting framework"
+
+[types.locations]
+allowed_patterns = ["content/concepts/*.md"]
+allowed_extensions = [".md"]
+forbidden_patterns = ["content/concepts/_*"]  # No private concepts
+
+[types.metadata]
+required = ["role", "layer", "canonical"]
+optional = ["aliases", "depends_on", "facets"]
+
+[types.metadata.constraints]
+role = { type = "literal", value = "concept" }
+layer = { type = "enum", values = ["primitive", "first-order", "mechanism", "accounting", "selector", "foundational", "failure-state", "meta-analytical"] }
+canonical = { type = "boolean" }
+aliases = { type = "list", item_type = "string" }
+depends_on = { type = "list", item_type = "string" }
+facets = { type = "list", item_type = "string", allowed = ["implicit-constraint", "anti-belief", "scale-fragile", "misuse-risk"] }
+
+[types.governance]
+linkable = false
+requires_envelope = false
+invariants = ["decomposition", "irreversibility"]
+required_sections = []  # Could add ["## Structural dependencies"] if enforced
+
+[types.validation]
+enforce_unique_canonical = true
+enforce_layer_dependencies = true
+
+# ============================================================================
+# DIAGNOSTIC NOTES
+# ============================================================================
+
+[[types]]
+type_id = "vault:diagnostic"
+description = "Diagnostic tool for applying the irreversibility lens to phenomena"
+
+[types.locations]
+allowed_patterns = ["content/diagnostics/**/*.md"]
+allowed_extensions = [".md"]
+
+[types.metadata]
+required = ["role"]
+optional = ["depends_on", "facets"]
+
+[types.metadata.constraints]
+role = { type = "literal", value = "diagnostic" }
+depends_on = { type = "list", item_type = "string" }
+facets = { type = "list", item_type = "string", allowed = ["implicit-constraint", "anti-belief", "scale-fragile", "misuse-risk"] }
+
+[types.governance]
+linkable = false
+requires_envelope = false
+invariants = ["irreversibility"]
+
+# ============================================================================
+# DOMAIN NOTES
+# ============================================================================
+
+[[types]]
+type_id = "vault:domain"
+description = "Domain-specific application of the framework"
+
+[types.locations]
+allowed_patterns = ["content/domains/*.md"]
+allowed_extensions = [".md"]
+
+[types.metadata]
+required = ["role"]
+optional = ["depends_on", "domain"]
+
+[types.metadata.constraints]
+role = { type = "literal", value = "domain" }
+depends_on = { type = "list", item_type = "string" }
+domain = { type = "string" }
+
+[types.governance]
+linkable = false
+requires_envelope = false
+
+# ============================================================================
+# PROJECTION NOTES
+# ============================================================================
+
+[[types]]
+type_id = "vault:projection"
+description = "Re-reading or projection of external work through the irreversibility lens"
+
+[types.locations]
+allowed_patterns = ["content/projections/*.md"]
+allowed_extensions = [".md"]
+
+[types.metadata]
+required = ["role", "type"]
+optional = ["canonical", "depends_on", "facets"]
+
+[types.metadata.constraints]
+role = { type = "literal", value = "projection" }
+type = { type = "enum", values = ["encoded", "reframe", "critique"] }
+canonical = { type = "boolean", default = false }
+depends_on = { type = "list", item_type = "string" }
+facets = { type = "list", item_type = "string" }
+
+[types.governance]
+linkable = false
+requires_envelope = false
+
+# ============================================================================
+# PAPER NOTES
+# ============================================================================
+
+[[types]]
+type_id = "vault:paper"
+description = "Core paper or compilation defining the framework"
+
+[types.locations]
+allowed_patterns = ["content/papers/*.md"]
+allowed_extensions = [".md"]
+
+[types.metadata]
+required = ["role"]
+optional = ["version", "authors"]
+
+[types.metadata.constraints]
+role = { type = "literal", value = "paper" }
+version = { type = "string" }
+authors = { type = "list", item_type = "string" }
+
+[types.governance]
+linkable = false
+requires_envelope = false
+invariants = ["governance"]
+
+# ============================================================================
+# INVARIANT NOTES
+# ============================================================================
+
+[[types]]
+type_id = "vault:invariant"
+description = "Invariant definition (governance/irreversibility/decomposition/attribution)"
+
+[types.locations]
+allowed_patterns = ["content/invariants/*.md"]
+allowed_extensions = [".md"]
+
+[types.metadata]
+required = ["role", "invariant_id"]
+optional = ["scope"]
+
+[types.metadata.constraints]
+role = { type = "literal", value = "invariant" }
+invariant_id = { type = "enum", values = ["governance", "irreversibility", "decomposition", "attribution"] }
+scope = { type = "enum", values = ["vault", "artifact", "graph", "ruleset"] }
+
+[types.governance]
+linkable = false
+requires_envelope = false
+invariants = ["governance"]
+
+# ============================================================================
+# TEMPLATE NOTES
+# ============================================================================
+
+[[types]]
+type_id = "vault:template"
+description = "Template for creating new content"
+
+[types.locations]
+allowed_patterns = ["content/_templates/*.md"]
+allowed_extensions = [".md"]
+
+[types.metadata]
+required = ["role"]
+optional = ["template_for"]
+
+[types.metadata.constraints]
+role = { type = "literal", value = "template" }
+template_for = { type = "enum", values = ["concept", "diagnostic", "domain", "projection", "paper"] }
+
+[types.governance]
+linkable = false
+requires_envelope = false
+requires_frontmatter = true
+
+# ============================================================================
+# SUPPORT NOTES
+# ============================================================================
+
+[[types]]
+type_id = "vault:support"
+description = "Supporting documentation (index, README, meta)"
+
+[types.locations]
+allowed_patterns = ["content/*.md", "content/meta/*.md"]
+allowed_extensions = [".md"]
+
+[types.metadata]
+required = ["role"]
+optional = ["type"]
+
+[types.metadata.constraints]
+role = { type = "literal", value = "support" }
+type = { type = "enum", values = ["index", "readme", "meta"] }
+
+[types.governance]
+linkable = false
+requires_envelope = false
+
+# ============================================================================
+# RULESET FILES
+# ============================================================================
+
+[[types]]
+type_id = "vault:ruleset"
+description = "TOML ruleset defining constraints and invariants"
+
+[types.locations]
+allowed_patterns = ["content/meta/rulesets/*.toml"]
+allowed_extensions = [".toml"]
+
+[types.metadata]
+required = ["ruleset_id", "version"]
+optional = ["description", "defaults"]
+
+[types.metadata.constraints]
+ruleset_id = { type = "string" }
+version = { type = "integer" }
+
+[types.governance]
+linkable = false
+requires_envelope = false
+requires_frontmatter = false
+invariants = ["governance"]
+
+[types.validation]
+enforce_schema = true
+
+# ============================================================================
+# CONFIG FILES (YAML)
+# ============================================================================
+
+[[types]]
+type_id = "vault:config"
+description = "YAML configuration files (hubs, registry overrides)"
+
+[types.locations]
+allowed_patterns = ["content/meta/*.yml", "content/meta/*.yaml"]
+allowed_extensions = [".yml", ".yaml"]
+
+[types.metadata]
+required = []
+
+[types.governance]
+linkable = false
+requires_envelope = false
+requires_frontmatter = false
+
+# ============================================================================
+# EXPORT FILES (Generated)
+# ============================================================================
+
+[[types]]
+type_id = "vault:export"
+description = "Generated export files (graphs, visualizations) - ephemeral, reproducible"
+
+[types.locations]
+allowed_patterns = ["content/exports/**/*"]
+allowed_extensions = [".json", ".svg", ".html", ".dot"]
+
+[types.metadata]
+required = []
+
+[types.governance]
+linkable = false
+requires_envelope = false
+requires_frontmatter = false
+ephemeral = true
+
+[types.validation]
+git_ignore_recommended = true

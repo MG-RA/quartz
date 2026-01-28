@@ -18,8 +18,8 @@ RULE_EXPLANATIONS: dict[str, str] = {
 **What it checks:** Links from concepts or diagnostics to papers.
 
 **Why it matters:**
-- Concepts should be self-contained and not depend on paper-specific content.
-- Diagnostics should reference the Registry (canonical definitions), not papers.
+- Concepts are treated as self-contained and independent of paper-specific content.
+- Diagnostics are intended to reference the Registry (canonical definitions), not papers.
 - This prevents authority bypass by ensuring papers don't become hidden dependencies.
 
 **Allowed:** Diagnostics may link to the Registry paper.
@@ -311,7 +311,7 @@ class LintRules:
         """Check for forbidden link patterns.
 
         Rules:
-        - concept → paper (concepts should be self-contained)
+        - concept → paper (concept/paper boundary crossed)
         - diagnostic → paper (diagnostics reference registry, not papers)
         """
         results = []
@@ -327,7 +327,7 @@ class LintRules:
                             level="warning",
                             rule="forbidden-edge",
                             file=concept.path,
-                            message=f"Concept links to paper '{link}' - concepts should be self-contained",
+                            message=f"Concept links to paper '{link}' (concept → paper edge)",
                         )
                     )
 

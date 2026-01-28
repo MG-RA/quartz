@@ -2,11 +2,13 @@
 
 import json
 import sys
+import hashlib
 from pathlib import Path
 
 from rich.console import Console
 from rich.table import Table
 
+from ..constraints import load_core_ruleset, run_constraints_lint
 from ..vault.graph import DependencyGraph
 from ..vault.loader import load_vault
 from ..vault.rules import RULE_EXPLANATIONS, LintResult, LintRules, get_rule_ids
@@ -60,8 +62,31 @@ def run_lint(
         console.print(f"Running lint checks for: {inv.name} Invariant", style="dim")
 
     # Run lint rules
-    rules = LintRules(vault, graph)
-    results = rules.run_all(allowed_rules=allowed_rules)
+    ruleset = load_core_ruleset(vault_path)
+    if ruleset is not None:
+        ruleset_path = vault_path / "meta" / "rulesets" / "core.toml"
+        ruleset_content_id = None
+        if ruleset_path.exists():
+            ruleset_content_id = hashlib.sha256(ruleset_path.read_bytes()).hexdigest()
+        ruleset_meta = {
+            "ruleset_id": ruleset.ruleset_id,
+            "version": ruleset.version,
+            "path": str(ruleset_path),
+            "content_id": ruleset_content_id,
+        }
+
+        results = run_constraints_lint(
+            vault_path,
+            vault=vault,
+            graph=graph,
+            ruleset=ruleset,
+            allowed_rule_ids=allowed_rules,
+            invariant_filter=invariant_filter,
+        )
+    else:
+        ruleset_meta = None
+        rules = LintRules(vault, graph)
+        results = rules.run_all(allowed_rules=allowed_rules)
 
     # Sort by level (errors first)
     level_order = {"error": 0, "warning": 1, "info": 2}
@@ -86,7 +111,7 @@ def run_lint(
             return 1
 
     if output_json:
-        _output_json(results, counts, vault)
+        _output_json(results, counts, vault, ruleset_meta=ruleset_meta)
     elif summary:
         _print_summary_output(console, results)
     else:
@@ -118,7 +143,7 @@ def _result_to_dict(result: LintResult) -> dict:
     }
 
 
-def _output_json(results: list[LintResult], counts: dict[str, int], vault) -> None:
+def _output_json(results: list[LintResult], counts: dict[str, int], vault, *, ruleset_meta: dict | None = None) -> None:
     """Output lint results as JSON with invariant grouping."""
     from irrev.vault.invariants import INVARIANTS
     from collections import defaultdict
@@ -142,6 +167,7 @@ def _output_json(results: list[LintResult], counts: dict[str, int], vault) -> No
     output = {
         **by_level,
         "by_invariant": dict(by_invariant),  # NEW
+        "ruleset": ruleset_meta,
         "summary": {
             "concepts": len(vault.concepts),
             "diagnostics": len(vault.diagnostics),
