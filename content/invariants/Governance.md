@@ -1,5 +1,6 @@
 ---
 role: invariant
+invariant_id: governance
 status: structural
 canonical: true
 ---
@@ -76,6 +77,22 @@ At that point, the system can no longer diagnose itself.
 > **Governance exists to prevent exemption, not to direct outcomes.**
 
 ---
+
+## Minimal decomposition
+
+- [[constraint-surface]] names the enforceable rules and interfaces that bind actors.
+- [[exemption]] names paths where constraint application differs by actor — the operational test for governance failure.
+- [[constraint-reflexivity]] is the property that constraints apply to their own authors and enforcers.
+- [[enforcement-topology]] maps the actual shape of what is enforced in practice.
+- [[self-diagnosability]] measures whether the system can examine its own constraint surfaces.
+
+## Structural consequences (non-normative)
+
+- Uninspectable exemptions degrade into [[interpretive-immunity]].
+- Authority that accumulates without governance accounting produces [[authority-leakage]].
+- Tools that auto-fix instead of surfacing violations create [[silent-correction]] paths.
+- Exemptions that bypass declared constraint surfaces form [[exemption-path|exemption paths]].
+- Authority exercised under prior governance regimes persists as [[governance-residual]].
 
 ## Related invariants
 

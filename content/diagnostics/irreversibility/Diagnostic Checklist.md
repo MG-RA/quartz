@@ -3,6 +3,8 @@ depends_on:
   - "[[Irreversibility Accounting (Registry)#Operator (diagnostic sequence)]]"
   - "[[Irreversibility Accounting (Registry)#Scope conditions]]"
   - "[[Failure Modes of the Irreversibility Lens]]"
+aliases:
+  - "Irreversibility Lens - Diagnostic Checklist"
 role: diagnostic
 type: checklist
 canonical: true

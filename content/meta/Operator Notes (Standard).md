@@ -1,6 +1,6 @@
 ---
 role: support
-type: standard
+type: meta
 canonical: true
 facets:
   - meta

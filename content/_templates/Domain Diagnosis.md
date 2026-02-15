@@ -2,11 +2,7 @@
 depends_on:
   - "[[Irreversibility Accounting (Registry)#Operator (diagnostic sequence)]]"
   - "[[Irreversibility Accounting (Registry)#Scope conditions]]"
-role: support
-type: template
-canonical: false
-facets:
-  - diagnostic
+role: template
 ---
 
 # Domain Diagnosis Template

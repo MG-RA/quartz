@@ -1,6 +1,6 @@
 ---
 role: support
-type: maintenance-accounting
+type: meta
 canonical: true
 facets:
   - meta

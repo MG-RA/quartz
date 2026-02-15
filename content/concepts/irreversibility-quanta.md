@@ -5,6 +5,11 @@ aliases:
 layer: primitive
 role: concept
 canonical: true
+invariants:
+  - governance
+  - irreversibility
+  - decomposition
+  - attribution
 ---
 
 # Irreversibility Quanta

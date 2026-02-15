@@ -4,6 +4,11 @@ aliases:
 layer: first-order
 role: concept
 canonical: true
+invariants:
+  - governance
+  - irreversibility
+  - decomposition
+  - attribution
 ---
 
 # Constraint Accumulation

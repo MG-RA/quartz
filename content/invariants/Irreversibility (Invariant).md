@@ -1,5 +1,9 @@
 ---
 role: invariant
+invariant_id: irreversibility
+aliases:
+  - "Irreversibility"
+  - "irreversibility"
 status: structural
 canonical: true
 ---

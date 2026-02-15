@@ -1,9 +1,9 @@
 concept,layer,links,depends_on
 [[concepts/transformation-space.md|transformation-space]],foundational,3,"[[difference|difference]], [[persistence|persistence]], [[persistent-difference|persistent-difference]]"
+[[concepts/erasure-cost.md|erasure-cost]],primitive,7,"[[persistent-difference|persistent difference]], [[constraint|constraints]], [[persistence|persistence]], [[difference|difference]], [[transformation-space|transformation space]], [[persistence|persistence]], [[residual|residuals]]"
 [[concepts/irreversibility-quanta.md|irreversibility-quanta]],primitive,7,"[[transformation-space|transformation-space]], [[erasure-asymmetry|erasure-asymmetry]], [[transformation-space|transformation-space]], [[difference|difference]], [[persistence|persistence]], [[erasure-cost|erasure-cost]], [[asymmetry|asymmetry]]"
 [[concepts/persistence.md|persistence]],primitive,7,"[[difference|difference]], [[transformation-space|transformation-space]], [[difference|difference]], [[transformation-space|transformation-space]], [[erasure-cost|erasure-cost]], [[displacement|displacement]], [[constraint-load|constraint-load]]"
 [[concepts/asymmetry.md|asymmetry]],primitive,6,"[[difference|difference]], [[persistence|persists]], [[difference|difference]], [[persistence|persistence]], [[persistence|persistence]], [[irreversibility|irreversibility]]"
 [[concepts/constraint.md|constraint]],primitive,4,"[[feasible-set|feasible set]], [[persistence|persistence]], [[admissibility|admissibility]], [[constraint-load|constraint-load]]"
 [[concepts/difference.md|difference]],primitive,4,"[[transformation-space|transformation-space]], [[transformation-space|transformation-space]], [[persistence|persistence]], [[erasure-cost|erasure-cost]]"
 [[concepts/accumulation.md|accumulation]],primitive,3,"[[constraint|constraints]], [[constraint|constraint]], [[admissibility|admissibility]]"
-[[concepts/erasure-cost.md|erasure-cost]],primitive,2,"[[persistence|persistence]], [[residual|residuals]]"

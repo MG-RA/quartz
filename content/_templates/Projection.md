@@ -2,17 +2,8 @@
 depends_on:
   - "[[Irreversibility Accounting (Registry)#Dependency classes (by layer)]]"
   - "[[Irreversibility Accounting (Registry)#Boundaries (distinctions)]]"
-role: projection
-type: encoded
-canonical: false
-# Axes (optional; helps slice the graph)
-# time_phase: pre-commitment | mid-flight | post-failure
-# compression: kernel | working | wrapper | example
-facets:
-  - implicit-constraint
-  - anti-belief
-  - scale-fragile
-  - misuse-risk
+role: template
+template_for: projection
 ---
 
 # {{Projection Name}}

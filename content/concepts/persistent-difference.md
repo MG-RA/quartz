@@ -5,6 +5,8 @@ aliases:
 layer: first-order
 role: concept
 canonical: true
+invariants:
+  - irreversibility
 ---
 
 # Persistent Difference

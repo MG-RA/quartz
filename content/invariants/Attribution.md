@@ -1,5 +1,6 @@
 ---
 role: invariant
+invariant_id: attribution
 status: structural
 canonical: true
 ---
@@ -76,6 +77,22 @@ Attribution that a role controlled (or failed to control) the rules and enforcem
 - No claim that responsibility is total, singular, or stable across contexts
 - No claim that "maturity" is an individual property independent of structure
 - No claim that attribution implies punishment, praise, or prescriptions
+
+## Minimal decomposition
+
+- [[control-surface]] declares where control can vary for a given role.
+- [[agency-layer]] indexes the type of control being claimed (causal / intentional / structural).
+- [[degrees-of-freedom]] names what the role could actually vary — the operational test for meaningful attribution.
+- [[responsibility-claim]] binds role, layer, degrees of freedom, and effect into an auditable unit.
+- [[attribution-admissibility]] determines whether a responsibility claim is structurally valid.
+
+## Structural consequences (non-normative)
+
+- Responsibility claims that exceed available degrees of freedom are structurally empty ([[over-attribution]]).
+- Responsibility gaps where control existed produce unaccounted effects ([[under-attribution]]).
+- Conflating agency layers makes attribution claims unevaluable ([[layer-collapse]]).
+- Responsibility can route away from control surfaces ([[attribution-displacement]]).
+- Responsibility bindings can outlive the control surfaces they were indexed to ([[attribution-residual]]).
 
 ## Summary (links)
 

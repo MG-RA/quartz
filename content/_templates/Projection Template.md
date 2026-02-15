@@ -1,9 +1,5 @@
 ---
-role: support
-type: template
-canonical: false
-facets:
-  - projection
+role: template
 depends_on:
   - "[[Irreversibility Accounting (Registry)#Dependency classes (by layer)]]"
 ---

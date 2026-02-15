@@ -4,6 +4,11 @@ aliases:
 layer: first-order # first-class remainder object; accounting consumes it
 role: concept
 canonical: true
+invariants:
+  - governance
+  - irreversibility
+  - decomposition
+  - attribution
 ---
 
 # Residual

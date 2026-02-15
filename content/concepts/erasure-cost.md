@@ -5,6 +5,8 @@ aliases:
 layer: primitive
 role: concept
 canonical: true
+invariants:
+  - irreversibility
 ---
 
 # Erasure Cost

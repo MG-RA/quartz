@@ -1,7 +1,6 @@
 ---
-role: concept
-layer: mechanism
-canonical: false
+role: template
+template_for: concept
 ---
 
 # <Mechanism Name>

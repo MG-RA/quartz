@@ -1,5 +1,6 @@
 ---
-role: doc
+role: support
+type: meta
 status: draft
 canonical: false
 tags:

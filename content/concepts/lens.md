@@ -4,6 +4,11 @@ aliases:
 layer: meta-analytical
 role: concept
 canonical: true
+invariants:
+  - governance
+  - irreversibility
+  - decomposition
+  - attribution
 ---
 
 # Lens

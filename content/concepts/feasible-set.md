@@ -6,6 +6,11 @@ aliases:
 layer: accounting
 role: concept
 canonical: true
+invariants:
+  - governance
+  - irreversibility
+  - decomposition
+  - attribution
 note_kind: object
 ---
 

@@ -4,6 +4,11 @@ aliases:
 layer: selector
 role: concept
 canonical: true
+invariants:
+  - governance
+  - irreversibility
+  - decomposition
+  - attribution
 note_kind: operator
 ---
 

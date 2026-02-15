@@ -4,6 +4,8 @@ aliases:
 layer: first-order
 role: concept
 canonical: true
+invariants:
+  - irreversibility
 ---
 
 # Displacement

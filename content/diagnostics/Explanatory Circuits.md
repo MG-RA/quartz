@@ -5,7 +5,7 @@ canonical: false
 ---
 
 # Explanatory Circuits
-**Non-claim**: This note names _patterns of circulation_ observed in the concept graph. It does not introduce new ontology or primitives.
+**Non-claim**: This note names _patterns of circulation_ observed in the concept graph (see [[Concept Graphs]]). It does not introduce new ontology or primitives.
 
 ## What is a circuit?
 
@@ -19,7 +19,7 @@ Circuits are detected empirically (community detection), not declared analytical
 
 ---
 
-## What is the “electricity”?
+## What is the "electricity"?
 
 The quantity that flows through circuits is **explanatory load**.
 
@@ -45,9 +45,9 @@ A **transistor-like concept** has three properties:
 
 Examples (by role, not category):
 
-- `admissibility` gates which transitions are even discussable
-- `erasure-cost` amplifies small differences into large consequences
-- `collapse-surface` forces termination of explanation
+- [[admissibility]] gates which transitions are even discussable
+- [[erasure-cost]] amplifies small differences into large consequences
+- [[collapse-surface]] forces termination of explanation
 
 These are _not_ new types. They are **roles under load**.
 
@@ -62,10 +62,16 @@ These are _not_ new types. They are **roles under load**.
 Typical path:
 
 ```
-mechanism → residual → constraint-load → feasible-set → (back to mechanism)
+mechanism -> residual -> constraint-load -> feasible-set -> (back to mechanism)
 ```
 
 This loop answers: _where does the cost go now?_
+
+Linked surfaces:
+- [[tracking-mechanism|mechanism]]
+- [[residual]]
+- [[constraint-load]]
+- [[feasible-set]]
 
 ---
 
@@ -76,24 +82,37 @@ This loop answers: _where does the cost go now?_
 Typical cluster:
 
 ```
-persistence ↔ difference ↔ erasure-cost ↔ saturation / brittleness
+persistence <-> difference <-> erasure-cost <-> saturation / brittleness
 ```
 
 This field answers: _what remains no matter what we do?_
 
+Linked surfaces:
+- [[persistence]]
+- [[difference]]
+- [[erasure-cost]]
+- [[saturation]]
+- [[brittleness]]
+
 ---
 
-### 3. Projection–Interpretation Bridge
+### 3. Projection-Interpretation Bridge
 
 **Function**: map abstract constraints into domains without mutation
 
 Typical span:
 
 ```
-primitive → transformation-space → admissibility → projection
+primitive -> transformation-space -> admissibility -> projection
 ```
 
 This bridge answers: _how does this vocabulary apply here?_
+
+Linked surfaces:
+- [[transformation-space]]
+- [[admissibility]]
+- [[lens]]
+- [[Projections Index|projection]]
 
 ---
 
@@ -125,3 +144,12 @@ The circuit language is a **reading aid** for graph structure.
 - Can circuit load be proxied operationally without metrification?
 
 These questions are admissible but unanswered.
+
+---
+
+## See also
+
+- [[Concept Graphs]]
+- [[Architecture]]
+- [[Irreversibility-First Design]]
+- [[Scope Patterns]]

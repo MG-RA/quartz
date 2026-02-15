@@ -5,6 +5,11 @@ layer: failure-state
 role: concept
 type: failure-state
 canonical: true
+invariants:
+  - governance
+  - irreversibility
+  - decomposition
+  - attribution
 ---
 
 # Saturation

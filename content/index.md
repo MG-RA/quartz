@@ -57,6 +57,7 @@ Canonical concept definitions live in `/concepts`.
   - [[persistent-difference]]
   - [[erasure-cost]]
   - [[residual]]
+  - [[horizon]]
   - [[constraint-load]]
   - [[admissibility]]
   - [[feasible-set]]
@@ -70,6 +71,7 @@ Canonical concept definitions live in `/concepts`.
 These notes define **how to use the lens** without turning it into doctrine.
 
 - [[Failure Modes of the Irreversibility Lens]]
+- [[Irreversibility Load Test (ILT-0)]]
 - [[Irreversibility Accounting (Registry)#Operator (diagnostic sequence)]]
 - *(additional diagnostic checklists and lenses live here)*
 
@@ -82,6 +84,8 @@ They do not propose solutions.
 These notes constrain misuse, overreach, and self-sealing interpretations.
 
 - [[Decomposition]] - Structural clarification of primitive vs composed concepts
+- [[Scope Primitives & Algebras]] - Domain/scope/DSL separation + witness-first foundations
+- [[Comparative Irreversibility]] - Comparative method: invariant handling patterns under irreversible change
 - *(Non-claims, limits, scope clarifications)*
 
 If the framework starts to feel obvious, total, or morally loaded, return here.

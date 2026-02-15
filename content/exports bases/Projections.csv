@@ -1,11 +1,11 @@
-projection,tags,failure_modes,rollback,lens,displacement,constraint_load,residual
-[[projections/Cosmology.md|Cosmology]],,no,yes,no,yes,yes,yes
-[[projections/Discordianism.md|Discordianism]],,yes,yes,no,yes,yes,yes
-[[projections/Enochian.md|Enochian]],,no,no,no,yes,yes,yes
-[[projections/Fourth Way.md|Fourth Way]],,no,yes,no,yes,yes,yes
-[[projections/Jung.md|Jung]],,no,yes,yes,yes,yes,yes
-[[projections/OpenAI.md|OpenAI]],,no,yes,no,yes,yes,yes
-[[projections/Plato's Republic.md|Plato's Republic]],,no,yes,no,yes,yes,yes
-[[projections/Quantum Measurement.md|Quantum Measurement]],,no,yes,no,yes,yes,yes
-[[projections/Stoicism.md|Stoicism]],,no,yes,no,yes,yes,yes
-[[projections/Zen.md|Zen]],,yes,yes,yes,yes,yes,yes
+projection,tags,missing_failure_modes,failure_modes,failure_modes_note,rollback,lens,displacement,constraint_load,residual
+[[projections/Cosmology.md|Cosmology]],,yes,,no,yes,no,yes,yes,yes
+[[projections/Discordianism.md|Discordianism]],,yes,,yes,yes,no,yes,yes,yes
+[[projections/Enochian.md|Enochian]],,yes,,no,no,no,yes,yes,yes
+[[projections/Fourth Way.md|Fourth Way]],,yes,,no,yes,no,yes,yes,yes
+[[projections/Jung.md|Jung]],,yes,,no,yes,yes,yes,yes,yes
+[[projections/OpenAI.md|OpenAI]],,yes,,no,yes,no,yes,yes,yes
+[[projections/Plato's Republic.md|Plato's Republic]],,yes,,no,yes,no,yes,yes,yes
+[[projections/Quantum Measurement.md|Quantum Measurement]],,yes,,no,yes,no,yes,yes,yes
+[[projections/Stoicism.md|Stoicism]],,yes,,no,yes,no,yes,yes,yes
+[[projections/Zen.md|Zen]],,yes,,yes,yes,yes,yes,yes,yes

@@ -2,6 +2,8 @@
 layer: first-order
 role: concept
 canonical: true
+invariants:
+  - irreversibility
 ---
 
 # Constraint Load

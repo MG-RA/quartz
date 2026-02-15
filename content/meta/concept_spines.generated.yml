@@ -1,0 +1,761 @@
+generated: true
+generated_at_utc: 2026-02-15T13:46:58Z
+vault_root: irrev-vault
+concepts:
+- id: absorption
+  title: Absorption
+  layer: first-order
+  primary_spine: irreversibility
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      irreversibility:
+        invariant: 1
+        diagnostic: 0
+      structural:
+        invariant: 0
+        diagnostic: 3
+- id: accounting-failure
+  title: Accounting Failure
+  layer: accounting
+  primary_spine: irreversibility
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      irreversibility:
+        invariant: 1
+        diagnostic: 0
+      structural:
+        invariant: 0
+        diagnostic: 4
+- id: accumulation
+  title: Accumulation
+  layer: primitive
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 1
+- id: admissibility
+  title: Admissibility
+  layer: selector
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 5
+- id: agency-layer
+  title: Agency Layer
+  layer: primitive
+  primary_spine: attribution
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - attribution
+    refs:
+      attribution:
+        invariant: 1
+        diagnostic: 2
+- id: asymmetry
+  title: Asymmetry
+  layer: primitive
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 1
+- id: attribution-admissibility
+  title: Attribution Admissibility
+  layer: selector
+  primary_spine: attribution
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - attribution
+    refs:
+      attribution:
+        invariant: 1
+        diagnostic: 2
+- id: attribution-displacement
+  title: Attribution Displacement
+  layer: first-order
+  primary_spine: attribution
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      attribution:
+        invariant: 1
+        diagnostic: 2
+- id: attribution-residual
+  title: Attribution Residual
+  layer: first-order
+  primary_spine: attribution
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      attribution:
+        invariant: 1
+        diagnostic: 0
+- id: authority-leakage
+  title: Authority Leakage
+  layer: failure-state
+  primary_spine: governance
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      governance:
+        invariant: 1
+        diagnostic: 2
+- id: boundary
+  title: Boundary
+  layer: meta-analytical
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence: {}
+- id: boundary-crossing
+  title: Boundary Crossing
+  layer: first-order
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence: {}
+- id: brittleness
+  title: Brittleness
+  layer: failure-state
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 2
+- id: collapse-surface
+  title: Collapse Surface
+  layer: accounting
+  primary_spine: irreversibility
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      irreversibility:
+        invariant: 1
+        diagnostic: 0
+      structural:
+        invariant: 0
+        diagnostic: 5
+- id: compensatory-structure
+  title: Compensatory Structure
+  layer: first-order
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 1
+- id: constraint
+  title: Constraint
+  layer: primitive
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 1
+- id: constraint-accumulation
+  title: Constraint Accumulation
+  layer: first-order
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 1
+- id: constraint-load
+  title: Constraint Load
+  layer: first-order
+  primary_spine: irreversibility
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      irreversibility:
+        invariant: 1
+        diagnostic: 0
+      structural:
+        invariant: 0
+        diagnostic: 5
+- id: constraint-reflexivity
+  title: Constraint Reflexivity
+  layer: first-order
+  primary_spine: governance
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - governance
+    refs:
+      governance:
+        invariant: 1
+        diagnostic: 4
+- id: constraint-surface
+  title: Constraint Surface
+  layer: primitive
+  primary_spine: governance
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - governance
+    refs:
+      governance:
+        invariant: 1
+        diagnostic: 2
+- id: containment
+  title: Containment
+  layer: mechanism
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence: {}
+- id: control-surface
+  title: Control Surface
+  layer: primitive
+  primary_spine: attribution
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - attribution
+    refs:
+      attribution:
+        invariant: 1
+        diagnostic: 2
+- id: decomposition-depth
+  title: Decomposition Depth
+  layer: accounting
+  primary_spine: decomposition
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - decomposition
+    refs:
+      decomposition:
+        invariant: 1
+        diagnostic: 4
+- id: degrees-of-freedom
+  title: Degrees of Freedom
+  layer: primitive
+  primary_spine: attribution
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - attribution
+    refs:
+      attribution:
+        invariant: 1
+        diagnostic: 2
+- id: deprecation
+  title: Deprecation
+  layer: mechanism
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence: {}
+- id: difference
+  title: Difference
+  layer: primitive
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 2
+- id: displacement
+  title: Displacement
+  layer: first-order
+  primary_spine: irreversibility
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      irreversibility:
+        invariant: 1
+        diagnostic: 0
+      structural:
+        invariant: 0
+        diagnostic: 5
+- id: enforcement-topology
+  title: Enforcement Topology
+  layer: accounting
+  primary_spine: governance
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - governance
+    refs:
+      governance:
+        invariant: 1
+        diagnostic: 2
+- id: erasure-asymmetry
+  title: Erasure Asymmetry
+  layer: first-order
+  primary_spine: irreversibility
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - irreversibility
+    refs:
+      irreversibility:
+        invariant: 1
+        diagnostic: 0
+      structural:
+        invariant: 0
+        diagnostic: 1
+- id: erasure-cost
+  title: Erasure Cost
+  layer: primitive
+  primary_spine: irreversibility
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - irreversibility
+    refs:
+      irreversibility:
+        invariant: 1
+        diagnostic: 0
+      structural:
+        invariant: 0
+        diagnostic: 6
+- id: exemption
+  title: Exemption
+  layer: primitive
+  primary_spine: governance
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - governance
+    refs:
+      governance:
+        invariant: 1
+        diagnostic: 3
+- id: exemption-path
+  title: Exemption Path
+  layer: first-order
+  primary_spine: governance
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      governance:
+        invariant: 1
+        diagnostic: 4
+- id: feasible-set
+  title: Feasible Set
+  layer: accounting
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 2
+- id: function-merge
+  title: Function Merge
+  layer: first-order
+  primary_spine: decomposition
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      decomposition:
+        invariant: 1
+        diagnostic: 5
+- id: governance-residual
+  title: Governance Residual
+  layer: first-order
+  primary_spine: governance
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      governance:
+        invariant: 1
+        diagnostic: 2
+- id: horizon
+  title: Horizon
+  layer: meta-analytical
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 1
+- id: interpretive-immunity
+  title: Interpretive Immunity
+  layer: failure-state
+  primary_spine: governance
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      governance:
+        invariant: 1
+        diagnostic: 4
+- id: irreversibility-quanta
+  title: Irreversibility Quanta
+  layer: primitive
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence: {}
+- id: layer-collapse
+  title: Layer Collapse
+  layer: failure-state
+  primary_spine: attribution
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      attribution:
+        invariant: 1
+        diagnostic: 3
+- id: lens
+  title: Lens
+  layer: meta-analytical
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 3
+- id: migration
+  title: Migration
+  layer: mechanism
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence: {}
+- id: normativity-leak
+  title: Normativity Leak
+  layer: failure-state
+  primary_spine: decomposition
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      decomposition:
+        invariant: 1
+        diagnostic: 5
+- id: over-attribution
+  title: Over-attribution
+  layer: failure-state
+  primary_spine: attribution
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      attribution:
+        invariant: 1
+        diagnostic: 4
+- id: persistence
+  title: Persistence
+  layer: primitive
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 2
+- id: persistence-gradient
+  title: Persistence Gradient
+  layer: first-order
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence: {}
+- id: persistent-difference
+  title: Persistent Difference
+  layer: first-order
+  primary_spine: irreversibility
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - irreversibility
+    refs:
+      irreversibility:
+        invariant: 1
+        diagnostic: 0
+      structural:
+        invariant: 0
+        diagnostic: 5
+- id: propagation
+  title: Propagation
+  layer: first-order
+  primary_spine: irreversibility
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      irreversibility:
+        invariant: 1
+        diagnostic: 0
+      structural:
+        invariant: 0
+        diagnostic: 1
+- id: quarantine
+  title: Quarantine
+  layer: mechanism
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence: {}
+- id: ratchet
+  title: Ratchet
+  layer: mechanism
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence: {}
+- id: refinement-stability
+  title: Refinement Stability
+  layer: accounting
+  primary_spine: decomposition
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - decomposition
+    refs:
+      decomposition:
+        invariant: 1
+        diagnostic: 5
+- id: residual
+  title: Residual
+  layer: first-order
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 3
+- id: responsibility-claim
+  title: Responsibility Claim
+  layer: first-order
+  primary_spine: attribution
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - attribution
+    refs:
+      attribution:
+        invariant: 1
+        diagnostic: 2
+- id: role-boundary
+  title: Role Boundary
+  layer: primitive
+  primary_spine: decomposition
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - decomposition
+    refs:
+      decomposition:
+        invariant: 1
+        diagnostic: 3
+- id: role-collapse
+  title: Role Collapse
+  layer: failure-state
+  primary_spine: decomposition
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - decomposition
+    refs:
+      decomposition:
+        invariant: 1
+        diagnostic: 3
+- id: role-purity
+  title: Role Purity
+  layer: selector
+  primary_spine: decomposition
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - decomposition
+    refs:
+      decomposition:
+        invariant: 1
+        diagnostic: 3
+- id: rollback
+  title: Rollback
+  layer: mechanism
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 1
+- id: saturation
+  title: Saturation
+  layer: failure-state
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 2
+- id: scope
+  title: Scope
+  layer: first-order
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence: {}
+- id: scope-change
+  title: Scope Change
+  layer: first-order
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence: {}
+- id: scope-pattern
+  title: Scope Pattern
+  layer: meta-analytical
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence: {}
+- id: scope-rigidity
+  title: Scope Rigidity
+  layer: first-order
+  primary_spine: decomposition
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      decomposition:
+        invariant: 1
+        diagnostic: 6
+- id: self-diagnosability
+  title: Self-diagnosability
+  layer: accounting
+  primary_spine: governance
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - governance
+    refs:
+      governance:
+        invariant: 1
+        diagnostic: 3
+- id: silent-correction
+  title: Silent Correction
+  layer: mechanism
+  primary_spine: governance
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      governance:
+        invariant: 1
+        diagnostic: 2
+- id: tracking-mechanism
+  title: Tracking Mechanism
+  layer: accounting
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 2
+- id: transformation-space
+  title: Transformation Space
+  layer: foundational
+  primary_spine: irreversibility
+  tier: core
+  confidence: high
+  evidence:
+    core_in:
+    - irreversibility
+    refs:
+      irreversibility:
+        invariant: 2
+        diagnostic: 0
+      structural:
+        invariant: 0
+        diagnostic: 4
+- id: under-attribution
+  title: Under-attribution
+  layer: failure-state
+  primary_spine: attribution
+  tier: support
+  confidence: medium
+  evidence:
+    refs:
+      attribution:
+        invariant: 1
+        diagnostic: 4
+- id: witness
+  title: Witness
+  layer: first-order
+  primary_spine: structural
+  tier: support
+  confidence: low
+  evidence:
+    refs:
+      structural:
+        invariant: 0
+        diagnostic: 1

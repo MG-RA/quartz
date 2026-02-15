@@ -73,6 +73,11 @@ predicate = { name = "legacy_lint_rule", params = { rule_id = "alias-drift" } }
 id = "registry-drift"
 predicate = { name = "legacy_lint_rule", params = { rule_id = "registry-drift" } }
 
+[[rules]]
+id = "scope-patterns"
+severity = "warning"
+predicate = { name = "legacy_lint_rule", params = { rule_id = "scope-patterns" } }
+
 # ---------------------------------------------------------------------------
 # Self-governance: ruleset hygiene (meta-rule).
 # ---------------------------------------------------------------------------

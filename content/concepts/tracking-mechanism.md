@@ -5,6 +5,11 @@ layer: accounting
 role: concept
 type: mechanism
 canonical: true
+invariants:
+  - governance
+  - irreversibility
+  - decomposition
+  - attribution
 ---
 
 # Tracking Mechanism

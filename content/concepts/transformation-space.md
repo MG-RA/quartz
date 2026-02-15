@@ -6,6 +6,8 @@ aliases:
 layer: foundational
 role: concept
 canonical: true
+invariants:
+  - irreversibility
 ---
 
 # Transformation Space

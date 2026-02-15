@@ -5,6 +5,8 @@ aliases:
 layer: accounting
 role: concept
 canonical: true
+invariants:
+  - irreversibility
 ---
 
 # Accounting Failure

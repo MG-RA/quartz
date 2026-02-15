@@ -28,6 +28,8 @@ This note records the primary ways the irreversibility diagnostic [[lens]] can m
 
 Apply these failure modes during auditing. See [[Prompting Guide]] pattern #4 (False positive / misuse audit) for the standard prompt.
 
+For a first-pass diagnostic sequence, see [[Irreversibility Load Test (ILT-0)]].
+
 ---
 
 ### 1. Reification of bookkeeping concepts

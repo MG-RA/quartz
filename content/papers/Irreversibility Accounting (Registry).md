@@ -1,9 +1,6 @@
 ---
-role: registry
+role: paper
 canonical: true
-facets:
-  - diagnostic
-  - meta
 ---
 
 # Irreversibility Accounting (Registry)
@@ -37,6 +34,12 @@ Directionality: This registry points to `/concepts` (definitions) and the paper 
 | [[asymmetry]] | non-symmetric cost structure | [[difference]], [[persistence]] |
 | [[accumulation]] | stacking of constraints | [[constraint]] |
 | [[irreversibility-quanta]] | minimum action-sized difference whose erasure exports cost beyond local system | [[asymmetry]], [[difference]], [[erasure-cost]], [[persistence]], [[transformation-space]] |
+| [[agency-layer]] | agency layer is an indexing scheme that distinguishes the type of control being exercised or attributed | [[control-surface]] |
+| [[constraint-surface]] | constraint surface is the set of enforceable rules, interfaces, and mechanisms that actively bind actors within a system at a given layer | None (primitive) |
+| [[control-surface]] | control surface is the declared set of transitions that a given role or actor can vary within a system | None (primitive) |
+| [[degrees-of-freedom]] | Degrees of freedom names the set of transitions that were actually available to a role at the time of action, within its declared [[contr… | [[agency-layer]], [[control-surface]] |
+| [[exemption]] | Exemption is a path where [[constraint-surface]] application differs by actor or role — where the same rule binds some participants but n… | [[constraint-surface]] |
+| [[role-boundary]] | Role boundary is the declared separation between the five structural roles in the decomposition invariant: objects, operators, boundaries… | None (primitive) |
 
 ### Concepts :: First-order composites
 
@@ -50,8 +53,24 @@ Directionality: This registry points to `/concepts` (definitions) and the paper 
 | [[residual]] | persistent remainder left after mechanisms act (hub: Mechanism-output hub) | [[constraint]], [[displacement]], [[persistent-difference]] |
 | [[constraint-load]] | accumulated incompatibilities (bookkeeping) (hub: Aggregation hub) | [[constraint]], [[difference]], [[erasure-cost]], [[residual]] |
 | [[constraint-accumulation]] | process by which load grows | [[accumulation]], [[constraint]], [[constraint-load]], [[difference]], [[persistent-difference]], [[residual]] |
-| [[irreversibility]] | composite relation across persistence and costs | [[asymmetry]], [[erasure-cost]], [[persistence]], [[transformation-space]] |
 | [[persistence-gradient]] | "for whom is this irreversible?" | [[irreversibility]] |
+| [[attribution-displacement]] | Attribution displacement is the routing of responsibility claims away from the [[control-surface]] where control actually operated, and o… | [[control-surface]], [[responsibility-claim]] |
+| [[attribution-residual]] | Attribution residual is a responsibility artifact that persists after the role, context, or organizational structure that produced it has… | [[responsibility-claim]] |
+| [[boundary-crossing]] | a boundary crossing is a transition between scopes or domains in which some
+distinctions may not survive | [[displacement]], [[erasure-cost]], [[irreversibility]], [[scope]], [[transformation-space]] |
+| [[compensatory-structure]] | compensatory structure is any new structure an agent must build to route around a [[constraint]] rather than satisfying it directly | [[constraint]], [[erasure-cost]] |
+| [[constraint-reflexivity]] | Constraint reflexivity is the structural property that constraints apply to their own authors, enforcers, and interpreters — not only to… | [[constraint-surface]], [[exemption]] |
+| [[exemption-path]] | exemption path is a named route through which a specific actor or role bypasses a [[constraint-surface]] that binds other participants | [[constraint-surface]], [[exemption]] |
+| [[function-merge]] | Function merge is the process by which one structural role absorbs the function of another, producing an artifact or component that perfo… | [[role-boundary]] |
+| [[governance-residual]] | governance residual is unaccounted authority that persists after rule changes, role transitions, or governance restructuring | [[exemption]] |
+| [[responsibility-claim]] | Responsibility claim is a structured assertion that a specific role, operating at a declared [[agency-layer]], controlled the [[degrees-o… | [[agency-layer]], [[degrees-of-freedom]] |
+| [[scope]] | a scope is an evaluation context: the bounded environment in which admissibility
+is computed | [[persistence]], [[transformation-space]] |
+| [[scope-change]] | Scope change is a boundary operation: a transition from one scope to another where
+distinctions can be erased and commitments can persist… | [[boundary-crossing]], [[displacement]], [[erasure-cost]], [[irreversibility]], [[persistence]], [[scope]], [[transformation-space]], [[witness]] |
+| [[scope-rigidity]] | Scope rigidity is accumulated over-specification within a decomposition: the state where [[role-boundary|role boundaries]] have been draw… | [[role-boundary]] |
+| [[witness]] | A witness is a structured evidence bundle that records why an admissibility verdict
+follows from declared constraints, permissions, and a… | [[constraint-accumulation]], [[displacement]], [[erasure-cost]], [[irreversibility]], [[persistence]], [[transformation-space]] |
 
 ### Concepts :: Mechanisms
 
@@ -63,6 +82,7 @@ Directionality: This registry points to `/concepts` (definitions) and the paper 
 | [[ratchet]] | one-way tightening operator that accumulates constraints | [[asymmetry]], [[constraint]], [[constraint-load]], [[erasure-cost]], [[residual]] |
 | [[deprecation]] | staged withdrawal operator that leaves legacy residue | [[constraint-load]], [[displacement]], [[persistent-difference]], [[propagation]], [[residual]] |
 | [[migration]] | transition operator that relocates structure under coordination | [[displacement]], [[erasure-cost]], [[persistent-difference]], [[propagation]], [[residual]] |
+| [[silent-correction]] | Silent correction is a mechanism by which a tool, process, or authority modifies system state to satisfy a [[constraint-surface]] without… | [[constraint-reflexivity]], [[exemption]] |
 
 ### Concepts :: Accounting
 
@@ -72,6 +92,10 @@ Directionality: This registry points to `/concepts` (definitions) and the paper 
 | [[accounting-failure]] | when costs persist without tracking | [[absorption]], [[constraint-load]], [[displacement]], [[erasure-cost]], [[persistent-difference]], [[residual]], [[tracking-mechanism]] |
 | [[feasible-set]] | set of transitions remaining structurally available | [[constraint]], [[constraint-load]], [[erasure-cost]], [[persistent-difference]], [[transformation-space]] |
 | [[collapse-surface]] | conditional boundary where options disappear | [[constraint-accumulation]], [[erasure-cost]], [[feasible-set]], [[persistence]], [[residual]] |
+| [[decomposition-depth]] | decomposition depth measures how many layers of structural role separation are explicitly maintained and mechanically enforced in a system | [[role-boundary]] |
+| [[enforcement-topology]] | enforcement topology is the actual shape of what is enforced in practice across a system's [[constraint-surface|constraint surfaces]] | [[constraint-reflexivity]], [[constraint-surface]] |
+| [[refinement-stability]] | Refinement stability is the property that adding structure to a system reduces the number of detectable error classes rather than shiftin… | [[decomposition-depth]], [[role-boundary]] |
+| [[self-diagnosability]] | Self-diagnosability is a system's capacity to examine its own [[constraint-surface|constraint surfaces]] using the same machinery it appl… | [[constraint-reflexivity]], [[enforcement-topology]] |
 
 ### Concepts :: Failure states
 
@@ -79,6 +103,13 @@ Directionality: This registry points to `/concepts` (definitions) and the paper 
 |---|---|---|
 | [[brittleness]] | small perturbations -> disproportionate failure | [[admissibility]], [[constraint-load]], [[residual]] |
 | [[saturation]] | no room to move; options reduce to maintenance | [[admissibility]], [[constraint-load]], [[erasure-cost]], [[residual]] |
+| [[authority-leakage]] | authority leakage is a failure state in which authority accumulates at a [[constraint-surface]] without corresponding governance accounting | [[constraint-surface]], [[exemption]] |
+| [[interpretive-immunity]] | Interpretive immunity is a failure state in which a role that interprets, enforces, or authors constraints cannot itself be inspected or… | [[agency-layer]], [[exemption]] |
+| [[layer-collapse]] | layer collapse is the conflation of distinct [[agency-layer|agency layers]] within a single [[responsibility-claim]] | [[agency-layer]], [[responsibility-claim]] |
+| [[normativity-leak]] | Normativity leak is a failure state in which prescriptive, evaluative, or action-directing content appears in artifacts whose declared ro… | [[role-boundary]] |
+| [[over-attribution]] | over-attribution is the assignment of responsibility to roles that did not control the relevant [[degrees-of-freedom]] | [[degrees-of-freedom]], [[responsibility-claim]] |
+| [[role-collapse]] | Role collapse is a failure state in which distinct structural roles merge, producing artifacts that simultaneously describe, evaluate, pr… | [[role-boundary]] |
+| [[under-attribution]] | Under-attribution is the failure to assign responsibility to roles that controlled the relevant [[degrees-of-freedom]] within a [[control… | [[control-surface]], [[responsibility-claim]] |
 
 ### Concepts :: Diagnostic apparatus
 
@@ -86,6 +117,11 @@ Directionality: This registry points to `/concepts` (definitions) and the paper 
 |---|---|---|
 | [[lens]] | meta-concept for the diagnostic operator | [[admissibility]], [[difference]], [[persistence]] |
 | [[admissibility]] | what transitions remain coherent | [[constraint]], [[constraint-load]], [[feasible-set]] |
+| [[attribution-admissibility]] | attribution admissibility is a predicate that determines whether a [[responsibility-claim]] is structurally valid | [[agency-layer]], [[degrees-of-freedom]], [[responsibility-claim]] |
+| [[boundary]] | a boundary is a declared separation between scopes/domains that classifies effects as “inside” vs “outside” (what counts as in-scope) | [[admissibility]], [[difference]], [[irreversibility]], [[persistence]] |
+| [[horizon]] | A horizon is a boundary across which state transitions remain causal in one direction but become unrecoverable (or only statistically rec… | [[accounting-failure]], [[boundary]], [[boundary-crossing]], [[constraint]], [[constraint-load]], [[erasure-cost]], [[irreversibility]], [[residual]] |
+| [[role-purity]] | Role purity is a predicate that determines whether an artifact maintains its declared structural role without performing work belonging t… | [[role-boundary]] |
+| [[scope-pattern]] | a scope pattern is a reusable structural form for how a scope is drawn and maintained: | [[accounting-failure]], [[admissibility]], [[boundary]], [[constraint]], [[irreversibility]] |
 <!-- END GENERATED -->
 ## Operator (diagnostic sequence)
 

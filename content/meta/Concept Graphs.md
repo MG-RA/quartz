@@ -1,5 +1,6 @@
 ---
-role: meta
+role: support
+type: meta
 canonical: false
 ---
 
@@ -17,6 +18,10 @@ Interactive (pan/zoom): [[meta/graphs/concepts-only.htm]]
 ## All-notes (wiki-links across vault)
 
 ![[meta/graphs/all-notes.svg]]
+
+## Diagnostics that use the concept graph
+
+- [[Explanatory Circuits]]
 
 Interactive (pan/zoom): [[meta/graphs/all-notes.htm]]
 

@@ -6,13 +6,17 @@ depends_on:
   - "[[Ontology of Irreversibility#Agency boundary (derived)]]"
   - "[[Irreversibility Accounting (Registry)#Dependency classes (by layer)]]"
   - "[[Irreversibility Accounting (Registry)#Operator (diagnostic sequence)]]"
+  - "[[Irreversibility (Invariant)]]"
+  - "[[Attribution]]"
+  - "[[Governance]]"
+  - "[[Decomposition]]"
 ---
 
 # The Structure of Agency (Derived)
 
 **Status:** Companion paper  
 **Type:** Structural interpretation  
-**Depends on:** [[Ontology of Irreversibility]]; [[Irreversibility Accounting (Registry)]]
+**Depends on:** [[Ontology of Irreversibility]]; [[Irreversibility Accounting (Registry)]]; [[Attribution]]; [[Governance]]; [[Decomposition]]
 
 *A constraint-first interpretation of agency in accumulation-dominated regimes.*
 
@@ -31,6 +35,12 @@ It does **not** propose a fundamental ontology of agency, consciousness, freedom
 
 The ontology note flags an **agency boundary**: agency is not primitive; it emerges at the interface of [[feasible-set]], [[admissibility]], [[constraint-load]], and [[displacement]] / [[absorption]]. This paper is the derived articulation of that boundary. [[Ontology of Irreversibility#Agency boundary (derived)]]
 
+This derivation is also **invariant-first**: agency claims are treated as structurally meaningful only when they remain coherent under all four invariants:
+- [[Irreversibility (Invariant)]] (persistence and cost-routing)
+- [[Decomposition]] (role separation so agency doesn't become a category error)
+- [[Governance]] (constraint surfaces and non-exemption)
+- [[Attribution]] (control surfaces, degrees of freedom, and agency layers)
+
 This interpretation is relevant in regimes where:
 - actions produce [[persistent-difference|persistent differences]]
 - [[rollback|rollback]] is asymmetric or costly
@@ -38,23 +48,35 @@ This interpretation is relevant in regimes where:
 
 It is less informative in novelty-dominant or reversibility-dominant regimes (e.g. early exploration, low-stakes trial-and-error, artistic experimentation).
 
-### Minimal derivation sketch (where “agency” enters)
+### Minimal derivation sketch (where "agency" enters)
 
 The explanatory spine stays fixed:
 
 ```
 [[persistent-difference]]
-        ↓
+        ->
 [[erasure-cost]] / [[erasure-asymmetry]]
-        ↓
+        ->
 [[residual]]
-        ↓
+        ->
 [[constraint-load]] / [[constraint-accumulation]]
-        ↓
+        ->
 [[admissibility]] / [[feasible-set]]
 ```
 
 Agency enters only once there is a **non-trivial boundary** between admissible and inadmissible moves: a situation where a localized system can still select among multiple admissible transitions, but selection changes where the next [[irreversibility-quanta|irreversibility quantum]] lands.
+
+### Four-invariant localization (what makes an agency claim well-formed here)
+
+In this vault, "agency" is not a free-floating property. An agency claim is only as good as the structural anchors it names.
+
+At minimum, an agency claim should be able to answer:
+- **What is the role?** (declared [[role-boundary]]; avoid [[role-collapse]])
+- **What layer of agency is being claimed?** ([[agency-layer]]; avoid [[layer-collapse]])
+- **What can the role vary?** ([[control-surface]] + [[degrees-of-freedom]])
+- **What constrains the move?** ([[constraint-surface]] + [[admissibility]] / [[feasible-set]])
+- **Where does persistence land?** ([[persistent-difference]] + [[displacement]] / [[absorption]] + [[residual]])
+- **Who is exempt (if anyone)?** ([[exemption]] / [[exemption-path]]; governance non-exemption is the stabilizer)
 
 ### Regime detection (convergent symptoms)
 
@@ -94,7 +116,13 @@ This is not a law. Breaks are expected in:
 
 ## 1. Preconditions (Assumed, Not Re-derived)
 
-This paper **does not restate** the following concepts. It assumes them as given:
+This paper is derived under the four invariant constraints:
+- [[Irreversibility (Invariant)]]: persistence exists under a declared [[transformation-space]], and erasure work has non-local, asymmetric cost ([[erasure-cost]], [[erasure-asymmetry]]).
+- [[Decomposition]]: we keep objects/operators/boundaries/accounting/governance roles explicit so "agency" doesn't collapse into an operator, a value judgment, or a scope error.
+- [[Governance]]: constraints must apply to their own authors/enforcers (no interpretive immunity); exemptions are visible as exemptions.
+- [[Attribution]]: agency is layered, and responsibility claims must be indexed to actual [[degrees-of-freedom]] on a declared [[control-surface]].
+
+This paper also **does not restate** the following irreversibility primitives. It assumes them as given:
 
 - [[persistent-difference]]
 - [[erasure-cost]] and [[erasure-asymmetry]]
@@ -117,7 +145,7 @@ Agency is **not** treated as:
 
 Instead:
 
-> **Agency is the capacity of a localized system to select among admissible transitions given an existing pattern of accumulated constraints.**
+> **Agency is the capacity of a localized role to vary a [[control-surface]] (within its [[degrees-of-freedom]]) to select among [[admissibility|admissible]] transitions, given an existing pattern of accumulated constraints.**
 
 Agents do not choose the space of possibilities.  
 They select **paths within it**.
@@ -130,6 +158,15 @@ Agency appears wherever constraints are:
 
 Agency is not the freedom to avoid irreversibility. Agency is the capacity to choose where the next [[irreversibility-quanta|irreversibility quantum]] lands. Strong agency localizes and contains quanta. Weak agency disperses them while assuming future rollback. [[irreversibility-quanta#Relation to agency]]
 
+### Agency is layered (attribution discipline)
+
+Under [[Attribution]], "agency" is not a single kind of control:
+- **Causal agency:** mechanisms produce effects (difference happens) without implying intent.
+- **Intentional agency:** an actor selects among perceived options and constraints.
+- **Structural / governance agency:** roles/tools change the constraint landscape itself (rules, interfaces, enforcement).
+
+In accumulation-dominant regimes, analysis fails most often by sliding between these layers (e.g., treating structural effects as if they were individual intent). The minimal correction is to name the [[agency-layer]] and the [[degrees-of-freedom]] being claimed.
+
 ---
 
 ## 3. Agency as Compression
@@ -141,10 +178,12 @@ Compression is used here in a functional sense: the reduction of a high-dimensio
 Agency-as-compression:
 - aggregates many micro-constraints into a tractable interface
 - enables action under complexity
-- supports attribution in distributed causality
+- supports attribution in distributed causality (by making a usable decision surface, which can then be audited as a [[control-surface]])
 
 Compression does not create possibilities.  
 It makes **navigation** possible.
+
+Compression also creates a governance and decomposition problem: what gets compressed can become uninspectable, and then "decision" quietly becomes "authority" (loss of [[self-diagnosability]], emergence of [[silent-correction]] paths). Naming the compression interface as a role-bound artifact is part of keeping the [[role-boundary]] explicit.
 
 In this sense, agency resembles other control interfaces:
 - steering mechanisms
@@ -159,7 +198,7 @@ Its function is **tractability**, not generation.
 
 Agency varies continuously with constraint density.
 
-- **High agency**: many admissible transitions, low [[erasure-cost]]
+- **High agency**: many admissible transitions; large [[degrees-of-freedom]] relative to [[constraint-load]]; low [[erasure-cost]]
 - **Medium agency**: choices exist but trade persistence
 - **Low agency**: choices primarily redirect irreversibility
 - **Zero agency**: only one admissible transition remains
@@ -183,7 +222,12 @@ The distinction between strong and weak agency is introduced **as a viability di
 
 In accumulation-dominated regimes, agents that cannot manage where persistence lands lose effective agency over time.
 
-Strong agency often appears as restraint, refusal of leverage, or limitation—not expansion.
+Strong agency often appears as restraint, refusal of leverage, or limitation, not expansion.
+
+Under the other invariants, "strong agency" also implies:
+- attribution does not drift into [[attribution-displacement]] (responsibility stays near control surfaces)
+- governance does not drift into [[exemption-path]]s (no "rules for thee, not for me")
+- decomposition does not drift into role confusion (no hidden operators inside object claims; no authority smuggled in as explanation)
 
 ---
 
@@ -206,7 +250,7 @@ Confusing intention with impact becomes especially costly in irreversible regime
 
 Authority is treated functionally, not normatively.
 
-> **Authority is a meta-constraint that serializes which actions update shared persistence structures.**
+> **Authority is a meta-constraint (a [[constraint-surface]]) that serializes which actions update shared persistence structures.**
 
 Its role is to:
 - coordinate irreversible updates
@@ -214,6 +258,8 @@ Its role is to:
 - manage proximity to [[collapse-surface|collapse surfaces]]
 
 Authority persists only when backed by effective [[tracking-mechanism|tracking mechanisms]] and sufficient [[absorption]] capacity.
+
+Governance failure occurs when authority acquires exemptions (or interpretive immunity) such that constraints no longer apply to their own enforcers. [[Governance]] [[interpretive-immunity]]
 
 ---
 
@@ -229,6 +275,11 @@ Under these conditions:
 - agency becomes allocative rather than generative
 - decisions route damage rather than create options
 - responsibility shifts from intention to persistence management
+
+This is also a shift in which agency layers dominate:
+- intentional choice remains locally real but structurally bounded
+- structural / governance agency increasingly determines what is admissible (and what violations are visible)
+- attribution failures become common when responsibility claims ignore where [[degrees-of-freedom]] actually live
 
 This represents not a loss of agency, but a **change in its operating regime**.
 
@@ -252,9 +303,16 @@ It is claimed as **structurally adequate where accumulation dominates**.
 In such regimes, the following explanations fail to remain coherent:
 - agency-first accounts that treat agency as possibility generation
 - assumptions that local rollback restores global options
-- intent–impact equivalence as a primary explanatory driver
+- intent-impact equivalence as a primary explanatory driver
 - freedom treated as option count without persistence tracking
 - local optimization treated as restoring global flexibility
+
+### Orthogonality reminder (what the ordering does not collapse)
+
+Even with the above ordering, the other invariants remain orthogonal checks:
+- [[Attribution]]: did we name the actual control surface and degrees of freedom, at the correct agency layer?
+- [[Governance]]: did we make exemptions visible, and keep constraints reflexive?
+- [[Decomposition]]: did we keep roles separated so analysis stays mechanically checkable rather than interpretive?
 
 ---
 
@@ -273,3 +331,4 @@ It explains **how action is routed once movement is constrained**.
 - This document is **derived**, not foundational.
 - All core concepts are defined in linked atomic notes.
 - Misuse patterns are tracked in [[Failure Modes of the Irreversibility Lens]].
+- Follow-up diagnostics exist for each invariant under `diagnostics/` (each spine has a checklist, failure signatures, and stress tests).

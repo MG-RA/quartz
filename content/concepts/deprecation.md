@@ -6,6 +6,11 @@ layer: mechanism
 role: concept
 type: mechanism
 canonical: true
+invariants:
+  - governance
+  - irreversibility
+  - decomposition
+  - attribution
 note_kind: operator
 ---
 

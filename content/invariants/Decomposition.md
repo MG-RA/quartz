@@ -1,5 +1,6 @@
 ---
 role: invariant
+invariant_id: decomposition
 status: structural
 canonical: true
 ---
@@ -148,6 +149,21 @@ Beyond this point, further decomposition is ornamental.
 This document exists so that future clarity does not reintroduce old failure modes under a new vocabulary.
 
 ---
+
+## Minimal decomposition (concepts)
+
+- [[role-boundary]] declares the separation between the five structural roles.
+- [[role-purity]] determines whether an artifact maintains its declared role.
+- [[role-collapse]] names the failure state where role boundaries have failed.
+- [[decomposition-depth]] measures how many layers of separation are mechanically enforced.
+- [[refinement-stability]] tests whether structural work reduces error classes or redistributes ambiguity.
+
+## Structural consequences (non-normative)
+
+- Prescriptive content in descriptive artifacts constitutes [[normativity-leak]].
+- One role absorbing another's function produces [[function-merge]].
+- Over-specification past the refinement ceiling creates [[scope-rigidity]].
+- Terminology can proliferate without corresponding error class reduction (refinement stability failure).
 
 ## Related invariants
 

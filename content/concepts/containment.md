@@ -1,11 +1,15 @@
 ---
 aliases:
   - "contain"
-  - "boundary"
 layer: mechanism
 role: concept
 type: mechanism
 canonical: true
+invariants:
+  - governance
+  - irreversibility
+  - decomposition
+  - attribution
 note_kind: operator
 ---
 
@@ -16,6 +20,8 @@ note_kind: operator
 **Containment** is an operator-pattern that attempts to **limit the propagation** of a [[persistent-difference]] by introducing boundaries, gates, or localized handling surfaces. It does not erase the difference; it changes where the difference can travel and which interfaces must acknowledge it.
 
 Containment is an ordinary mechanism under scale: it trades global spread for local boundary maintenance, routing the work of coordination into explicit seams.
+
+Containment presupposes a declared [[boundary]]; boundaries without enforcement do not constitute containment.
 
 ## Preconditions
 

@@ -6,6 +6,8 @@ layer: accounting
 role: concept
 type: failure-state
 canonical: true
+invariants:
+  - irreversibility
 note_kind: object
 ---
 
